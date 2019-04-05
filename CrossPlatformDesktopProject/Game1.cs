@@ -529,7 +529,7 @@ namespace CrossPlatformDesktopProject
                 for(int j = i+1; j < physEntList.Count; j++)
                 {
                     //if(())
-                    if (physEntList[i].hitBox.Intersects(physEntList[j].hitBox))
+                    if (physEntList[i].hitCircle.Overlaps(physEntList[j].hitCircle))
                     {
                         Vector2[] newVects = Collision(physEntList[i], physEntList[j]);
                         double[] dams = DetermineDamage(new PhysEntity[] { physEntList[i], physEntList[j] }, newVects);
@@ -538,10 +538,20 @@ namespace CrossPlatformDesktopProject
 
                         physEntList[i].TakeDamage(dams[0]);
                         physEntList[j].TakeDamage(dams[1]);
-
-                        //physEntList[i].Update(gameTime);
-                        //physEntList[j].Update(gameTime);
                     }
+                    //if (physEntList[i].hitBox.Intersects(physEntList[j].hitBox))
+                    //{
+                    //    Vector2[] newVects = Collision(physEntList[i], physEntList[j]);
+                    //    double[] dams = DetermineDamage(new PhysEntity[] { physEntList[i], physEntList[j] }, newVects);
+                    //    physEntList[i].posDot = newVects[0];
+                    //    physEntList[j].posDot = newVects[1];
+
+                    //    physEntList[i].TakeDamage(dams[0]);
+                    //    physEntList[j].TakeDamage(dams[1]);
+
+                    //    //physEntList[i].Update(gameTime);
+                    //    //physEntList[j].Update(gameTime);
+                    //}
                 }
             }
         }

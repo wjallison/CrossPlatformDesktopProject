@@ -22,6 +22,7 @@ namespace CrossPlatformDesktopProject
         public double diam;
         public double damResist = 100; //% out of 100
         public Rectangle hitBox;
+        public Circle hitCircle;
         public bool radialMenuFollows = false;
         public bool initialized = true;
         public bool playerControled;
@@ -60,6 +61,7 @@ namespace CrossPlatformDesktopProject
             drawPos.Y = pos.Y - (float)(diam * .5);
 
             hitBox.Location = new Point((int)drawPos.X, (int)drawPos.Y);
+            hitCircle.center = pos;
 
             theta = theta + thetaDot * gameTime.ElapsedGameTime.TotalSeconds;
         }
@@ -133,6 +135,7 @@ namespace CrossPlatformDesktopProject
                 );
 
             hitBox = new Rectangle((int)drawPos.X, (int)drawPos.Y, (int)diam, (int)diam);
+            hitCircle = new Circle(pos, (float)diam);
 
             for(int i = 0; i < resources.Count(); i++)
             {
@@ -309,6 +312,7 @@ namespace CrossPlatformDesktopProject
                 );
 
             hitBox = new Rectangle((int)drawPos.X, (int)drawPos.Y, (int)diam, (int)diam);
+            hitCircle = new Circle(pos, (float)diam);
 
             texture = text;
             playerControled = false;
