@@ -23,6 +23,9 @@ namespace CrossPlatformDesktopProject
         public double damResist = 100; //% out of 100
         public Rectangle hitBox;
         public bool radialMenuFollows = false;
+        public bool initialized = true;
+
+        public Texture2D texture;
 
         //double doubles
         //public double[] pos = new double[] { 0, 0 };  //Note: pos is to center of mass.
@@ -36,6 +39,11 @@ namespace CrossPlatformDesktopProject
 
         //bools
         public bool solid = true;
+
+        public PhysEntity()
+        {
+            initialized = false;
+        }
 
         public void Update(GameTime gameTime)
         {
@@ -87,7 +95,12 @@ namespace CrossPlatformDesktopProject
 
         private double thrust;
 
-        public Drone(double thrust, double diameter, string name, double m, double hp, double x = 0, double y = 0, double xDot = 0, double yDot = 0)
+        public int[] resources = new int[15];
+
+        public Drone(Texture2D text
+            double thrust, double diameter, 
+            string name, double m, double hp, 
+            double x = 0, double y = 0, double xDot = 0, double yDot = 0)
         {
             idNo = name;
 
@@ -117,7 +130,15 @@ namespace CrossPlatformDesktopProject
                 );
 
             hitBox = new Rectangle((int)drawPos.X, (int)drawPos.Y, (int)diam, (int)diam);
+
+            for(int i = 0; i < resources.Count(); i++)
+            {
+                resources[i] = 0;
+            }
+
+            texture = text;
         }
+
 
 
         public void UpdateTarget(Vector2 t)
@@ -177,14 +198,14 @@ namespace CrossPlatformDesktopProject
                     if (Math.Abs(a) < negThrustMax)
                     {
                         posDotDot = new Vector2(
-                            (float)(thrustMax / relTarget.Length() * relTarget.X),
-                            (float)(thrustMax / relTarget.Length() * relTarget.Y));
+                            (float)(thrustMax / relTarget.Length() * relTarget.X / mass),
+                            (float)(thrustMax / relTarget.Length() * relTarget.Y / mass));
                     }
                     else
                     {
                         posDotDot = new Vector2(
-                            (float)(-negThrustMax / relTarget.Length() * relTarget.X),
-                            (float)(-negThrustMax / relTarget.Length() * relTarget.Y));
+                            (float)(-negThrustMax / relTarget.Length() * relTarget.X / mass),
+                            (float)(-negThrustMax / relTarget.Length() * relTarget.Y / mass));
                     }
                 }
                 else
@@ -231,7 +252,7 @@ namespace CrossPlatformDesktopProject
         public IDictionary<string, double> content = new Dictionary<string, double>();
 
 
-        public Asteroid(int lane, double diameter, string name, double m, double x = 0, double y = 0, double xDot = 0, double yDot = 0)
+        public Asteroid(Texture2D text, int lane, double diameter, string name, double m, double x = 0, double y = 0, double xDot = 0, double yDot = 0)
         {
 
             #region content based on lane
@@ -284,6 +305,8 @@ namespace CrossPlatformDesktopProject
                 );
 
             hitBox = new Rectangle((int)drawPos.X, (int)drawPos.Y, (int)diam, (int)diam);
+
+            texture = text;
         }
         public override void TakeDamage(double damage)
         {
@@ -293,4 +316,31 @@ namespace CrossPlatformDesktopProject
         }
     }
 
+    
+    public class Station
+    {
+        public List<StationBlock> blocks = new List<StationBlock>();
+
+        public void AddBlock(StationBlock s)
+        {
+            blocks.Add(s);
+        }
+    }
+
+    public class StationBlock : PhysEntity
+    {
+
+    }
+
+    public struct _selectedPhysEnt
+    {
+        public int index;
+        public PhysEntity entity;
+
+        public _selectedPhysEnt(int ind, PhysEntity ent)
+        {
+            index = ind;
+            entity = ent;
+        }
+    }
 }

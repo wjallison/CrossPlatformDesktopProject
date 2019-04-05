@@ -11,10 +11,16 @@ namespace CrossPlatformDesktopProject
     /// </summary>
     public class Game1 : Game
     {
-        Texture2D textureBall, textureRadialMenu;
+        Texture2D textureBall, textureRadialMenu, textureBoundingBox;
+
+        UIItem resourcesPanel, selectedEntityPanel, menuButtonPanel, groupButtonsPanel;
 
         Vector2 ballPos;
         float ballSpeed;
+
+        double lane1SpawnCounter = 0;
+
+        bool firstInit = true;
 
         bool temp1 = true;
         bool temp2 = true;
@@ -24,6 +30,23 @@ namespace CrossPlatformDesktopProject
         bool radialMenuFollowing = false;
         Vector2 radialMenuPos;
         Rectangle radialMenuRect;
+
+        public int[] playerResources = new int[15];
+        //"Waste",
+        //    "Fe",
+        //    "Rock",
+        //    "Au",
+        //    "Ag",
+        //    "Pt",
+        //    "U",
+        //    "Cu",
+        //    "H2O",
+        //    "H2",
+        //    "O2",
+        //    "Cu",
+        //    "CO2",
+        //    "Money",
+        //    "Fuel"
 
         public Rectangle resourcesPanelRect,
             selectedEntityPanelRect,
@@ -39,6 +62,7 @@ namespace CrossPlatformDesktopProject
 
         public List<PhysEntity> physEntList = new List<PhysEntity>();
         public List<Object> asteroidList = new List<object>();
+        public _selectedPhysEnt selectedPhysEnt = new _selectedPhysEnt(0, new PhysEntity());
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -62,8 +86,8 @@ namespace CrossPlatformDesktopProject
             // TODO: Add your initialization logic here
             IsMouseVisible = true;
 
-            resourcesPanelRect = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, 20);
-            selectedEntityPanelRect = new Rectangle(50, graphics.PreferredBackBufferHeight + 30, graphics.PreferredBackBufferWidth - 100, 30);
+            resourcesPanelRect = new Rectangle(0, 0, graphics.PreferredBackBufferWidth, 50);
+            selectedEntityPanelRect = new Rectangle(50, graphics.PreferredBackBufferHeight - 60, graphics.PreferredBackBufferWidth - 100, 60);
             GroupButtonsRect = new Rectangle(graphics.PreferredBackBufferWidth - 30, 20, 30, graphics.PreferredBackBufferHeight - 50);
             MenuButtonRect = new Rectangle(graphics.PreferredBackBufferWidth - 50, graphics.PreferredBackBufferHeight - 50, 50, 50);
 
@@ -94,9 +118,12 @@ namespace CrossPlatformDesktopProject
             // TODO: use this.Content to load your game content here
 
             textureBall = Content.Load<Texture2D>("ball");
+
+            #region UI Elements
             textureRadialMenu = Content.Load<Texture2D>("asteroidProject_touchMenu");
-            //textureBall.Height = 50;
-            //textureBall.
+            textureBoundingBox = Content.Load<Texture2D>("BoundingBox");
+
+            #endregion
 
             font = Content.Load<SpriteFont>("Font");
         }
@@ -117,6 +144,13 @@ namespace CrossPlatformDesktopProject
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            if (firstInit)
+            {
+                resourcesPanel = new UIItem(resourcesPanelRect, textureBoundingBox);
+                selectedEntityPanel = new UIItem(selectedEntityPanelRect, textureBoundingBox);
+
+                firstInit = false;
+            }
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -144,7 +178,7 @@ namespace CrossPlatformDesktopProject
                 //SpawnAsteroid();
                 if (temp1)
                 {
-                    physEntList.Add(new Asteroid(1, 50, "01", 10, 50, 50, 50, 0));
+                    physEntList.Add(new Asteroid(textureBall, 1, 50, "01", 10, 50, 50, 50, 0));
                     temp1 = false;
                 }
             }
@@ -164,7 +198,7 @@ namespace CrossPlatformDesktopProject
                 if (temp1)
                 {
                     //Drone spawns at 300,50,0deg
-                    physEntList.Add(new Drone(100, 50, "d1", 10, 10, 300, 50));
+                    physEntList.Add(new Drone(textureBall, 100, 50, "d1", 10, 10, 300, 50));
                     temp1 = false;
                 }
             }
@@ -246,6 +280,10 @@ namespace CrossPlatformDesktopProject
                                 radialMenuOn = true;
                                 radialMenuFollowing = true;
                                 physEntList[i].radialMenuFollows = true;
+
+                                selectedPhysEnt.index = i;
+                                selectedPhysEnt.entity = physEntList[i];
+
                             }
                         }
                         
@@ -264,6 +302,30 @@ namespace CrossPlatformDesktopProject
 
             #endregion
 
+            #region spawn asteroids
+
+            lane1SpawnCounter += gameTime.ElapsedGameTime.TotalSeconds;
+            //roughly every 3 seconds
+            if(lane1SpawnCounter > 3)
+            {
+                lane1SpawnCounter = 0;
+                SpawnAsteroid(1);
+            }
+
+            #endregion
+
+            #region remove entities outside box
+
+            for(int i = 0; i < physEntList.Count; i++)
+            {
+                if(physEntList[i].pos.Y < -75)
+                {
+                    physEntList.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            #endregion
 
             if (physEntList.Count > 0)
             {
@@ -280,16 +342,7 @@ namespace CrossPlatformDesktopProject
             ballPos.X = Math.Min(Math.Max(textureBall.Width / 2, ballPos.X), graphics.PreferredBackBufferWidth - textureBall.Width / 2);
             ballPos.Y = Math.Min(Math.Max(textureBall.Height / 2, ballPos.Y), graphics.PreferredBackBufferHeight - textureBall.Height / 2);
 
-            /*MOUSE LOGIC
-             * Logic structure:
-             * if(mouseRect.Intersects(spriteRect)
-             * DO something
-             * 
-             * else
-             * 
-             * 
-             * 
-             */
+            
 
             
             ScanForCollisions(gameTime);
@@ -298,12 +351,6 @@ namespace CrossPlatformDesktopProject
             {
                 physEntList[i].Update(gameTime);
             }
-
-            
-
-
-
-
 
             base.Update(gameTime);
         }
@@ -339,7 +386,9 @@ namespace CrossPlatformDesktopProject
                 0f
                 );
 
-            if(physEntList.Count > 0)
+            
+
+            if (physEntList.Count > 0)
             {
                 for (int i = 0; i < physEntList.Count; i++)
                 {
@@ -362,7 +411,21 @@ namespace CrossPlatformDesktopProject
             }
 
 
-            
+            #region UI
+
+            spriteBatch.Draw(
+                resourcesPanel.texture,
+                resourcesPanel.box,
+                Color.White
+                );
+            spriteBatch.Draw(selectedEntityPanel.texture, selectedEntityPanel.box, Color.White);
+            //if
+            selectedEntityPanel.AddRelControl(
+                new UIControl(
+                    new Vector2((float)25, 25), new Vector2(50, 50), selectedPhysEnt.entity.texture));
+            //spriteBatch.Draw(textureBall, new Rectangle(new Point(selectedEntityPanel.box.X, selectedEntityPanel.box.Y), new Point(10, 10)), Color.White);
+
+            #endregion
 
             spriteBatch.End();
 
@@ -520,7 +583,7 @@ namespace CrossPlatformDesktopProject
 
         public void SpawnAsteroid()
         {
-            physEntList.Add(new Asteroid(1, 50, "01", 50,50, 1,1));
+            //physEntList.Add(new Asteroid(1, 50, "01", 50,50, 1,1));
         }
 
         public void SetRadialMenuPos(double x, double y)
@@ -529,6 +592,60 @@ namespace CrossPlatformDesktopProject
             y -= 50;
             radialMenuPos = new Vector2((float)x, (float)y);
             radialMenuRect = new Rectangle(new Point((int)x, (int)y), new Point(100, 100));
+        }
+
+        public void SpawnAsteroid(int lane)
+        {
+            /* Lane definitions:
+             * Lane 1:
+             * 0 - 25 (% from right edge)
+             * Asteroids can be aimed as far as -10 to 27.5
+             * Speed: 10-50
+             * Frequency:
+             * 
+             * Lane 2:
+             * 40 - 75
+             * Aim: 37.5, 80
+             * Speed: 50 - 100
+             * 
+             * Lane 3:
+             * 85 - 100
+             * Aim: 80, 110
+             * Speed: 100 - 200
+             * */
+            Asteroid newAsteroid;
+            Random r = new Random();
+            float xSpawn = 0;
+            float xTarget;
+            double diam = 0;
+            int speed = 0;
+            Vector2 direction = new Vector2(0,0);
+
+            switch (lane)
+            {
+                case 1:
+                    xSpawn = (float)(25 * r.NextDouble() / 100 * graphics.PreferredBackBufferWidth);
+                    xTarget = (float)((37.5 * r.NextDouble() / 100 - .1) * graphics.PreferredBackBufferWidth);
+                    speed = (int)(40 * r.NextDouble() + 10);
+                    direction = new Vector2(xSpawn - xTarget, -graphics.PreferredBackBufferHeight);
+                    //(int lane, double diameter, string name, double m, double x = 0, double y = 0, double xDot = 0, double yDot = 0)
+                    diam = (50 * r.NextDouble() + 25);
+                    
+                    break;
+            }
+
+            newAsteroid = new Asteroid(textureBall,
+                        1,
+                        diam,
+                        "a" + physEntList.Count.ToString(),
+                        Math.Pow(diam / 2, 2),
+                        graphics.PreferredBackBufferWidth - xSpawn,
+                        graphics.PreferredBackBufferHeight + 100,
+                        direction.X / direction.Length() * speed,
+                        direction.Y / direction.Length() * speed
+                        );
+
+            physEntList.Add(newAsteroid);
         }
     }
 }
