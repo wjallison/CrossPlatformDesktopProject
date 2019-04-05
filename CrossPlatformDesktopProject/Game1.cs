@@ -200,7 +200,7 @@ namespace CrossPlatformDesktopProject
                 if (temp1)
                 {
                     //Drone spawns at 300,50,0deg
-                    physEntList.Add(new Drone(textureBall, 100, 50, "d1", 10, 10, 300, 50));
+                    physEntList.Add(new Drone(textureBall, 100, 50, "d1", 300, 250, 300, 50));
                     temp1 = false;
                 }
             }
@@ -218,6 +218,31 @@ namespace CrossPlatformDesktopProject
                     d.UpdateTarget(new Vector2(300, 150));
                     //physEntList.Add(new Asteroid(1, 50, "a1", 10, 300, 150, 0, 0));
                     physEntList[0] = d;
+                    temp2 = false;
+                }
+            }
+            #endregion
+
+            #region testing drone following
+
+            if (kstate.IsKeyDown(Keys.NumPad7))
+            {
+                if (temp1)
+                {
+                    physEntList.Add(new Asteroid(textureBall, 1, 50, "a1", 10, 300, 150, 10, 0));
+                    physEntList.Add(new Drone(textureBall, 100, 50, "d1", 10, 300, 200, 250, 0, 0));
+                    temp1 = false;
+                }
+            }
+            if (kstate.IsKeyDown(Keys.NumPad8))
+            {
+                if (!temp1 && temp2)
+                {
+                    
+                    Drone d = (Drone)physEntList[1];
+                    //d.UpdateTarget(new Vector2(300, 150));
+                    d.GoTo(physEntList[0]);
+                    physEntList[1] = d;
                     temp2 = false;
                 }
             }
@@ -309,13 +334,13 @@ namespace CrossPlatformDesktopProject
 
             #region spawn asteroids
 
-            lane1SpawnCounter += gameTime.ElapsedGameTime.TotalSeconds;
-            //roughly every 3 seconds
-            if(lane1SpawnCounter > 3)
-            {
-                lane1SpawnCounter = 0;
-                SpawnAsteroid(1);
-            }
+            //lane1SpawnCounter += gameTime.ElapsedGameTime.TotalSeconds;
+            ////roughly every 3 seconds
+            //if(lane1SpawnCounter > 3)
+            //{
+            //    lane1SpawnCounter = 0;
+            //    SpawnAsteroid(1);
+            //}
 
             #endregion
 
@@ -348,7 +373,7 @@ namespace CrossPlatformDesktopProject
             ballPos.Y = Math.Min(Math.Max(textureBall.Height / 2, ballPos.Y), graphics.PreferredBackBufferHeight - textureBall.Height / 2);
 
             
-
+            //Mining
             
             ScanForCollisions(gameTime);
 
@@ -552,6 +577,30 @@ namespace CrossPlatformDesktopProject
                     //    //physEntList[i].Update(gameTime);
                     //    //physEntList[j].Update(gameTime);
                     //}
+                }
+            }
+        }
+
+        public void ScanForMining(GameTime gametime)
+        {
+            for(int i = 0; i < physEntList.Count; i++)
+            {
+                if(physEntList[i].type == "drone")
+                {
+                    Drone d = (Drone)physEntList[i];
+                    if (d.miningEnabled)
+                    {
+                        for (int j = 0; j < physEntList.Count; j++)
+                        {
+                            if (physEntList[j].type == "asteroid")
+                            {
+                                if((physEntList[j].pos - d.pos).Length() < physEntList[j].diam / 2 + d.range)
+                                {
+                                    physEntList[j].TakeDamage(d.DealDamage());
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

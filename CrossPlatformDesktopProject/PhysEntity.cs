@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CrossPlatformDesktopProject
 {
-    public class PhysEntity
+    public class PhysEntity : Clickable
     {
 
         //single doubles
@@ -83,176 +83,7 @@ namespace CrossPlatformDesktopProject
         }
     }
 
-    public class Drone : PhysEntity
-    {
-        public double thrustMax;
-        public double negThrustMax;
-        public double maxShield;
-        public double shield;
-
-        public double thetaDotDotMax = 10;
-
-        public bool targetSet = false;
-        public Vector2 target;
-        public Vector2 relTarget = new Vector2(0, 0);
-
-        private double thrust;
-
-        public int[] resources = new int[15];
-
-        
-
-        public Drone(Texture2D text,
-            double thrust, double diameter, 
-            string name, double m, double hp, 
-            double x = 0, double y = 0, double xDot = 0, double yDot = 0)
-        {
-            idNo = name;
-
-            theta = 0;
-            thetaDot = 0;
-            pos = new Vector2((float)x, (float)y);
-            posDot = new Vector2((float)xDot, (float)yDot);
-            posDotDot = new Vector2(0, 0);
-
-            diam = diameter;
-
-            thrustMax = thrust;
-            negThrustMax = .5 * thrustMax;
-
-            
-            maxHealth = hp;
-            health = maxHealth;
-
-            maxShield = maxHealth * .1;
-            shield = maxShield;
-
-            mass = m;
-
-            drawPos = new Vector2(
-                pos.X - (float)(diam * .5),
-                pos.Y - (float)(diam * .5)
-                );
-
-            hitBox = new Rectangle((int)drawPos.X, (int)drawPos.Y, (int)diam, (int)diam);
-            hitCircle = new Circle(pos, (float)diam);
-
-            for(int i = 0; i < resources.Count(); i++)
-            {
-                resources[i] = 0;
-            }
-
-            texture = text;
-            playerControled = true;
-        }
-
-
-
-        public void UpdateTarget(Vector2 t)
-        {
-            target = t;
-            relTarget = target - pos;
-            targetSet = true;
-        }
-
-        public void TargetUpdate()
-        {
-            if (targetSet)
-            {
-                relTarget = target - pos;
-
-                if(relTarget.Length() < 10)
-                {
-                    if(posDot.X > 0)
-                    {
-                        if(posDot.X < 5)
-                        {
-                            posDot.X = 0;
-                        }
-                        else { posDot.X = (float)(.7 * posDot.X); }
-                    }
-                    else
-                    {
-                        if (posDot.X > -5)
-                        {
-                            posDot.X = 0;
-                        }
-                        else { posDot.X = (float)(.7 * posDot.X); }
-                    }
-
-                    if (posDot.Y > 0)
-                    {
-                        if (posDot.Y < 5)
-                        {
-                            posDot.Y = 0;
-                        }
-                        else { posDot.Y = (float)(.7 * posDot.Y); }
-                    }
-                    else
-                    {
-                        if (posDot.Y > -5)
-                        {
-                            posDot.Y = 0;
-                        }
-                        else { posDot.Y = (float)(.7 * posDot.Y); }
-                    }
-                }
-
-                if (ApproxEquals(Math.Atan2(relTarget.Y, relTarget.X), theta))
-                {
-                    thetaDot = 0;
-                    double a = -Math.Pow(posDot.Length(), 2) / (2 * relTarget.Length());
-                    if (Math.Abs(a) < negThrustMax)
-                    {
-                        posDotDot = new Vector2(
-                            (float)(thrustMax / relTarget.Length() * relTarget.X / mass),
-                            (float)(thrustMax / relTarget.Length() * relTarget.Y / mass));
-                    }
-                    else
-                    {
-                        posDotDot = new Vector2(
-                            (float)(-negThrustMax / relTarget.Length() * relTarget.X / mass),
-                            (float)(-negThrustMax / relTarget.Length() * relTarget.Y / mass));
-                    }
-                }
-                else
-                {
-                    posDotDot = new Vector2(0, 0);
-                    thetaDot = 10 * (Math.Atan2(relTarget.Y, relTarget.X) - theta);
-                }
-            }
-            
-        }
-
-        public override void TakeDamage(double damage)
-        {
-            if(shield > damage)
-            {
-                shield = shield - damage;
-                return;
-            }
-            else
-            {
-                damage -= shield;
-                shield = 0;
-
-                damage = damage * damResist / 100;
-
-                health = health - damage;
-            }
-
-            //if(health < 0)
-            //{
-
-            //}
-        }
-
-        public override void individualUpdate()
-        {
-            TargetUpdate();
-        }
-
-    }
+    
 
     public class Asteroid : PhysEntity
     {
@@ -292,6 +123,7 @@ namespace CrossPlatformDesktopProject
             #endregion
 
             idNo = name;
+            type = "asteroid";
 
             theta = 0;
             thetaDot = 0;
@@ -351,5 +183,10 @@ namespace CrossPlatformDesktopProject
             index = ind;
             entity = ent;
         }
+    }
+
+    public class Clickable
+    {
+        public string type;
     }
 }

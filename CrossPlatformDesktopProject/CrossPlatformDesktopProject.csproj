@@ -43,10 +43,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Circle.cs" />
+    <Compile Include="Drone.cs" />
     <Compile Include="PhysEntity.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RadialMenu.cs" />
     <Compile Include="UIItem.cs" />
     <Compile Include="_globals.cs" />
   </ItemGroup>
