@@ -14,7 +14,7 @@ namespace CrossPlatformDesktopProject
     {
         public Rectangle box;
         public Texture2D texture;
-        public List<UIControl> controls;
+        public List<UIControl> controls = new List<UIControl>();
 
         public UIItem(Rectangle rect, Texture2D _texture)
         {

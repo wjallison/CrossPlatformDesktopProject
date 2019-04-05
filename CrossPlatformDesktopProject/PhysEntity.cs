@@ -24,6 +24,7 @@ namespace CrossPlatformDesktopProject
         public Rectangle hitBox;
         public bool radialMenuFollows = false;
         public bool initialized = true;
+        public bool playerControled;
 
         public Texture2D texture;
 
@@ -97,7 +98,9 @@ namespace CrossPlatformDesktopProject
 
         public int[] resources = new int[15];
 
-        public Drone(Texture2D text
+        
+
+        public Drone(Texture2D text,
             double thrust, double diameter, 
             string name, double m, double hp, 
             double x = 0, double y = 0, double xDot = 0, double yDot = 0)
@@ -137,6 +140,7 @@ namespace CrossPlatformDesktopProject
             }
 
             texture = text;
+            playerControled = true;
         }
 
 
@@ -307,6 +311,7 @@ namespace CrossPlatformDesktopProject
             hitBox = new Rectangle((int)drawPos.X, (int)drawPos.Y, (int)diam, (int)diam);
 
             texture = text;
+            playerControled = false;
         }
         public override void TakeDamage(double damage)
         {

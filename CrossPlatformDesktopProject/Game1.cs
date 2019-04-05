@@ -20,7 +20,8 @@ namespace CrossPlatformDesktopProject
 
         double lane1SpawnCounter = 0;
 
-        bool firstInit = true;
+        bool firstInitUpdate = true;
+        bool firstInitDraw = true;
 
         bool temp1 = true;
         bool temp2 = true;
@@ -63,6 +64,7 @@ namespace CrossPlatformDesktopProject
         public List<PhysEntity> physEntList = new List<PhysEntity>();
         public List<Object> asteroidList = new List<object>();
         public _selectedPhysEnt selectedPhysEnt = new _selectedPhysEnt(0, new PhysEntity());
+        public bool PhysEntSelected = false;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -144,12 +146,12 @@ namespace CrossPlatformDesktopProject
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (firstInit)
+            if (firstInitUpdate)
             {
                 resourcesPanel = new UIItem(resourcesPanelRect, textureBoundingBox);
                 selectedEntityPanel = new UIItem(selectedEntityPanelRect, textureBoundingBox);
 
-                firstInit = false;
+                firstInitUpdate = false;
             }
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -271,8 +273,10 @@ namespace CrossPlatformDesktopProject
                     else
                     {
                         SetRadialMenuPos(mState.Position.X, mState.Position.Y);
+                        bool ent = false;
                         for (int i = 0; i < physEntList.Count; i++)
                         {
+                            if (!physEntList[i].playerControled) { continue; }
                             physEntList[i].radialMenuFollows = false;
                             if (r.Intersects(physEntList[i].hitBox))
                             {
@@ -283,10 +287,11 @@ namespace CrossPlatformDesktopProject
 
                                 selectedPhysEnt.index = i;
                                 selectedPhysEnt.entity = physEntList[i];
-
+                                PhysEntSelected = true;
+                                ent = true;
                             }
                         }
-                        
+                        if (!ent) { PhysEntSelected = false; }
                         radialMenuOn = true;
                     }
 
@@ -420,9 +425,21 @@ namespace CrossPlatformDesktopProject
                 );
             spriteBatch.Draw(selectedEntityPanel.texture, selectedEntityPanel.box, Color.White);
             //if
-            selectedEntityPanel.AddRelControl(
+            if (firstInitDraw)
+            {
+                selectedEntityPanel.AddRelControl(
                 new UIControl(
-                    new Vector2((float)25, 25), new Vector2(50, 50), selectedPhysEnt.entity.texture));
+                    new Vector2((float)25, 10), new Vector2(25, 25), selectedPhysEnt.entity.texture));
+            }
+            
+            if (PhysEntSelected)
+            {
+                selectedEntityPanel.controls[0].texture = selectedPhysEnt.entity.texture;
+                spriteBatch.Draw(selectedEntityPanel.controls[0].texture,
+                            selectedEntityPanel.controls[0].box,
+                            Color.White);
+            }
+            
             //spriteBatch.Draw(textureBall, new Rectangle(new Point(selectedEntityPanel.box.X, selectedEntityPanel.box.Y), new Point(10, 10)), Color.White);
 
             #endregion
