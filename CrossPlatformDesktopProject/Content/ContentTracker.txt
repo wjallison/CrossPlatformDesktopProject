@@ -2,3 +2,9 @@
 asteroidProject_touchMenu.png
 Font.spritefont
 BoundingBox.png
+
+Attack.png
+dock.png
+Goto.png
+harpoon.png
+Harvest.png

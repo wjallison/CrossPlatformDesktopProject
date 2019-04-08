@@ -11,7 +11,8 @@ namespace CrossPlatformDesktopProject
     /// </summary>
     public class Game1 : Game
     {
-        Texture2D textureBall, textureRadialMenu, textureBoundingBox;
+        Texture2D textureBall, textureRadialMenu, textureBoundingBox,
+            textureGoToButton, textureAttackButton, textureHarpoonButton, textureDockButton, textureGatherButton;
 
         UIItem resourcesPanel, selectedEntityPanel, menuButtonPanel, groupButtonsPanel;
 
@@ -31,6 +32,17 @@ namespace CrossPlatformDesktopProject
         bool radialMenuFollowing = false;
         Vector2 radialMenuPos;
         Rectangle radialMenuRect;
+
+        enum GameState
+        {
+            MainMenu = 0,
+            Loading = 1,
+            MainState = 2,
+            Paused = 3,
+            SubMenuPaused = 4
+        }
+
+        int gameState = 2;
 
         public int[] playerResources = new int[15];
         //"Waste",
@@ -125,6 +137,12 @@ namespace CrossPlatformDesktopProject
             textureRadialMenu = Content.Load<Texture2D>("asteroidProject_touchMenu");
             textureBoundingBox = Content.Load<Texture2D>("BoundingBox");
 
+            textureGoToButton = Content.Load<Texture2D>("Goto");
+            textureAttackButton = Content.Load<Texture2D>("Attack");
+            textureGatherButton = Content.Load<Texture2D>("Harvest");
+            textureHarpoonButton = Content.Load<Texture2D>("harpoon");
+            textureDockButton = Content.Load<Texture2D>("dock");
+
             #endregion
 
             font = Content.Load<SpriteFont>("Font");
@@ -146,243 +164,273 @@ namespace CrossPlatformDesktopProject
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (firstInitUpdate)
-            {
-                resourcesPanel = new UIItem(resourcesPanelRect, textureBoundingBox);
-                selectedEntityPanel = new UIItem(selectedEntityPanelRect, textureBoundingBox);
 
-                firstInitUpdate = false;
+        //    enum GameState
+        //{
+        //    MainMenu = 0,
+        //    Loading = 1,
+        //    MainState = 2,
+        //    Paused = 3,
+        //    SubMenuPaused = 4
+        //}
+
+            if(gameState == 0)
+            {
+
             }
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            // TODO: Add your update logic here
-
-            var kstate = Keyboard.GetState();
-
-            #region tutorial move ball
-            if (kstate.IsKeyDown(Keys.Up))
-                ballPos.Y -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (kstate.IsKeyDown(Keys.Down))
-                ballPos.Y += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (kstate.IsKeyDown(Keys.Left))
-                ballPos.X -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (kstate.IsKeyDown(Keys.Right))
-                ballPos.X += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            #endregion
-
-            #region testing collisions
-            if (kstate.IsKeyDown(Keys.NumPad0))
+            else if(gameState == 1)
             {
-                //SpawnAsteroid();
-                if (temp1)
+
+            }
+            else if (gameState == 2)
+            {
+                if (firstInitUpdate)
                 {
-                    physEntList.Add(new Asteroid(textureBall, 1, 50, "01", 10, 50, 50, 50, 0));
-                    temp1 = false;
+                    resourcesPanel = new UIItem(resourcesPanelRect, textureBoundingBox);
+                    selectedEntityPanel = new UIItem(selectedEntityPanelRect, textureBoundingBox);
+
+                    firstInitUpdate = false;
                 }
-            }
-            //if (kstate.IsKeyDown(Keys.NumPad1))
-            //{
-            //    if (temp2)
-            //    {
-            //        physEntList.Add(new Asteroid(1, 50, "02", 10, 300, 50, 0, 0));
-            //        temp2 = false;
-            //    }
-            //}
-            #endregion
+                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                    Exit();
 
-            #region testing drone line pathing
-            if (kstate.IsKeyDown(Keys.NumPad4))
-            {
-                if (temp1)
+                // TODO: Add your update logic here
+
+                var kstate = Keyboard.GetState();
+
+                #region tutorial move ball
+                if (kstate.IsKeyDown(Keys.Up))
+                    ballPos.Y -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (kstate.IsKeyDown(Keys.Down))
+                    ballPos.Y += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (kstate.IsKeyDown(Keys.Left))
+                    ballPos.X -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (kstate.IsKeyDown(Keys.Right))
+                    ballPos.X += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                #endregion
+
+                #region testing collisions
+                if (kstate.IsKeyDown(Keys.NumPad0))
                 {
-                    //Drone spawns at 300,50,0deg
-                    physEntList.Add(new Drone(textureBall, 100, 50, "d1", 300, 250, 300, 50));
-                    temp1 = false;
-                }
-            }
-            if (kstate.IsKeyDown(Keys.NumPad5))
-            {
-                if(!temp1 && temp2)
-                {
-                    //Drone's target is updated to 500,50
-                    //Drone d = (Drone)physEntList[0];
-                    //d.UpdateTarget(new Vector2(500, 50));
-                    //physEntList[0] = d;
-
-                    //Drone's target is updated to 500,100
-                    Drone d = (Drone)physEntList[0];
-                    d.UpdateTarget(new Vector2(300, 150));
-                    //physEntList.Add(new Asteroid(1, 50, "a1", 10, 300, 150, 0, 0));
-                    physEntList[0] = d;
-                    temp2 = false;
-                }
-            }
-            #endregion
-
-            #region testing drone following
-
-            if (kstate.IsKeyDown(Keys.NumPad7))
-            {
-                if (temp1)
-                {
-                    physEntList.Add(new Asteroid(textureBall, 1, 50, "a1", 10, 300, 150, 10, 0));
-                    physEntList.Add(new Drone(textureBall, 100, 50, "d1", 10, 300, 200, 250, 0, 0));
-                    temp1 = false;
-                }
-            }
-            if (kstate.IsKeyDown(Keys.NumPad8))
-            {
-                if (!temp1 && temp2)
-                {
-                    
-                    Drone d = (Drone)physEntList[1];
-                    //d.UpdateTarget(new Vector2(300, 150));
-                    d.GoTo(physEntList[0]);
-                    physEntList[1] = d;
-                    temp2 = false;
-                }
-            }
-            #endregion
-
-            #region click actions
-            var mState = Mouse.GetState();
-
-            for(int i = 0; i < physEntList.Count; i++)
-            {
-                if (physEntList[i].radialMenuFollows)
-                {
-                    SetRadialMenuPos(physEntList[i].pos.X, physEntList[i].pos.Y);
-                }
-            }
-
-            if(mouseClicked == false)
-            {
-                if(mState.LeftButton == ButtonState.Pressed)
-                {
-                    mouseClicked = true;
-
-                    /*
-                     * 
-                     * Order:
-                     * Menu
-                     * PC Entity
-                     * NPC Entity
-                     * 
-                     * 
-                     * 
-                     * 
-                     */
-                    Rectangle r = new Rectangle(mState.Position.X, mState.Y, 1, 1);
-
-                    if (r.Intersects(resourcesPanelRect))
+                    //SpawnAsteroid();
+                    if (temp1)
                     {
-                        radialMenuOn = false;
+                        physEntList.Add(new Asteroid(textureBall, 1, 50, "01", 10, 50, 50, 50, 0));
+                        temp1 = false;
                     }
-                    else if (r.Intersects(selectedEntityPanelRect))
+                }
+                //if (kstate.IsKeyDown(Keys.NumPad1))
+                //{
+                //    if (temp2)
+                //    {
+                //        physEntList.Add(new Asteroid(1, 50, "02", 10, 300, 50, 0, 0));
+                //        temp2 = false;
+                //    }
+                //}
+                #endregion
+
+                #region testing drone line pathing
+                if (kstate.IsKeyDown(Keys.NumPad4))
+                {
+                    if (temp1)
                     {
-                        radialMenuOn = false;
+                        //Drone spawns at 300,50,0deg
+                        physEntList.Add(new Drone(textureBall, 100, 50, "d1", 300, 250, 300, 50));
+                        temp1 = false;
                     }
-                    else if (r.Intersects(GroupButtonsRect))
+                }
+                if (kstate.IsKeyDown(Keys.NumPad5))
+                {
+                    if (!temp1 && temp2)
                     {
-                        radialMenuOn = false;
+                        //Drone's target is updated to 500,50
+                        //Drone d = (Drone)physEntList[0];
+                        //d.UpdateTarget(new Vector2(500, 50));
+                        //physEntList[0] = d;
+
+                        //Drone's target is updated to 500,100
+                        Drone d = (Drone)physEntList[0];
+                        d.UpdateTarget(new Vector2(300, 150));
+                        //physEntList.Add(new Asteroid(1, 50, "a1", 10, 300, 150, 0, 0));
+                        physEntList[0] = d;
+                        temp2 = false;
                     }
-                    else if (r.Intersects(MenuButtonRect))
+                }
+                #endregion
+
+                #region testing drone following
+
+                if (kstate.IsKeyDown(Keys.NumPad7))
+                {
+                    if (temp1)
+                    {
+                        physEntList.Add(new Asteroid(textureBall, 1, 50, "a1", 10, 300, 150, 10, 0));
+                        physEntList.Add(new Drone(textureBall, 100, 50, "d1", 10, 300, 200, 250, 0, 0));
+                        temp1 = false;
+                    }
+                }
+                if (kstate.IsKeyDown(Keys.NumPad8))
+                {
+                    if (!temp1 && temp2)
                     {
 
+                        Drone d = (Drone)physEntList[1];
+                        //d.UpdateTarget(new Vector2(300, 150));
+                        d.GoTo(physEntList[0]);
+                        physEntList[1] = d;
+                        temp2 = false;
                     }
-                    
-                    else
+                }
+                #endregion
+
+                #region click actions
+                var mState = Mouse.GetState();
+
+                for (int i = 0; i < physEntList.Count; i++)
+                {
+                    if (physEntList[i].radialMenuFollows)
                     {
-                        SetRadialMenuPos(mState.Position.X, mState.Position.Y);
-                        bool ent = false;
-                        for (int i = 0; i < physEntList.Count; i++)
+                        SetRadialMenuPos(physEntList[i].pos.X, physEntList[i].pos.Y);
+                    }
+                }
+
+                if (mouseClicked == false)
+                {
+                    if (mState.LeftButton == ButtonState.Pressed)
+                    {
+                        mouseClicked = true;
+
+                        /*
+                         * 
+                         * Order:
+                         * Menu
+                         * PC Entity
+                         * NPC Entity
+                         * 
+                         * 
+                         * 
+                         * 
+                         */
+                        Rectangle r = new Rectangle(mState.Position.X, mState.Y, 1, 1);
+
+                        if (r.Intersects(resourcesPanelRect))
                         {
-                            if (!physEntList[i].playerControled) { continue; }
-                            physEntList[i].radialMenuFollows = false;
-                            if (r.Intersects(physEntList[i].hitBox))
-                            {
-                                SetRadialMenuPos(physEntList[i].pos.X, physEntList[i].pos.Y);
-                                radialMenuOn = true;
-                                radialMenuFollowing = true;
-                                physEntList[i].radialMenuFollows = true;
-
-                                selectedPhysEnt.index = i;
-                                selectedPhysEnt.entity = physEntList[i];
-                                PhysEntSelected = true;
-                                ent = true;
-                            }
+                            radialMenuOn = false;
                         }
-                        if (!ent) { PhysEntSelected = false; }
-                        radialMenuOn = true;
+                        else if (r.Intersects(selectedEntityPanelRect))
+                        {
+                            radialMenuOn = false;
+                        }
+                        else if (r.Intersects(GroupButtonsRect))
+                        {
+                            radialMenuOn = false;
+                        }
+                        else if (r.Intersects(MenuButtonRect))
+                        {
+
+                        }
+
+                        else
+                        {
+                            SetRadialMenuPos(mState.Position.X, mState.Position.Y);
+                            bool ent = false;
+                            for (int i = 0; i < physEntList.Count; i++)
+                            {
+                                if (!physEntList[i].playerControled) { continue; }
+                                physEntList[i].radialMenuFollows = false;
+                                if (r.Intersects(physEntList[i].hitBox))
+                                {
+                                    SetRadialMenuPos(physEntList[i].pos.X, physEntList[i].pos.Y);
+                                    radialMenuOn = true;
+                                    radialMenuFollowing = true;
+                                    physEntList[i].radialMenuFollows = true;
+
+                                    selectedPhysEnt.index = i;
+                                    selectedPhysEnt.entity = physEntList[i];
+                                    PhysEntSelected = true;
+                                    ent = true;
+                                }
+                            }
+                            if (!ent) { PhysEntSelected = false; }
+                            radialMenuOn = true;
+                        }
+
                     }
-
                 }
-            }
-            else
-            {
-                if(mState.LeftButton == ButtonState.Released)
+                else
                 {
-                    mouseClicked = false;
+                    if (mState.LeftButton == ButtonState.Released)
+                    {
+                        mouseClicked = false;
+                    }
                 }
-            }
 
-            #endregion
+                #endregion
 
-            #region spawn asteroids
+                #region spawn asteroids
 
-            //lane1SpawnCounter += gameTime.ElapsedGameTime.TotalSeconds;
-            ////roughly every 3 seconds
-            //if(lane1SpawnCounter > 3)
-            //{
-            //    lane1SpawnCounter = 0;
-            //    SpawnAsteroid(1);
-            //}
+                //lane1SpawnCounter += gameTime.ElapsedGameTime.TotalSeconds;
+                ////roughly every 3 seconds
+                //if(lane1SpawnCounter > 3)
+                //{
+                //    lane1SpawnCounter = 0;
+                //    SpawnAsteroid(1);
+                //}
 
-            #endregion
+                #endregion
 
-            #region remove entities outside box
+                #region remove entities outside box
 
-            for(int i = 0; i < physEntList.Count; i++)
-            {
-                if(physEntList[i].pos.Y < -75)
+                for (int i = 0; i < physEntList.Count; i++)
                 {
-                    physEntList.RemoveAt(i);
-                    i--;
+                    if (physEntList[i].pos.Y < -75)
+                    {
+                        physEntList.RemoveAt(i);
+                        i--;
+                    }
                 }
+
+                #endregion
+
+                if (physEntList.Count > 0)
+                {
+                    dV1 = physEntList[0].theta;
+                    dV2 = physEntList[0].posDot.X;
+                    dV3 = physEntList[0].posDotDot.X;
+                    dV4 = physEntList[0].health;
+                }
+
+                //mState.
+
+
+
+                ballPos.X = Math.Min(Math.Max(textureBall.Width / 2, ballPos.X), graphics.PreferredBackBufferWidth - textureBall.Width / 2);
+                ballPos.Y = Math.Min(Math.Max(textureBall.Height / 2, ballPos.Y), graphics.PreferredBackBufferHeight - textureBall.Height / 2);
+
+
+                //Mining
+
+                ScanForCollisions(gameTime);
+
+                for (int i = 0; i < physEntList.Count; i++)
+                {
+                    physEntList[i].Update(gameTime);
+                }
+
+                base.Update(gameTime);
             }
-
-            #endregion
-
-            if (physEntList.Count > 0)
+            else if (gameState == 3)
             {
-                dV1 = physEntList[0].theta;
-                dV2 = physEntList[0].posDot.X;
-                dV3 = physEntList[0].posDotDot.X;
-                dV4 = physEntList[0].health;
+
             }
-
-            //mState.
-
-
-
-            ballPos.X = Math.Min(Math.Max(textureBall.Width / 2, ballPos.X), graphics.PreferredBackBufferWidth - textureBall.Width / 2);
-            ballPos.Y = Math.Min(Math.Max(textureBall.Height / 2, ballPos.Y), graphics.PreferredBackBufferHeight - textureBall.Height / 2);
-
-            
-            //Mining
-            
-            ScanForCollisions(gameTime);
-
-            for(int i = 0; i < physEntList.Count; i++)
+            else if (gameState == 4)
             {
-                physEntList[i].Update(gameTime);
-            }
 
-            base.Update(gameTime);
+            }
+            
         }
 
 
@@ -393,85 +441,105 @@ namespace CrossPlatformDesktopProject
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-            spriteBatch.Begin();
-
-            //spriteBatch.DrawString(font, displayValue.ToString(), new Vector2(200, -200), Color.Black);
-            //spriteBatch.DrawString(font, "test", new Vector2(200, 100), Color.Black);
-            spriteBatch.DrawString(font, "Theta: " + dV1.ToString(), new Vector2(200, 100), Color.Black);
-            spriteBatch.DrawString(font, dV2.ToString(), new Vector2(200, 120), Color.Black);
-            spriteBatch.DrawString(font, dV3.ToString(), new Vector2(200, 140), Color.Black);
-            spriteBatch.DrawString(font, dV4.ToString(), new Vector2(200, 160), Color.Black);
-            //spriteBatch.Draw(textureBall, ballPos, Color.White);
-            spriteBatch.Draw(textureBall,
-                ballPos,
-                null,
-                Color.White,
-                0f,
-                new Vector2(textureBall.Width / 2, textureBall.Height / 2),
-                Vector2.One,
-                SpriteEffects.None,
-                0f
-                );
-
-            
-
-            if (physEntList.Count > 0)
+            if (gameState == 0)
             {
-                for (int i = 0; i < physEntList.Count; i++)
+
+            }
+            else if (gameState == 1)
+            {
+
+            }
+            else if(gameState == 2)
+            {
+                GraphicsDevice.Clear(Color.CornflowerBlue);
+
+                // TODO: Add your drawing code here
+                spriteBatch.Begin();
+
+                //spriteBatch.DrawString(font, displayValue.ToString(), new Vector2(200, -200), Color.Black);
+                //spriteBatch.DrawString(font, "test", new Vector2(200, 100), Color.Black);
+                spriteBatch.DrawString(font, "Theta: " + dV1.ToString(), new Vector2(200, 100), Color.Black);
+                spriteBatch.DrawString(font, dV2.ToString(), new Vector2(200, 120), Color.Black);
+                spriteBatch.DrawString(font, dV3.ToString(), new Vector2(200, 140), Color.Black);
+                spriteBatch.DrawString(font, dV4.ToString(), new Vector2(200, 160), Color.Black);
+                //spriteBatch.Draw(textureBall, ballPos, Color.White);
+                spriteBatch.Draw(textureBall,
+                    ballPos,
+                    null,
+                    Color.White,
+                    0f,
+                    new Vector2(textureBall.Width / 2, textureBall.Height / 2),
+                    Vector2.One,
+                    SpriteEffects.None,
+                    0f
+                    );
+
+
+
+                if (physEntList.Count > 0)
                 {
-                    //physEntList[i]
+                    for (int i = 0; i < physEntList.Count; i++)
+                    {
+                        //physEntList[i]
+                        spriteBatch.Draw(
+                            textureBall,
+                            physEntList[i].hitBox,
+                            Color.White
+                            );
+                    }
+                }
+
+                if (radialMenuOn)
+                {
                     spriteBatch.Draw(
-                        textureBall,
-                        physEntList[i].hitBox,
+                        textureRadialMenu,
+                        radialMenuRect,
                         Color.White
                         );
                 }
-            }
 
-            if (radialMenuOn)
-            {
+
+                #region UI
+
                 spriteBatch.Draw(
-                    textureRadialMenu,
-                    radialMenuRect,
+                    resourcesPanel.texture,
+                    resourcesPanel.box,
                     Color.White
                     );
-            }
+                spriteBatch.Draw(selectedEntityPanel.texture, selectedEntityPanel.box, Color.White);
+                //if
+                if (firstInitDraw)
+                {
+                    selectedEntityPanel.AddRelControl(
+                    new UIControl(
+                        new Vector2((float)25, 10), new Vector2(25, 25), selectedPhysEnt.entity.texture));
+                }
 
+                if (PhysEntSelected)
+                {
+                    selectedEntityPanel.controls[0].texture = selectedPhysEnt.entity.texture;
+                    spriteBatch.Draw(selectedEntityPanel.controls[0].texture,
+                                selectedEntityPanel.controls[0].box,
+                                Color.White);
+                }
 
-            #region UI
+                //spriteBatch.Draw(textureBall, new Rectangle(new Point(selectedEntityPanel.box.X, selectedEntityPanel.box.Y), new Point(10, 10)), Color.White);
 
-            spriteBatch.Draw(
-                resourcesPanel.texture,
-                resourcesPanel.box,
-                Color.White
-                );
-            spriteBatch.Draw(selectedEntityPanel.texture, selectedEntityPanel.box, Color.White);
-            //if
-            if (firstInitDraw)
-            {
-                selectedEntityPanel.AddRelControl(
-                new UIControl(
-                    new Vector2((float)25, 10), new Vector2(25, 25), selectedPhysEnt.entity.texture));
+                #endregion
+
+                spriteBatch.End();
+
+                base.Draw(gameTime);
             }
             
-            if (PhysEntSelected)
+            else if (gameState == 3)
             {
-                selectedEntityPanel.controls[0].texture = selectedPhysEnt.entity.texture;
-                spriteBatch.Draw(selectedEntityPanel.controls[0].texture,
-                            selectedEntityPanel.controls[0].box,
-                            Color.White);
+
             }
-            
-            //spriteBatch.Draw(textureBall, new Rectangle(new Point(selectedEntityPanel.box.X, selectedEntityPanel.box.Y), new Point(10, 10)), Color.White);
-
-            #endregion
-
-            spriteBatch.End();
-
-            base.Draw(gameTime);
+            else if (gameState == 4)
+            {
+                
+            }
         }
 
         public Vector2 PosFromVelocity(double[] pos, double[] posDot, GameTime gametime)
