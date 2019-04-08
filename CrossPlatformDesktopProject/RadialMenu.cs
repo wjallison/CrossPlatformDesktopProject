@@ -13,6 +13,7 @@ namespace CrossPlatformDesktopProject
     public class RadialMenu
     {
         public bool isFollowing = false;
+        public int followingIndex = 0;
         public bool isOn = false;
         public Vector2 center = new Vector2(0, 0);
         public Rectangle drawBox = new Rectangle(new Point(-50, -50), new Point(100, 100));
@@ -36,7 +37,7 @@ namespace CrossPlatformDesktopProject
             for(int i = 0; i < 5; i++)
             {
                 buttonRectangles[i] = new Rectangle(
-                    new Point((int)(100 * Math.Cos(90 - i * 18)), (int)(100 * Math.Sin(90 - i * 18))),
+                    new Point((int)(60 * Math.Cos(90 - i * 18)), (int)(60 * Math.Sin(90 - i * 18))),
                     new Point(50, 50)
                     );
                 buttons[0] = new RadialButton(buttonRectangles[i], textures[i]);
@@ -44,7 +45,31 @@ namespace CrossPlatformDesktopProject
         }
 
         //public void Update
+        //public void UpdateToSpace
+        public void UpdateOff()
+        {
+            isFollowing = false;
+            isOn = false;
+        }
 
+        public void UpdateSpace(Vector2 pt)
+        {
+            isFollowing = false;
+            isOn = true;
+
+            Center(pt);
+            //ButtonsSpatial();
+        }
+
+        public void UpdateAsteroid(Asteroid a, int ind)
+        {
+            isFollowing = true;
+            isOn = true;
+            followingIndex = ind;
+
+            Center(a.pos);
+            //ButtonsSpatial();
+        }
         public void Update(PhysEntity selected, Clickable focus = null)
         {
             switch (focus.type)
@@ -53,6 +78,25 @@ namespace CrossPlatformDesktopProject
 
                     break;
 
+            }
+        }
+
+        public void Center(Vector2 pt)
+        {
+            center = pt;
+            drawBox.Location = new Point((int)center.X, (int)center.Y);
+            ButtonsSpatial();
+        }
+        public void ButtonsSpatial()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                buttonRectangles[i] = new Rectangle(
+                    new Point((int)(60 * Math.Cos(90 - i * 18)) + (int)center.X, 
+                    (int)center.Y + (int)(60 * Math.Sin(90 - i * 18))),
+                    new Point(50, 50)
+                    );
+                buttons[0].box = buttonRectangles[i];
             }
         }
     }

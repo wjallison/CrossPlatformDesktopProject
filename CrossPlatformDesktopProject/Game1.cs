@@ -12,7 +12,8 @@ namespace CrossPlatformDesktopProject
     public class Game1 : Game
     {
         Texture2D textureBall, textureRadialMenu, textureBoundingBox,
-            textureGoToButton, textureAttackButton, textureHarpoonButton, textureDockButton, textureGatherButton;
+            textureGoToButton, textureAttackButton, textureHarpoonButton, textureDockButton, textureGatherButton,
+            textureBlackLine;
 
         UIItem resourcesPanel, selectedEntityPanel, menuButtonPanel, groupButtonsPanel;
 
@@ -32,6 +33,8 @@ namespace CrossPlatformDesktopProject
         bool radialMenuFollowing = false;
         Vector2 radialMenuPos;
         Rectangle radialMenuRect;
+
+        RadialMenu radial;
 
         enum GameState
         {
@@ -145,7 +148,18 @@ namespace CrossPlatformDesktopProject
 
             #endregion
 
+            textureBlackLine = new Texture2D(GraphicsDevice, 1, 1);
+            textureBlackLine.SetData<Color>(new Color[] { Color.Black });
+
             font = Content.Load<SpriteFont>("Font");
+
+            resourcesPanel = new UIItem(resourcesPanelRect, textureBoundingBox);
+            selectedEntityPanel = new UIItem(selectedEntityPanelRect, textureBoundingBox);
+
+            //Load Radial Menu
+            Texture2D[] textures = new Texture2D[] {textureGoToButton,textureAttackButton,
+            textureGatherButton,textureHarpoonButton,textureDockButton};
+            radial = new RadialMenu(textures);
         }
 
         /// <summary>
@@ -184,17 +198,19 @@ namespace CrossPlatformDesktopProject
             }
             else if (gameState == 2)
             {
-                if (firstInitUpdate)
-                {
-                    resourcesPanel = new UIItem(resourcesPanelRect, textureBoundingBox);
-                    selectedEntityPanel = new UIItem(selectedEntityPanelRect, textureBoundingBox);
+                //if (firstInitUpdate)
+                //{
+                //    //resourcesPanel = new UIItem(resourcesPanelRect, textureBoundingBox);
+                //    //selectedEntityPanel = new UIItem(selectedEntityPanelRect, textureBoundingBox);
 
-                    firstInitUpdate = false;
-                }
+                //    firstInitUpdate = false;
+                //}
                 if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                     Exit();
 
                 // TODO: Add your update logic here
+
+                #region Debug commands
 
                 var kstate = Keyboard.GetState();
 
@@ -286,8 +302,7 @@ namespace CrossPlatformDesktopProject
                 }
                 #endregion
 
-                #region click actions
-                var mState = Mouse.GetState();
+                #endregion
 
                 for (int i = 0; i < physEntList.Count; i++)
                 {
@@ -297,23 +312,15 @@ namespace CrossPlatformDesktopProject
                     }
                 }
 
+                #region click actions
+                var mState = Mouse.GetState();                
+
                 if (mouseClicked == false)
                 {
                     if (mState.LeftButton == ButtonState.Pressed)
                     {
                         mouseClicked = true;
 
-                        /*
-                         * 
-                         * Order:
-                         * Menu
-                         * PC Entity
-                         * NPC Entity
-                         * 
-                         * 
-                         * 
-                         * 
-                         */
                         Rectangle r = new Rectangle(mState.Position.X, mState.Y, 1, 1);
 
                         if (r.Intersects(resourcesPanelRect))
@@ -474,7 +481,7 @@ namespace CrossPlatformDesktopProject
                     0f
                     );
 
-
+                //spriteBatch.
 
                 if (physEntList.Count > 0)
                 {
@@ -725,10 +732,10 @@ namespace CrossPlatformDesktopProject
             return ret;
         }
 
-        public void SpawnAsteroid()
-        {
-            //physEntList.Add(new Asteroid(1, 50, "01", 50,50, 1,1));
-        }
+        //public void SpawnAsteroid()
+        //{
+        //    //physEntList.Add(new Asteroid(1, 50, "01", 50,50, 1,1));
+        //}
 
         public void SetRadialMenuPos(double x, double y)
         {
@@ -790,6 +797,33 @@ namespace CrossPlatformDesktopProject
                         );
 
             physEntList.Add(newAsteroid);
+        }
+
+        public void DrawRadial()
+        {
+
+        }
+
+        public void DrawLine(SpriteBatch sb, Vector2 start, Vector2 end)
+        {
+            Vector2 edge = end - start;
+            // calculate angle to rotate line
+            float angle =
+                (float)Math.Atan2(edge.Y, edge.X);
+
+
+            sb.Draw(textureBlackLine,
+                new Rectangle(// rectangle defines shape of line and position of start of line
+                    (int)start.X,
+                    (int)start.Y,
+                    (int)edge.Length(), //sb will strech the texture to fill this rectangle
+                    1), //width of line, change this to make thicker line
+                null,
+                Color.Red, //colour of line
+                angle,     //angle of line (calulated above)
+                new Vector2(0, 0), // point in line about which to rotate
+                SpriteEffects.None,
+                0);
         }
     }
 }
