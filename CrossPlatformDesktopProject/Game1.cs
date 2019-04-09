@@ -312,18 +312,18 @@ namespace CrossPlatformDesktopProject
                         temp1 = false;
                     }
                 }
-                if (kstate.IsKeyDown(Keys.NumPad8))
-                {
-                    if (!temp1 && temp2)
-                    {
+                //if (kstate.IsKeyDown(Keys.NumPad8))
+                //{
+                //    if (!temp1 && temp2)
+                //    {
 
-                        Drone d = (Drone)physEntList[1];
-                        //d.UpdateTarget(new Vector2(300, 150));
-                        d.GoTo(physEntList[0]);
-                        physEntList[1] = d;
-                        temp2 = false;
-                    }
-                }
+                //        Drone d = (Drone)physEntList[1];
+                //        //d.UpdateTarget(new Vector2(300, 150));
+                //        d.GoTo(physEntList[0]);
+                //        physEntList[1] = d;
+                //        temp2 = false;
+                //    }
+                //}
 
                 ballAngle += 0.01f;
                 #endregion
@@ -400,7 +400,15 @@ namespace CrossPlatformDesktopProject
                                 {
                                     radial.Follow(physEntList[i], i);
 
+                                    
+
                                     bool[] s = new bool[] { true, false, true, false, true, false };
+
+                                    if (physEntList[i].playerControled)
+                                    {
+                                        s[5] = true;
+                                    }
+
                                     radial.SetState(s);
                                     //physEntList[i].radialMenuFollows = true;
                                     break;
@@ -445,7 +453,14 @@ namespace CrossPlatformDesktopProject
                     if (physEntList[i].pos.Y < -75)
                     {
                         physEntList.RemoveAt(i);
-                        i--;
+                        if (radial.isFollowing)
+                        {
+                            if(radial.followingIndex > i)
+                            {
+                                radial.followingIndex--;
+                            }
+                        }
+                        i--;                        
                     }
                 }
 
@@ -618,7 +633,7 @@ namespace CrossPlatformDesktopProject
                         spriteBatch.Draw(radial.buttons[i].textureDisabled, radial.buttons[i].box, Color.White);
                     }
                 }
-                if (radial.switchToAvaliable)
+                if (radial.SwitchButton.enabled)
                 {
                     spriteBatch.Draw(radial.SwitchButton.textureEnabled, radial.SwitchButton.box, Color.White);
                 }
@@ -627,10 +642,20 @@ namespace CrossPlatformDesktopProject
 
         public void IssueCommand(int command)
         {
+            Drone d = (Drone)physEntList[selectedEntIndex];
+            //d.ReceiveOrder(command)
+
             switch (command)
             {
                 case 0:
-                    
+                    if (radial.isFollowing)
+                    {
+                        d.ReceiveOrder(0, new Vector2(0, 0), physEntList[radial.followingIndex], radial.followingIndex);
+                    }
+                    else
+                    {
+                        d.ReceiveOrder(0, radial.center);
+                    }
                     break;
                 case 1:
                     break;

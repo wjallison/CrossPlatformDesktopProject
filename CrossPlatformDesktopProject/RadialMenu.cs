@@ -145,6 +145,7 @@ namespace CrossPlatformDesktopProject
                     );
                 buttons[i].box = buttonRectangles[i];
             }
+            SwitchButton.box = new Rectangle(new Point((int)(center.X - 25), (int)(center.Y - 25)), new Point(50, 50));
         }
     }
 

@@ -221,37 +221,38 @@ namespace CrossPlatformDesktopProject
         //    mine = 2,
         //    gather = 3
         //}
-            switch (orderState)
-            {
-                case 0:
-                    if(home != null)
-                    {
-                        ApproachPt(home.pos);
-                        //Approach(ref p);
-                    }
-                    else { UpdateTarget(pos); }
-                    break;
-                case 1:
+            //switch (orderState)
+            //{
+            //    case 0:
+            //        if(home != null)
+            //        {
+            //            ApproachPt(home.pos);
+            //            //Approach(ref p);
+            //        }
+            //        else { UpdateTarget(pos); }
+            //        break;
+            //    case 1:
 
-                    break;
-                case 2:
+            //        break;
+            //    case 2:
 
-                    break;
-            }
+            //        break;
+            //}
 
             if (approaching)
             {
-                Approach(ref targetPhysEnt);
+                Approach(targetPhysEnt, targetIndex);
             }
             TargetUpdate();
         }
 
-        public void Approach(ref PhysEntity target)
+        public void Approach(PhysEntity target, int ind)
         {
             float x = (float)((target.pos.X - pos.X) / (target.pos - pos).Length() * (target.diam / 2 + 50));
             float y = (float)((target.pos.Y - pos.Y) / (target.pos - pos).Length() * (target.diam / 2 + 50));
 
             targetPhysEnt = target;
+            targetIndex = ind;
             UpdateTarget(new Vector2(x, y));
         }
         public void ApproachPt(Vector2 pt)
@@ -268,9 +269,9 @@ namespace CrossPlatformDesktopProject
         }
 
         #region Orders
-        public void Mine(PhysEntity target)
+        public void Mine(PhysEntity target, int ind)
         {
-            Approach(ref target);
+            Approach(target, ind);
             approaching = true;
             miningEnabled = true;
             dockingEnabled = false;
@@ -283,14 +284,14 @@ namespace CrossPlatformDesktopProject
             dockingEnabled = false;
             approaching = false;
         }
-        public void GoTo(PhysEntity a)
-        {
-            Approach(ref a);
+        //public void GoTo(PhysEntity a)
+        //{
+        //    Approach(a);
 
-            miningEnabled = false;
-            dockingEnabled = false;
-            approaching = true;
-        }
+        //    miningEnabled = false;
+        //    dockingEnabled = false;
+        //    approaching = true;
+        //}
 
         public void GoHome()
         {
@@ -298,6 +299,27 @@ namespace CrossPlatformDesktopProject
             dockingEnabled = true;
             miningEnabled = false;
             approaching = false;
+        }
+
+        public void ReceiveOrder(int order, Vector2 targetPt, PhysEntity targetEnt = null, int targetInd = 0)
+        {
+            //orderState 
+            switch (order)
+            {
+                case 0:
+                    if(targetEnt != null)
+                    {
+                        Approach(targetEnt, targetInd);
+                        miningEnabled = false;
+                        dockingEnabled = false;
+                        approaching = true;
+                    }
+                    else
+                    {
+                        ApproachPt(targetPt);
+                    }
+                    break;
+            }
         }
 
         #endregion
