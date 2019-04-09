@@ -18,12 +18,10 @@ namespace CrossPlatformDesktopProject
         public double maxShield;
         public double shield;
         public double baseDamage;
-        public bool miningEnabled = false;
-        public bool dockingEnabled = false;
-        public bool approaching = false;
+        
         public double range = 75;
 
-        public PhysEntity targetPhysEnt;
+        
 
         public int physEntListTargetIndex;
 
@@ -31,13 +29,37 @@ namespace CrossPlatformDesktopProject
 
         public double thetaDotDotMax = 10;
 
+        
+
+        //private double thrust;
+
+        public int[] resources = new int[15];
+
+
+        #region Orders
+
+        public PhysEntity targetPhysEnt;
+        public int targetIndex;
+        public bool miningEnabled = false;
+        public bool dockingEnabled = false;
+        public bool approaching = false;
         public bool targetSet = false;
         public Vector2 target;
         public Vector2 relTarget = new Vector2(0, 0);
 
-        private double thrust;
+        public enum OrderState
+        {
+            none = 0,
+            goTo = 1,
+            mine = 2,
+            gather = 3
+        }
+        public int orderState = 0;
 
-        public int[] resources = new int[15];
+
+
+
+        #endregion
 
 
         //public Drone() { }
@@ -192,6 +214,31 @@ namespace CrossPlatformDesktopProject
 
         public override void individualUpdate()
         {
+        //    public enum OrderState
+        //{
+        //    none = 0,
+        //    goTo = 1,
+        //    mine = 2,
+        //    gather = 3
+        //}
+            switch (orderState)
+            {
+                case 0:
+                    if(home != null)
+                    {
+                        ApproachPt(home.pos);
+                        //Approach(ref p);
+                    }
+                    else { UpdateTarget(pos); }
+                    break;
+                case 1:
+
+                    break;
+                case 2:
+
+                    break;
+            }
+
             if (approaching)
             {
                 Approach(ref targetPhysEnt);
@@ -207,14 +254,18 @@ namespace CrossPlatformDesktopProject
             targetPhysEnt = target;
             UpdateTarget(new Vector2(x, y));
         }
+        public void ApproachPt(Vector2 pt)
+        {
+            float x = (float)((pt.X - pos.X) / (pt - pos).Length() * (50));
+            float y = (float)((pt.Y - pos.Y) / (pt - pos).Length() * (50));
+
+            UpdateTarget(new Vector2(x, y));
+        }
 
         public double DealDamage()
         {
             return baseDamage;
         }
-
-
-
 
         #region Orders
         public void Mine(PhysEntity target)

@@ -19,6 +19,7 @@ namespace CrossPlatformDesktopProject
 
         Vector2 ballPos;
         float ballSpeed;
+        float ballAngle = 0;
 
         double lane1SpawnCounter = 0;
 
@@ -44,6 +45,8 @@ namespace CrossPlatformDesktopProject
             Paused = 3,
             SubMenuPaused = 4
         }
+
+
 
         int gameState = 2;
 
@@ -79,6 +82,8 @@ namespace CrossPlatformDesktopProject
         public List<PhysEntity> physEntList = new List<PhysEntity>();
         public List<Object> asteroidList = new List<object>();
         public _selectedPhysEnt selectedPhysEnt = new _selectedPhysEnt(0, new PhysEntity());
+        public int selectedEntIndex;
+        //public List<int> selectedEntIndices = new List<int>();
         public bool PhysEntSelected = false;
 
         GraphicsDeviceManager graphics;
@@ -138,13 +143,31 @@ namespace CrossPlatformDesktopProject
 
             #region UI Elements
             textureRadialMenu = Content.Load<Texture2D>("asteroidProject_touchMenu");
+            _globals.textures[4] = Content.Load<Texture2D>("asteroidProject_touchMenu");
             textureBoundingBox = Content.Load<Texture2D>("BoundingBox");
+            _globals.textures[11] = Content.Load<Texture2D>("BoundingBox");
 
-            textureGoToButton = Content.Load<Texture2D>("Goto");
-            textureAttackButton = Content.Load<Texture2D>("Attack");
-            textureGatherButton = Content.Load<Texture2D>("Harvest");
-            textureHarpoonButton = Content.Load<Texture2D>("harpoon");
-            textureDockButton = Content.Load<Texture2D>("dock");
+            //textureGoToButton = Content.Load<Texture2D>("Goto");
+            //textureAttackButton = Content.Load<Texture2D>("Attack");
+            //textureGatherButton = Content.Load<Texture2D>("Harvest");
+            //textureHarpoonButton = Content.Load<Texture2D>("harpoon");
+            //textureDockButton = Content.Load<Texture2D>("dock");
+
+            _globals.textures[5] = Content.Load<Texture2D>("Goto");
+            _globals.textures[6] = Content.Load<Texture2D>("Attack");
+            _globals.textures[7] = Content.Load<Texture2D>("Harvest");
+            _globals.textures[8] = Content.Load<Texture2D>("harpoon");
+            _globals.textures[9] = Content.Load<Texture2D>("dock");
+
+            _globals.textures[10] = Content.Load<Texture2D>("switch");
+
+            _globals.textures[12] = Content.Load<Texture2D>("GotoDis");
+            _globals.textures[13] = Content.Load<Texture2D>("AttackDis");
+            _globals.textures[14] = Content.Load<Texture2D>("HarvestDis");
+            _globals.textures[15] = Content.Load<Texture2D>("harpoonDis");
+            _globals.textures[16] = Content.Load<Texture2D>("dockDis");
+
+            _globals.textures[17] = Content.Load<Texture2D>("switchDis");
 
             #endregion
 
@@ -157,9 +180,10 @@ namespace CrossPlatformDesktopProject
             selectedEntityPanel = new UIItem(selectedEntityPanelRect, textureBoundingBox);
 
             //Load Radial Menu
-            Texture2D[] textures = new Texture2D[] {textureGoToButton,textureAttackButton,
-            textureGatherButton,textureHarpoonButton,textureDockButton};
-            radial = new RadialMenu(textures);
+            //Texture2D[] textures = new Texture2D[] {textureGoToButton,textureAttackButton,
+            //textureGatherButton,textureHarpoonButton,textureDockButton};
+            //radial = new RadialMenu(textures);
+            radial = new RadialMenu();
         }
 
         /// <summary>
@@ -300,17 +324,26 @@ namespace CrossPlatformDesktopProject
                         temp2 = false;
                     }
                 }
+
+                ballAngle += 0.01f;
                 #endregion
 
                 #endregion
 
-                for (int i = 0; i < physEntList.Count; i++)
+
+                if (radial.isFollowing)
                 {
-                    if (physEntList[i].radialMenuFollows)
-                    {
-                        SetRadialMenuPos(physEntList[i].pos.X, physEntList[i].pos.Y);
-                    }
+                    //for (int i = 0; i < physEntList.Count; i++)
+                    //{
+                    //    if (physEntList[i].radialMenuFollows)
+                    //    {
+                    //        SetRadialMenuPos(physEntList[i].pos.X, physEntList[i].pos.Y);
+                    //    }
+                    //}
+                    //SetRadialMenuPos
+                    radial.Update(physEntList[radial.followingIndex]);
                 }
+                
 
                 #region click actions
                 var mState = Mouse.GetState();                
@@ -323,46 +356,91 @@ namespace CrossPlatformDesktopProject
 
                         Rectangle r = new Rectangle(mState.Position.X, mState.Y, 1, 1);
 
-                        if (r.Intersects(resourcesPanelRect))
+                        if (r.Intersects(radial.drawBox))
+                        {
+                            for(int i = 0; i < radial.buttons.Length; i++)
+                            {
+                                if (radial.buttons[i].enabled)
+                                {
+                                    if (r.Intersects(radial.buttons[i].box))
+                                    {
+                                        IssueCommand(i);
+                                    }
+                                }
+                            }
+                            if (radial.switchToAvaliable)
+                            {
+                                if (r.Intersects(radial.SwitchButton.box))
+                                {
+
+                                }
+                            }
+                        }
+                        else if (r.Intersects(resourcesPanelRect))
                         {
                             radialMenuOn = false;
+                            radial.Off();
                         }
                         else if (r.Intersects(selectedEntityPanelRect))
                         {
                             radialMenuOn = false;
+                            radial.Off();
                         }
                         else if (r.Intersects(GroupButtonsRect))
                         {
                             radialMenuOn = false;
+                            radial.Off();
                         }
                         else if (r.Intersects(MenuButtonRect))
                         {
-
+                            radial.Off();
                         }
 
                         else
                         {
-                            SetRadialMenuPos(mState.Position.X, mState.Position.Y);
-                            bool ent = false;
+                            //radial.isOn = true;
+                            radial.isFollowing = false;
                             for (int i = 0; i < physEntList.Count; i++)
                             {
-                                if (!physEntList[i].playerControled) { continue; }
-                                physEntList[i].radialMenuFollows = false;
                                 if (r.Intersects(physEntList[i].hitBox))
                                 {
-                                    SetRadialMenuPos(physEntList[i].pos.X, physEntList[i].pos.Y);
-                                    radialMenuOn = true;
-                                    radialMenuFollowing = true;
-                                    physEntList[i].radialMenuFollows = true;
+                                    radial.Follow(physEntList[i], i);
 
-                                    selectedPhysEnt.index = i;
-                                    selectedPhysEnt.entity = physEntList[i];
-                                    PhysEntSelected = true;
-                                    ent = true;
+                                    bool[] s = new bool[] { true, false, true, false, true, false };
+                                    radial.SetState(s);
+                                    //physEntList[i].radialMenuFollows = true;
+                                    break;
                                 }
                             }
-                            if (!ent) { PhysEntSelected = false; }
-                            radialMenuOn = true;
+                            if (!radial.isFollowing)
+                            {
+                                radial.UpdateSpace(new Vector2((float)mState.Position.X, (float)mState.Position.Y));
+                                bool[] s = new bool[] { true, false, true, false, true, false };
+                                radial.SetState(s);
+                            }
+                            ////radial
+
+                            //SetRadialMenuPos(mState.Position.X, mState.Position.Y);
+                            //bool ent = false;
+                            //for (int i = 0; i < physEntList.Count; i++)
+                            //{
+                            //    if (!physEntList[i].playerControled) { continue; }
+                            //    physEntList[i].radialMenuFollows = false;
+                            //    if (r.Intersects(physEntList[i].hitBox))
+                            //    {
+                            //        SetRadialMenuPos(physEntList[i].pos.X, physEntList[i].pos.Y);
+                            //        radialMenuOn = true;
+                            //        radialMenuFollowing = true;
+                            //        physEntList[i].radialMenuFollows = true;
+
+                            //        selectedPhysEnt.index = i;
+                            //        selectedPhysEnt.entity = physEntList[i];
+                            //        PhysEntSelected = true;
+                            //        ent = true;
+                            //    }
+                            //}
+                            //if (!ent) { PhysEntSelected = false; }
+                            //radialMenuOn = true;
                         }
 
                     }
@@ -474,7 +552,7 @@ namespace CrossPlatformDesktopProject
                     ballPos,
                     null,
                     Color.White,
-                    0f,
+                    ballAngle,
                     new Vector2(textureBall.Width / 2, textureBall.Height / 2),
                     Vector2.One,
                     SpriteEffects.None,
@@ -496,13 +574,15 @@ namespace CrossPlatformDesktopProject
                     }
                 }
 
-                if (radialMenuOn)
+                if (radial.isOn)
                 {
-                    spriteBatch.Draw(
-                        textureRadialMenu,
-                        radialMenuRect,
-                        Color.White
-                        );
+                    //spriteBatch.Draw(
+                    //    textureRadialMenu,
+                    //    radialMenuRect,
+                    //    Color.White
+                    //    );
+                    DrawRadialMenu();
+
                 }
 
 
@@ -534,6 +614,8 @@ namespace CrossPlatformDesktopProject
 
                 #endregion
 
+                //spriteBatch.Draw(textureBall,)
+
                 spriteBatch.End();
 
                 base.Draw(gameTime);
@@ -546,6 +628,47 @@ namespace CrossPlatformDesktopProject
             else if (gameState == 4)
             {
                 
+            }
+        }
+
+        public void DrawRadialMenu()
+        {
+            if (radial.isOn)
+            {
+                spriteBatch.Draw(radial.texture, radial.drawBox, Color.White);
+                for(int i = 0; i < 5; i++)
+                {
+                    if (radial.buttons[i].enabled)
+                    {
+                        spriteBatch.Draw(radial.buttons[i].textureEnabled, radial.buttons[i].box, Color.White);
+                    }
+                    else
+                    {
+                        spriteBatch.Draw(radial.buttons[i].textureDisabled, radial.buttons[i].box, Color.White);
+                    }
+                }
+                if (radial.switchToAvaliable)
+                {
+                    spriteBatch.Draw(radial.SwitchButton.textureEnabled, radial.SwitchButton.box, Color.White);
+                }
+            }
+        }
+
+        public void IssueCommand(int command)
+        {
+            switch (command)
+            {
+                case 0:
+                    
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
             }
         }
 
@@ -626,9 +749,10 @@ namespace CrossPlatformDesktopProject
         {
             for(int i = 0; i < physEntList.Count; i++)
             {
-                for(int j = i+1; j < physEntList.Count; j++)
+                if (!physEntList[i].solid) { continue; }
+                for (int j = i+1; j < physEntList.Count; j++)
                 {
-                    //if(())
+                    if (!physEntList[j].solid) { continue; }
                     if (physEntList[i].hitCircle.Overlaps(physEntList[j].hitCircle))
                     {
                         Vector2[] newVects = Collision(physEntList[i], physEntList[j]);
@@ -799,10 +923,6 @@ namespace CrossPlatformDesktopProject
             physEntList.Add(newAsteroid);
         }
 
-        public void DrawRadial()
-        {
-
-        }
 
         public void DrawLine(SpriteBatch sb, Vector2 start, Vector2 end)
         {

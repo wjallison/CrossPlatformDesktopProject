@@ -10,6 +10,30 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CrossPlatformDesktopProject
 {
+    //public class NonCollideEntity : Clickable
+    //{
+    //    public double diam;
+    //    public Rectangle hitBox;
+    //    //public Circle hitCircle;
+    //    public bool radialMenuFollows = false;
+    //    public bool playerControlled;
+    //    public string idNo;
+
+    //    public Texture2D texture;
+
+    //    public Vector2 pos, posDot, posDotDot, drawPos;
+
+    //    public double theta;
+    //    public double thetaDot;
+
+    //    public void Update(GameTime gameTime)
+    //    {
+
+    //    }
+
+    //    public virtual void IndividualUpdate(GameTime gameTime) { }
+    //}
+
     public class PhysEntity : Clickable
     {
 
@@ -126,7 +150,7 @@ namespace CrossPlatformDesktopProject
             type = "asteroid";
 
             theta = 0;
-            thetaDot = 0;
+            thetaDot = 0.01f * PlusMinusOne();
             pos = new Vector2((float)x, (float)y);
             posDot = new Vector2((float)xDot, (float)yDot);
             posDotDot = new Vector2(0, 0);
@@ -155,6 +179,54 @@ namespace CrossPlatformDesktopProject
 
             health = health - damage;
         }
+    }
+
+    //public class Debris : NonCollideEntity
+    public class Debris : PhysEntity
+    {
+        public IDictionary<string, double> content = new Dictionary<string, double>();
+        //public double diam;
+        //public Rectangle hitBox;
+        ////public Circle hitCircle;
+        //public bool radialMenuFollows = false;
+        //public bool playerControlled;
+        //public string idNo;
+
+        //public Texture2D texture;
+
+        //public Vector2 pos, posDot, posDotDot, drawPos;
+
+        public Debris(Asteroid source)
+        {
+            //Random rand = new Random();
+            solid = false;
+
+            pos = source.pos;
+            posDot = source.posDot;
+            posDot.X += (float)(5 * PlusMinusOne());
+            posDot.Y += (float)(5 * PlusMinusOne());
+
+            theta = 0;
+            thetaDot = 0.01f * PlusMinusOne();
+
+            diam = 25;
+            drawPos = new Vector2((float)(pos.X - 12.5), (float)(pos.Y - 12.5));
+            hitBox = new Rectangle(new Point((int)drawPos.X, (int)drawPos.Y),
+                new Point(25, 25));
+            playerControled = false;
+            //idNo = 
+
+            //texture = _globals.textures[1004];
+            content = source.content;
+            
+            foreach(string k in content.Keys)
+            {
+                content[k] *= .1;                
+            }
+        }
+
+
+        
     }
 
     
@@ -188,5 +260,12 @@ namespace CrossPlatformDesktopProject
     public class Clickable
     {
         public string type;
+
+        public double PlusMinusOne()
+        {
+            Random rand = new Random();
+            double d = rand.Next() * 2 - 1;
+            return d;
+        }
     }
 }

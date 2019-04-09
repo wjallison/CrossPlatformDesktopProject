@@ -19,6 +19,10 @@ namespace CrossPlatformDesktopProject
         public Rectangle drawBox = new Rectangle(new Point(-50, -50), new Point(100, 100));
         public Rectangle[] buttonRectangles = new Rectangle[5];
         public RadialButton[] buttons = new RadialButton[5];
+        public Texture2D texture;
+
+        public bool switchToAvaliable = false;
+        public RadialButton SwitchButton;
 
         //public Enum buttons { }
 
@@ -32,16 +36,40 @@ namespace CrossPlatformDesktopProject
          * 
          * 
          */
-        public RadialMenu(Texture2D[] textures)
+        //public RadialMenu(Texture2D[] textures)
+        //{
+        //    for(int i = 0; i < 5; i++)
+        //    {
+        //        buttonRectangles[i] = new Rectangle(
+        //            new Point((int)(60 * Math.Cos(90 - i * 18)), (int)(60 * Math.Sin(90 - i * 18))),
+        //            new Point(50, 50)
+        //            );
+        //        buttons[0] = new RadialButton(buttonRectangles[i], textures[i]);
+        //    }
+        //}
+        public RadialMenu()
         {
-            for(int i = 0; i < 5; i++)
+            texture = _globals.textures[4];
+            for (int i = 0; i < 5; i++)
             {
                 buttonRectangles[i] = new Rectangle(
                     new Point((int)(60 * Math.Cos(90 - i * 18)), (int)(60 * Math.Sin(90 - i * 18))),
                     new Point(50, 50)
                     );
-                buttons[0] = new RadialButton(buttonRectangles[i], textures[i]);
+                buttons[i] = new RadialButton(buttonRectangles[i], _globals.textures[i + 5], _globals.textures[i + 12]);
+
+                SwitchButton = new RadialButton(
+                    new Rectangle(new Point((int)(center.X - 25), (int)(center.Y - 25)), new Point(50, 50)),
+                    _globals.textures[10],
+                    _globals.textures[17]
+                    );
             }
+        }
+
+        public void Off()
+        {
+            isFollowing = false;
+            isOn = false;
         }
 
         //public void Update
@@ -61,6 +89,15 @@ namespace CrossPlatformDesktopProject
             //ButtonsSpatial();
         }
 
+        public void SetState(bool[] states)
+        {
+            for(int i = 0; i < 5; i++)
+            {
+                buttons[i].enabled = states[i];
+            }
+            SwitchButton.enabled = states[5];
+        }
+
         public void UpdateAsteroid(Asteroid a, int ind)
         {
             isFollowing = true;
@@ -70,15 +107,18 @@ namespace CrossPlatformDesktopProject
             Center(a.pos);
             //ButtonsSpatial();
         }
+
+        public void Follow(PhysEntity phys, int ind)
+        {
+            isFollowing = true;
+            isOn = true;
+            followingIndex = ind;
+
+            Center(phys.pos);
+        }
         public void Update(PhysEntity selected, Clickable focus = null)
         {
-            switch (focus.type)
-            {
-                case "asteroid":
-
-                    break;
-
-            }
+            center = selected.pos;
         }
 
         public void Center(Vector2 pt)
@@ -116,7 +156,7 @@ namespace CrossPlatformDesktopProject
         {
             box = r;
             textureEnabled = te;
-            //textureDisabled = td;
+            textureDisabled = td;
         }
     }
 }
