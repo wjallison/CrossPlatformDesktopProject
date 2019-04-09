@@ -333,14 +333,6 @@ namespace CrossPlatformDesktopProject
 
                 if (radial.isFollowing)
                 {
-                    //for (int i = 0; i < physEntList.Count; i++)
-                    //{
-                    //    if (physEntList[i].radialMenuFollows)
-                    //    {
-                    //        SetRadialMenuPos(physEntList[i].pos.X, physEntList[i].pos.Y);
-                    //    }
-                    //}
-                    //SetRadialMenuPos
                     radial.Update(physEntList[radial.followingIndex]);
                 }
                 
@@ -372,6 +364,8 @@ namespace CrossPlatformDesktopProject
                             {
                                 if (r.Intersects(radial.SwitchButton.box))
                                 {
+                                    selectedPhysEnt.entity = physEntList[radial.followingIndex];
+                                    selectedPhysEnt.index = radial.followingIndex;
 
                                 }
                             }
@@ -418,29 +412,6 @@ namespace CrossPlatformDesktopProject
                                 bool[] s = new bool[] { true, false, true, false, true, false };
                                 radial.SetState(s);
                             }
-                            ////radial
-
-                            //SetRadialMenuPos(mState.Position.X, mState.Position.Y);
-                            //bool ent = false;
-                            //for (int i = 0; i < physEntList.Count; i++)
-                            //{
-                            //    if (!physEntList[i].playerControled) { continue; }
-                            //    physEntList[i].radialMenuFollows = false;
-                            //    if (r.Intersects(physEntList[i].hitBox))
-                            //    {
-                            //        SetRadialMenuPos(physEntList[i].pos.X, physEntList[i].pos.Y);
-                            //        radialMenuOn = true;
-                            //        radialMenuFollowing = true;
-                            //        physEntList[i].radialMenuFollows = true;
-
-                            //        selectedPhysEnt.index = i;
-                            //        selectedPhysEnt.entity = physEntList[i];
-                            //        PhysEntSelected = true;
-                            //        ent = true;
-                            //    }
-                            //}
-                            //if (!ent) { PhysEntSelected = false; }
-                            //radialMenuOn = true;
                         }
 
                     }

@@ -20,6 +20,7 @@ namespace CrossPlatformDesktopProject
         public Rectangle[] buttonRectangles = new Rectangle[5];
         public RadialButton[] buttons = new RadialButton[5];
         public Texture2D texture;
+        public double diam = 100;
 
         public bool switchToAvaliable = false;
         public RadialButton SwitchButton;
@@ -118,25 +119,31 @@ namespace CrossPlatformDesktopProject
         }
         public void Update(PhysEntity selected, Clickable focus = null)
         {
-            center = selected.pos;
+            //center = selected.pos;
+            Center(selected.pos);
         }
 
         public void Center(Vector2 pt)
         {
             center = pt;
-            drawBox.Location = new Point((int)center.X, (int)center.Y);
+            drawBox.Location = new Point((int)center.X - (int)(diam/2), (int)center.Y - (int)(diam / 2));
             ButtonsSpatial();
         }
         public void ButtonsSpatial()
         {
             for (int i = 0; i < 5; i++)
             {
+                int xMod = (int)(60 * Math.Cos(3.14 / 180 * (90 - i * 18)));
+                int yMod = -(int)(60 * Math.Sin(3.14 / 180 * (90 - i * 18)));
+
+
                 buttonRectangles[i] = new Rectangle(
-                    new Point((int)(60 * Math.Cos(90 - i * 18)) + (int)center.X, 
-                    (int)center.Y + (int)(60 * Math.Sin(90 - i * 18))),
-                    new Point(50, 50)
+                    new Point(
+                        (int)(60 * Math.Cos(3.14/180 * (90 - i * 18))) + (int)center.X, 
+                    (int)center.Y - (int)(60 * Math.Sin(3.14 / 180 * (90 - i * 18)))),
+                    new Point(20, 20)
                     );
-                buttons[0].box = buttonRectangles[i];
+                buttons[i].box = buttonRectangles[i];
             }
         }
     }
