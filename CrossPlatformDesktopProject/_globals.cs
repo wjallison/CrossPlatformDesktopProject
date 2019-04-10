@@ -31,6 +31,7 @@ namespace CrossPlatformDesktopProject
          * 15: rb4 dis
          * 16: rb5 dis
          * 17: rb switch dis
+         * 18: laser effect
          * 
          * 
          */

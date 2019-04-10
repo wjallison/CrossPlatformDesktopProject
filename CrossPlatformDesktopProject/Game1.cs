@@ -35,6 +35,8 @@ namespace CrossPlatformDesktopProject
         Vector2 radialMenuPos;
         Rectangle radialMenuRect;
 
+        LinearEffect linear;
+
         RadialMenu radial;
 
         enum GameState
@@ -169,6 +171,8 @@ namespace CrossPlatformDesktopProject
 
             _globals.textures[17] = Content.Load<Texture2D>("switchDis");
 
+            _globals.textures[18] = Content.Load<Texture2D>("laserHomogeneous");
+
             #endregion
 
             textureBlackLine = new Texture2D(GraphicsDevice, 1, 1);
@@ -184,6 +188,12 @@ namespace CrossPlatformDesktopProject
             //textureGatherButton,textureHarpoonButton,textureDockButton};
             //radial = new RadialMenu(textures);
             radial = new RadialMenu();
+            Vector2 a, b;
+            a = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+            b = new Vector2(a.X + 200, a.Y);
+            Rectangle r = new Rectangle(new Point((int)a.X, (int)a.Y), new Point(200, 100));
+            linear = new LinearEffect(a, b);
+            linear.rect = r;
         }
 
         /// <summary>
@@ -527,6 +537,8 @@ namespace CrossPlatformDesktopProject
                 // TODO: Add your drawing code here
                 spriteBatch.Begin();
 
+                
+
                 //spriteBatch.DrawString(font, displayValue.ToString(), new Vector2(200, -200), Color.Black);
                 //spriteBatch.DrawString(font, "test", new Vector2(200, 100), Color.Black);
                 spriteBatch.DrawString(font, "Theta: " + dV1.ToString(), new Vector2(200, 100), Color.Black);
@@ -545,6 +557,56 @@ namespace CrossPlatformDesktopProject
                     0f
                     );
 
+                Vector2 offset = new Vector2(0, 0);
+                //Vector2 ob = new Vector2(textureBall.Width / 2, textureBall.Height / 2);
+                Vector2 ob = new Vector2(0, 0);
+                spriteBatch.Draw(linear.texture,
+                    linear.start + offset,
+                    //new Rectangle((int)linear.start.X, (int)linear.start.Y, 200, 100),
+                    new Rectangle(0, 0, 200, 5),
+                    //null,
+                    Color.White,
+                    (Single)(3.14/6),
+                    ob,
+                    Vector2.One,
+                    SpriteEffects.None,
+                    0f);
+                //Vector2 offset = new Vector2(0, 0);
+                spriteBatch.Draw(linear.texture,
+                    linear.start + offset,
+                    //new Rectangle((int)linear.start.X, (int)linear.start.Y, 200, 100),
+                    new Rectangle(0, 0, 200, 5),
+                    //null,
+                    Color.White,
+                    0f,
+                    ob,
+                    Vector2.One,
+                    SpriteEffects.None,
+                    0f);
+                spriteBatch.Draw(linear.texture,
+                    linear.start + offset,
+                    //new Rectangle((int)linear.start.X, (int)linear.start.Y, 200, 100),
+                    new Rectangle(0, 0, 200, 5),
+                    //null,
+                    Color.White,
+                    (Single)(3.14 / 3),
+                    ob,
+                    Vector2.One,
+                    SpriteEffects.None,
+                    0f);
+                spriteBatch.Draw(linear.texture,
+                    linear.start + offset,
+                    //new Rectangle((int)linear.start.X, (int)linear.start.Y, 200, 100),
+                    new Rectangle(0, 0, 200, 5),
+                    //null,
+                    Color.White,
+                    (Single)(3.14 / 2),
+                    ob,
+                    Vector2.One,
+                    SpriteEffects.None,
+                    0f);
+                //Rectangle r = new Rectangle()
+                //spriteBatch.Draw(linear.texture, linear.rect, Color.White);
                 //spriteBatch.
 
                 if (physEntList.Count > 0)
@@ -601,6 +663,8 @@ namespace CrossPlatformDesktopProject
                 #endregion
 
                 //spriteBatch.Draw(textureBall,)
+                
+
 
                 spriteBatch.End();
 

@@ -64,4 +64,18 @@ namespace CrossPlatformDesktopProject
             texture = _texture;
         }
     }
+
+    public class LinearEffect
+    {
+        public Vector2 start, end;
+        public Rectangle rect;
+        public Texture2D texture;
+
+        public LinearEffect(Vector2 _start, Vector2 _end)
+        {
+            start = _start;
+            end = _end;
+            texture = _globals.textures[18];
+        }
+    }
 }
