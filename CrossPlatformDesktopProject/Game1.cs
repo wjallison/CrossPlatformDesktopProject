@@ -45,7 +45,7 @@ namespace CrossPlatformDesktopProject
             Loading = 1,
             MainState = 2,
             Paused = 3,
-            SubMenuPaused = 4
+            BuildMenuPaused = 4
         }
 
 
@@ -223,7 +223,7 @@ namespace CrossPlatformDesktopProject
         //    Loading = 1,
         //    MainState = 2,
         //    Paused = 3,
-        //    SubMenuPaused = 4
+        //    GameMenuPaused = 4
         //}
 
             if(gameState == 0)
@@ -532,12 +532,18 @@ namespace CrossPlatformDesktopProject
             }
             else if (gameState == 4)
             {
-
+                
             }
             
         }
 
-
+        public Vector2 ScaleAbout(double scalar, Vector2 pt0, Vector2 center)
+        {
+            Vector2 ptPrime = center;
+            ptPrime.X = ptPrime.X + (float)(scalar * (pt0.X - center.X));
+            ptPrime.Y = ptPrime.Y + (float)(scalar * (pt0.Y - center.Y));
+            return ptPrime;
+        } 
 
         /// <summary>
         /// This is called when the game should draw itself.

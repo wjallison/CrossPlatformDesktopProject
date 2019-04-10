@@ -234,16 +234,69 @@ namespace CrossPlatformDesktopProject
     {
         public List<StationBlock> blocks = new List<StationBlock>();
 
+        public Station()
+        {
+            StationBlock core = new StationBlock();
+            blocks.Add(core);
+        }
+
+        public void AddBlock(int x, int y, string type)
+        {
+            StationBlock s = new StationBlock(x, y, type, blocks[0]);
+        }
         public void AddBlock(StationBlock s)
         {
             blocks.Add(s);
+        }
+
+        public void ScaleAllAbout(double scalar, Vector2 center)
+        {
+            for(int i = 0; i < blocks.Count; i++)
+            {
+                blocks[i].expPos = ScaleAbout(scalar, blocks[i].pos, center);
+                blocks[i].expRect = ScaleRectAbout(scalar, blocks[i].hitBox, center);
+            }
+        }
+
+        public Vector2 ScaleAbout(double scalar, Vector2 pt0, Vector2 center)
+        {
+            Vector2 ptPrime = center;
+            ptPrime.X = ptPrime.X + (float)(scalar * (pt0.X - center.X));
+            ptPrime.Y = ptPrime.Y + (float)(scalar * (pt0.Y - center.Y));
+            return ptPrime;
+        }
+        public Rectangle ScaleRectAbout(double scalar, Rectangle r0, Vector2 center)
+        {
+            Rectangle rPrime = r0;
+            rPrime.Location = new Point(
+                (int)(center.X + scalar * (rPrime.X - center.X)),
+                (int)(center.Y + scalar * (rPrime.Y - center.Y))
+                );
+            rPrime.Size = new Point((int)(scalar * rPrime.Size.X), (int)(scalar * rPrime.Size.Y));
+
+            return rPrime;
         }
     }
 
     public class StationBlock : PhysEntity
     {
         public double[] gridPos = new double[2];
-        
+        public Vector2 expPos;
+        public Rectangle expRect;
+
+        public StationBlock()
+        {
+            type = "core";
+            solid = false;
+            gridPos[0] = 0;
+            gridPos[1] = 0;
+            diam = 40;
+            //texture = 
+            //pos = new Vector2()
+            Vector2 offset = new Vector2(-20, -20);
+            drawPos = pos + offset;
+            posDot = new Vector2(0, 0);
+        }
         public StationBlock(int x, int y, string typ, StationBlock core)
         {
             type = typ;
