@@ -41,7 +41,7 @@ namespace CrossPlatformDesktopProject
         public double mass;
         public double maxHealth;
         public double health;
-        public double theta;
+        public double theta = 0;
         public double thetaDot;
         public double diam;
         public double damResist = 100; //% out of 100
@@ -242,7 +242,30 @@ namespace CrossPlatformDesktopProject
 
     public class StationBlock : PhysEntity
     {
+        public double[] gridPos = new double[2];
+        
+        public StationBlock(int x, int y, string typ, StationBlock core)
+        {
+            type = typ;
+            solid = false; // May change later
+            gridPos[0] = x;
+            gridPos[1] = y;
 
+            diam = 40;
+            switch (typ)
+            {
+                case "core":
+                    //texture = 
+                    break;
+            }
+
+            pos = new Vector2((float)(core.pos.X + diam * gridPos[0]), (float)(core.pos.Y + diam * gridPos[1]));
+            Vector2 offset = new Vector2(-20, -20);
+            drawPos = pos + offset;
+            posDot = new Vector2(0, 0);
+
+
+        }
     }
 
     public struct _selectedPhysEnt

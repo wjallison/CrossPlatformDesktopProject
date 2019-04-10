@@ -32,6 +32,9 @@ namespace CrossPlatformDesktopProject
          * 16: rb5 dis
          * 17: rb switch dis
          * 18: laser effect
+         * 19: miningDrone
+         * 20: harvestDrone
+         * 21: harpoonDrone
          * 
          * 
          */

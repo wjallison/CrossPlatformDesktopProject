@@ -173,6 +173,10 @@ namespace CrossPlatformDesktopProject
 
             _globals.textures[18] = Content.Load<Texture2D>("laserHomogeneous");
 
+            _globals.textures[19] = Content.Load<Texture2D>("miningDrone");
+            _globals.textures[20] = Content.Load<Texture2D>("harvestingDrone");
+            _globals.textures[21] = Content.Load<Texture2D>("harpoonDrone");
+
             #endregion
 
             textureBlackLine = new Texture2D(GraphicsDevice, 1, 1);
@@ -412,7 +416,26 @@ namespace CrossPlatformDesktopProject
 
                                     
 
-                                    bool[] s = new bool[] { true, false, true, false, true, false };
+                                    bool[] s = new bool[] { true, false, false, false, false, false };
+
+                                    //if(physEntList[selectedEntIndex].type == "miningDrone")
+                                    //{
+                                    //    s[1] = true;
+                                    //}
+                                    if(physEntList[i].type == "asteroid")
+                                    {
+                                        switch (physEntList[selectedEntIndex].type)
+                                        {
+                                            case "miningDrone":
+                                                s[1] = true;
+                                                break;
+                                            case "harvestingDrone":
+                                                s[2] = true;
+                                                break;
+                                        }
+                                    }
+                                    //else if(physEntList[i].type = "dockingStation")
+                                    
 
                                     if (physEntList[i].playerControled)
                                     {
@@ -427,7 +450,7 @@ namespace CrossPlatformDesktopProject
                             if (!radial.isFollowing)
                             {
                                 radial.UpdateSpace(new Vector2((float)mState.Position.X, (float)mState.Position.Y));
-                                bool[] s = new bool[] { true, false, true, false, true, false };
+                                bool[] s = new bool[] { true, false, false, false, false, false };
                                 radial.SetState(s);
                             }
                         }
