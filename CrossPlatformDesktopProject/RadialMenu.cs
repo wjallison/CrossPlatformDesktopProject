@@ -50,19 +50,18 @@ namespace CrossPlatformDesktopProject
         //}
         public RadialMenu()
         {
-            texture = _globals.textures[4];
+            texture = _globals.textures[4,0];
             for (int i = 0; i < 5; i++)
             {
                 buttonRectangles[i] = new Rectangle(
                     new Point((int)(60 * Math.Cos(90 - i * 18)), (int)(60 * Math.Sin(90 - i * 18))),
                     new Point(50, 50)
                     );
-                buttons[i] = new RadialButton(buttonRectangles[i], _globals.textures[i + 5], _globals.textures[i + 12]);
+                buttons[i] = new RadialButton(buttonRectangles[i], _globals.textures[4,i + 1], _globals.textures[4, i + 7]);
 
                 SwitchButton = new RadialButton(
                     new Rectangle(new Point((int)(center.X - 25), (int)(center.Y - 25)), new Point(50, 50)),
-                    _globals.textures[10],
-                    _globals.textures[17]
+                    _globals.textures[4,6]
                     );
             }
         }

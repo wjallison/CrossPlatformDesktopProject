@@ -234,9 +234,9 @@ namespace CrossPlatformDesktopProject
     {
         public List<StationBlock> blocks = new List<StationBlock>();
 
-        public Station()
+        public Station(Vector2 origin)
         {
-            StationBlock core = new StationBlock();
+            StationBlock core = new StationBlock(origin);
             blocks.Add(core);
         }
 
@@ -284,15 +284,15 @@ namespace CrossPlatformDesktopProject
         public Vector2 expPos;
         public Rectangle expRect;
 
-        public StationBlock()
+        public StationBlock(Vector2 stationOrigin)
         {
             type = "core";
             solid = false;
             gridPos[0] = 0;
             gridPos[1] = 0;
             diam = 40;
-            //texture = 
-            //pos = new Vector2()
+            texture = _globals.textures[2,0];
+            pos = stationOrigin;
             Vector2 offset = new Vector2(-20, -20);
             drawPos = pos + offset;
             posDot = new Vector2(0, 0);
@@ -307,8 +307,26 @@ namespace CrossPlatformDesktopProject
             diam = 40;
             switch (typ)
             {
-                case "core":
-                    //texture = 
+                case "stationDock":
+                    texture = _globals.textures[2,1];
+                    break;
+                case "stationStorage":
+
+                    break;
+                case "stationPower":
+
+                    break;
+                case "stationStructure":
+
+                    break;
+                case "stationTractor":
+
+                    break;
+                case "stationGrinder":
+
+                    break;
+                case "stationRepel":
+
                     break;
             }
 

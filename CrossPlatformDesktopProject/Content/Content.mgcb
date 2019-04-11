@@ -73,6 +73,18 @@
 /processorParam:TextureFormat=Color
 /build:BoundingBox.png
 
+#begin Core.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Core.png
+
 #begin dock.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -235,6 +247,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:miningDrone.png
+
+#begin StationDock.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:StationDock.png
 
 #begin switch.png
 /importer:TextureImporter

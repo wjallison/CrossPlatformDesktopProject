@@ -13,6 +13,7 @@ namespace CrossPlatformDesktopProject
     public static class _globals
     {
         /*
+         * OBSOLETE:
          * 0: asteroid
          * 1: drone
          * 2: testing station block
@@ -35,10 +36,41 @@ namespace CrossPlatformDesktopProject
          * 19: miningDrone
          * 20: harvestDrone
          * 21: harpoonDrone
+         * 22: Core (station core)
+         * 23: StationDock
+         * 
+         * NEW:
+         * [0,x]: asteroid
+         * 
+         * [1,0]: drone
+         * [1,1]: miningDrone
+         * [1,2]: harvestDrone
+         * [1,3]: harpoonDrone
+         * 
+         * [2,0]: Core (station core)
+         * [2,1]: StationDock
+         * 
+         * [3,x]: debris
+         * 
+         * [4,0]: radial menu
+         * [4,1]: rb 1
+         * [4,...]
+         * [4,5]: rb 5
+         * [4,6]: rb switch
+         * [4,7]: rb1 disabled
+         * [4,...]:
+         * [4,11]: rb5 disabled
+         * 
+         * [5] Effects
+         * [5,0] laser effect
+         * 
+         * [6] UI
+         * [6,0] bounding box
+         * 
          * 
          * 
          */
-        public static Texture2D[] textures = new Texture2D[30];
+        public static Texture2D[,] textures = new Texture2D[30,15];
 
         
 

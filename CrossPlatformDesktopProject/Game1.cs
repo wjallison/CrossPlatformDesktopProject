@@ -11,9 +11,8 @@ namespace CrossPlatformDesktopProject
     /// </summary>
     public class Game1 : Game
     {
-        Texture2D textureBall, textureRadialMenu, textureBoundingBox,
-            textureGoToButton, textureAttackButton, textureHarpoonButton, textureDockButton, textureGatherButton,
-            textureBlackLine;
+        Texture2D textureBall, textureBlackLine;
+        //Texture2D textureRadialMenu, textureBoundingBox, textureGoToButton, textureAttackButton, textureHarpoonButton, textureDockButton, textureGatherButton;
 
         UIItem resourcesPanel, selectedEntityPanel, menuButtonPanel, groupButtonsPanel;
 
@@ -21,7 +20,7 @@ namespace CrossPlatformDesktopProject
         float ballSpeed;
         float ballAngle = 0;
 
-        double lane1SpawnCounter = 0;
+        //double lane1SpawnCounter = 0;
 
         bool firstInitUpdate = true;
         bool firstInitDraw = true;
@@ -88,6 +87,8 @@ namespace CrossPlatformDesktopProject
         //public List<int> selectedEntIndices = new List<int>();
         public bool PhysEntSelected = false;
 
+        public Station station;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         
@@ -144,10 +145,25 @@ namespace CrossPlatformDesktopProject
             textureBall = Content.Load<Texture2D>("ball");
 
             #region UI Elements
-            textureRadialMenu = Content.Load<Texture2D>("asteroidProject_touchMenu");
-            _globals.textures[4] = Content.Load<Texture2D>("asteroidProject_touchMenu");
-            textureBoundingBox = Content.Load<Texture2D>("BoundingBox");
-            _globals.textures[11] = Content.Load<Texture2D>("BoundingBox");
+            //textureRadialMenu = Content.Load<Texture2D>("asteroidProject_touchMenu");
+            _globals.textures[4,0] = Content.Load<Texture2D>("asteroidProject_touchMenu");
+            _globals.textures[4,1] = Content.Load<Texture2D>("Goto");
+            _globals.textures[4,2] = Content.Load<Texture2D>("Attack");
+            _globals.textures[4,3] = Content.Load<Texture2D>("Harvest");
+            _globals.textures[4,4] = Content.Load<Texture2D>("harpoon");
+            _globals.textures[4,5] = Content.Load<Texture2D>("dock");
+
+            _globals.textures[4,6] = Content.Load<Texture2D>("switch");
+
+            _globals.textures[4,7] = Content.Load<Texture2D>("GotoDis");
+            _globals.textures[4,8] = Content.Load<Texture2D>("AttackDis");
+            _globals.textures[4,9] = Content.Load<Texture2D>("HarvestDis");
+            _globals.textures[4,10] = Content.Load<Texture2D>("harpoonDis");
+            _globals.textures[4,11] = Content.Load<Texture2D>("dockDis");
+            //_globals.textures[17] = Content.Load<Texture2D>("switchDis");
+
+            //textureBoundingBox = Content.Load<Texture2D>("BoundingBox");
+            _globals.textures[6,0] = Content.Load<Texture2D>("BoundingBox");
 
             //textureGoToButton = Content.Load<Texture2D>("Goto");
             //textureAttackButton = Content.Load<Texture2D>("Attack");
@@ -155,27 +171,16 @@ namespace CrossPlatformDesktopProject
             //textureHarpoonButton = Content.Load<Texture2D>("harpoon");
             //textureDockButton = Content.Load<Texture2D>("dock");
 
-            _globals.textures[5] = Content.Load<Texture2D>("Goto");
-            _globals.textures[6] = Content.Load<Texture2D>("Attack");
-            _globals.textures[7] = Content.Load<Texture2D>("Harvest");
-            _globals.textures[8] = Content.Load<Texture2D>("harpoon");
-            _globals.textures[9] = Content.Load<Texture2D>("dock");
+            
 
-            _globals.textures[10] = Content.Load<Texture2D>("switch");
+            _globals.textures[5,0] = Content.Load<Texture2D>("laserHomogeneous");
 
-            _globals.textures[12] = Content.Load<Texture2D>("GotoDis");
-            _globals.textures[13] = Content.Load<Texture2D>("AttackDis");
-            _globals.textures[14] = Content.Load<Texture2D>("HarvestDis");
-            _globals.textures[15] = Content.Load<Texture2D>("harpoonDis");
-            _globals.textures[16] = Content.Load<Texture2D>("dockDis");
+            _globals.textures[1,1] = Content.Load<Texture2D>("miningDrone");
+            _globals.textures[1,2] = Content.Load<Texture2D>("harvestingDrone");
+            _globals.textures[1,3] = Content.Load<Texture2D>("harpoonDrone");
 
-            _globals.textures[17] = Content.Load<Texture2D>("switchDis");
-
-            _globals.textures[18] = Content.Load<Texture2D>("laserHomogeneous");
-
-            _globals.textures[19] = Content.Load<Texture2D>("miningDrone");
-            _globals.textures[20] = Content.Load<Texture2D>("harvestingDrone");
-            _globals.textures[21] = Content.Load<Texture2D>("harpoonDrone");
+            _globals.textures[2,0] = Content.Load<Texture2D>("Core");
+            _globals.textures[2,1] = Content.Load<Texture2D>("StationDock");
 
             #endregion
 
@@ -184,8 +189,8 @@ namespace CrossPlatformDesktopProject
 
             font = Content.Load<SpriteFont>("Font");
 
-            resourcesPanel = new UIItem(resourcesPanelRect, textureBoundingBox);
-            selectedEntityPanel = new UIItem(selectedEntityPanelRect, textureBoundingBox);
+            resourcesPanel = new UIItem(resourcesPanelRect, _globals.textures[6,0]);
+            selectedEntityPanel = new UIItem(selectedEntityPanelRect, _globals.textures[6, 0]);
 
             //Load Radial Menu
             //Texture2D[] textures = new Texture2D[] {textureGoToButton,textureAttackButton,
@@ -198,6 +203,8 @@ namespace CrossPlatformDesktopProject
             Rectangle r = new Rectangle(new Point((int)a.X, (int)a.Y), new Point(200, 100));
             linear = new LinearEffect(a, b);
             linear.rect = r;
+
+            station = new Station(new Vector2(graphics.PreferredBackBufferWidth / 3 * 2, graphics.PreferredBackBufferHeight / 2));
         }
 
         /// <summary>

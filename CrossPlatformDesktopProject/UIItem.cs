@@ -75,7 +75,7 @@ namespace CrossPlatformDesktopProject
         {
             start = _start;
             end = _end;
-            texture = _globals.textures[18];
+            texture = _globals.textures[5,0];
         }
     }
 }
