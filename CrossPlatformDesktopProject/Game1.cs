@@ -197,6 +197,15 @@ namespace CrossPlatformDesktopProject
             //Texture2D[] textures = new Texture2D[] {textureGoToButton,textureAttackButton,
             //textureGatherButton,textureHarpoonButton,textureDockButton};
             //radial = new RadialMenu(textures);
+
+            selectedEntityPanel.AddRelControl(
+                    new UIControl(
+                        new Vector2((float)25, 10), new Vector2(25, 25), 
+                        //selectedPhysEnt.entity.texture
+                        _globals.textures[6,0]
+                        ));
+
+
             radial = new RadialMenu();
             Vector2 a, b;
             a = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
@@ -728,6 +737,7 @@ namespace CrossPlatformDesktopProject
                     }
                 }
 
+                DrawSelectedDisplay();
                 if (radial.isOn)
                 {
                     //spriteBatch.Draw(
@@ -747,22 +757,22 @@ namespace CrossPlatformDesktopProject
                     resourcesPanel.box,
                     Color.White
                     );
-                spriteBatch.Draw(selectedEntityPanel.texture, selectedEntityPanel.box, Color.White);
+                //spriteBatch.Draw(selectedEntityPanel.texture, selectedEntityPanel.box, Color.White);
                 //if
-                if (firstInitDraw)
-                {
-                    selectedEntityPanel.AddRelControl(
-                    new UIControl(
-                        new Vector2((float)25, 10), new Vector2(25, 25), selectedPhysEnt.entity.texture));
-                }
+                //if (firstInitDraw)
+                //{
+                //    selectedEntityPanel.AddRelControl(
+                //    new UIControl(
+                //        new Vector2((float)25, 10), new Vector2(25, 25), selectedPhysEnt.entity.texture));
+                //}
 
-                if (PhysEntSelected)
-                {
-                    selectedEntityPanel.controls[0].texture = selectedPhysEnt.entity.texture;
-                    spriteBatch.Draw(selectedEntityPanel.controls[0].texture,
-                                selectedEntityPanel.controls[0].box,
-                                Color.White);
-                }
+                //if (PhysEntSelected)
+                //{
+                //    selectedEntityPanel.controls[0].texture = selectedPhysEnt.entity.texture;
+                //    spriteBatch.Draw(selectedEntityPanel.controls[0].texture,
+                //                selectedEntityPanel.controls[0].box,
+                //                Color.White);
+                //}
 
                 //spriteBatch.Draw(textureBall, new Rectangle(new Point(selectedEntityPanel.box.X, selectedEntityPanel.box.Y), new Point(10, 10)), Color.White);
 
@@ -831,6 +841,24 @@ namespace CrossPlatformDesktopProject
                 }
             }
             
+        }
+
+        public void DrawSelectedDisplay()
+        {
+            spriteBatch.Draw(selectedEntityPanel.texture, selectedEntityPanel.box, Color.White);
+            //spriteBatch.DrawString(font, dV4.ToString(), new Vector2(200, 160), Color.Black);
+            if (PhysEntSelected)
+            {
+                selectedEntityPanel.controls[0].texture = selectedPhysEnt.entity.texture;
+                spriteBatch.Draw(selectedEntityPanel.controls[0].texture,
+                            selectedEntityPanel.controls[0].box,
+                            Color.White);
+                //located at 25, 10, and box is 25,25
+                //-> extends to 50,35
+
+                spriteBatch.DrawString(font, selectedPhysEnt.entity.idNo, new Vector2((float)selectedEntityPanel.box.Location.X, (float)selectedEntityPanel.box.Location.Y), Color.Black);
+            }
+
         }
 
         public void IssueCommand(int command)
