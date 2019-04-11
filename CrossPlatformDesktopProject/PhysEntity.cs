@@ -287,7 +287,7 @@ namespace CrossPlatformDesktopProject
         public bool spawnsDrones = false;
         public bool lessThanLimit = false;
         public string droneType;
-        public int numDrones = 3;
+        public int numDrones = 1;
         public List<int> droneIndList = new List<int>();
         public List<string> droneList = new List<string>();
         public int countUp = 0;

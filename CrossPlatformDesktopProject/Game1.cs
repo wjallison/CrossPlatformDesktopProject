@@ -22,15 +22,15 @@ namespace CrossPlatformDesktopProject
 
         //double lane1SpawnCounter = 0;
 
-        bool firstInitUpdate = true;
-        bool firstInitDraw = true;
+        //bool firstInitUpdate = true;
+        //bool firstInitDraw = true;
 
         bool temp1 = true;
         bool temp2 = true;
 
         bool mouseClicked = false;
-        bool radialMenuOn = false;
-        bool radialMenuFollowing = false;
+        //bool radialMenuOn = false;
+        //bool radialMenuFollowing = false;
         Vector2 radialMenuPos;
         Rectangle radialMenuRect;
 
@@ -82,9 +82,9 @@ namespace CrossPlatformDesktopProject
         public double dV1 = 0, dV2 = 0, dV3 = 0, dV4 = 0, dV5 = 0, dV6 = 0;
 
         public List<PhysEntity> physEntList = new List<PhysEntity>();
-        public List<Object> asteroidList = new List<object>();
+        //public List<Object> asteroidList = new List<object>();
         public _selectedPhysEnt selectedPhysEnt = new _selectedPhysEnt(0, new PhysEntity());
-        public int selectedEntIndex;
+        //public int selectedEntIndex;
         //public List<int> selectedEntIndices = new List<int>();
         public bool PhysEntSelected = false;
 
@@ -407,17 +407,18 @@ namespace CrossPlatformDesktopProject
                         }
                         else if (r.Intersects(resourcesPanelRect))
                         {
-                            radialMenuOn = false;
+                            //radialMenuOn = false;
+                            //radial.isOn 
                             radial.Off();
                         }
                         else if (r.Intersects(selectedEntityPanelRect))
                         {
-                            radialMenuOn = false;
+                            //radialMenuOn = false;
                             radial.Off();
                         }
                         else if (r.Intersects(GroupButtonsRect))
                         {
-                            radialMenuOn = false;
+                            //radialMenuOn = false;
                             radial.Off();
                         }
                         else if (r.Intersects(MenuButtonRect))
@@ -456,7 +457,7 @@ namespace CrossPlatformDesktopProject
                                     //}
                                     if (physEntList[i].type == "asteroid")
                                     {
-                                        switch (physEntList[selectedEntIndex].type)
+                                        switch (physEntList[selectedPhysEnt.index].type)
                                         {
                                             case "miningDrone":
                                                 s[1] = true;
@@ -730,7 +731,7 @@ namespace CrossPlatformDesktopProject
                     {
                         //physEntList[i]
                         spriteBatch.Draw(
-                            textureBall,
+                            physEntList[i].texture,
                             physEntList[i].hitBox,
                             Color.White
                             );
@@ -863,7 +864,7 @@ namespace CrossPlatformDesktopProject
 
         public void IssueCommand(int command)
         {
-            Drone d = (Drone)physEntList[selectedEntIndex];
+            Drone d = (Drone)physEntList[selectedPhysEnt.index];
             //d.ReceiveOrder(command)
 
             switch (command)
