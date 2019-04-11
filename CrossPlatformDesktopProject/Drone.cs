@@ -162,12 +162,10 @@ namespace CrossPlatformDesktopProject
                         else { posDot.Y = (float)(.7 * posDot.Y); }
                     }
                 }
-
-                if (ApproxEquals(Math.Atan2(relTarget.Y, relTarget.X), theta))
+                else
                 {
-                    thetaDot = 0;
                     double a = -Math.Pow(posDot.Length(), 2) / (2 * relTarget.Length());
-                    if (Math.Abs(a) < negThrustMax)
+                    if(Math.Abs(a) < thrustMax)
                     {
                         posDotDot = new Vector2(
                             (float)(thrustMax / relTarget.Length() * relTarget.X / mass),
@@ -176,15 +174,32 @@ namespace CrossPlatformDesktopProject
                     else
                     {
                         posDotDot = new Vector2(
-                            (float)(-negThrustMax / relTarget.Length() * relTarget.X / mass),
-                            (float)(-negThrustMax / relTarget.Length() * relTarget.Y / mass));
+                            -(float)(thrustMax / relTarget.Length() * relTarget.X / mass),
+                            -(float)(thrustMax / relTarget.Length() * relTarget.Y / mass));
                     }
                 }
-                else
-                {
-                    posDotDot = new Vector2(0, 0);
-                    thetaDot = 10 * (Math.Atan2(relTarget.Y, relTarget.X) - theta);
-                }
+                //if (ApproxEquals(Math.Atan2(relTarget.Y, relTarget.X), theta))
+                //{
+                //    thetaDot = 0;
+                //    double a = -Math.Pow(posDot.Length(), 2) / (2 * relTarget.Length());
+                //    if (Math.Abs(a) < negThrustMax)
+                //    {
+                //        posDotDot = new Vector2(
+                //            (float)(thrustMax / relTarget.Length() * relTarget.X / mass),
+                //            (float)(thrustMax / relTarget.Length() * relTarget.Y / mass));
+                //    }
+                //    else
+                //    {
+                //        posDotDot = new Vector2(
+                //            (float)(-negThrustMax / relTarget.Length() * relTarget.X / mass),
+                //            (float)(-negThrustMax / relTarget.Length() * relTarget.Y / mass));
+                //    }
+                //}
+                //else
+                //{
+                //    posDotDot = new Vector2(0, 0);
+                //    thetaDot = 10 * (Math.Atan2(relTarget.Y, relTarget.X) - theta);
+                //}
             }
 
         }
@@ -260,7 +275,7 @@ namespace CrossPlatformDesktopProject
             float x = (float)((pt.X - pos.X) / (pt - pos).Length() * (50));
             float y = (float)((pt.Y - pos.Y) / (pt - pos).Length() * (50));
 
-            UpdateTarget(new Vector2(x, y));
+            UpdateTarget((new Vector2(x, y)) + pos);
         }
 
         public double DealDamage()
