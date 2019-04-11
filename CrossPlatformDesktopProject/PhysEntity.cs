@@ -284,6 +284,13 @@ namespace CrossPlatformDesktopProject
         public double[] gridPos = new double[2];
         public Vector2 expPos;
         public Rectangle expRect;
+        public bool spawnsDrones = false;
+        public bool lessThanLimit = false;
+        public string droneType;
+        public int numDrones = 3;
+        public List<int> droneIndList = new List<int>();
+        public List<string> droneList = new List<string>();
+        public int countUp = 0;
 
         public StationBlock(Vector2 stationOrigin)
         {
@@ -300,6 +307,8 @@ namespace CrossPlatformDesktopProject
                 new Point((int)drawPos.X, (int)drawPos.Y),
                 new Point((int)diam, (int)diam));
             posDot = new Vector2(0, 0);
+
+            idNo = "S" + gridPos[0].ToString() + "-" + gridPos[1].ToString();
         }
         public StationBlock(int x, int y, string typ, StationBlock core)
         {
@@ -313,6 +322,8 @@ namespace CrossPlatformDesktopProject
             {
                 case "stationDock":
                     texture = _globals.textures[2,1];
+                    spawnsDrones = true;
+                    droneType = "miningDrone";
                     break;
                 case "stationStorage":
 
@@ -344,6 +355,29 @@ namespace CrossPlatformDesktopProject
 
             //expPos = 
         }
+
+
+        public override void individualUpdate()
+        {
+            
+        }
+
+        public Drone SpawnDrone()
+        {
+            //public Drone(Texture2D text,
+            //double thrust, double diameter,
+            //string name, double m, double hp,
+            //double x = 0, double y = 0, double xDot = 0, double yDot = 0, StationBlock homeBlock = null)
+            //physEntList.Add(new Drone(textureBall, 100, 50, "d1", 300, 250, 300, 50));
+            Drone d = new Drone(_globals.textures[1, 1],
+                100, 50, idNo + "d", 300, 250,
+                pos.X, pos.Y,
+                0, 0,
+                this
+                );
+            return d;
+        }
+
         public Vector2 ScaleAbout(double scalar, Vector2 pt0, Vector2 center)
         {
             Vector2 ptPrime = center;

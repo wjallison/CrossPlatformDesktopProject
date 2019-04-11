@@ -209,6 +209,7 @@ namespace CrossPlatformDesktopProject
                 new Vector2(
                     graphics.PreferredBackBufferWidth / 3 * 2, 
                 graphics.PreferredBackBufferHeight / 2));
+            station.AddBlock(1, 0, "stationDock");
         }
 
         /// <summary>
@@ -538,6 +539,30 @@ namespace CrossPlatformDesktopProject
 
 
                 //Mining
+                for(int i = 0; i < station.blocks.Count; i++)
+                {
+                    //int counter = 0;
+                    //Not the right way, but I feel lazy
+                    if (station.blocks[i].spawnsDrones)
+                    {
+                        if (station.blocks[i].droneIndList.Count < station.blocks[i].numDrones)
+                        {
+                            if(station.blocks[i].countUp < 10)
+                            {
+                                station.blocks[i].countUp++;
+                            }
+                            else
+                            {
+                                station.blocks[i].droneIndList.Add(physEntList.Count);
+                                physEntList.Add(station.blocks[i].SpawnDrone());
+                                station.blocks[i].countUp = 0;
+                            }
+
+                            
+                        }
+                    }
+                    
+                }
 
                 ScanForCollisions(gameTime);
 
