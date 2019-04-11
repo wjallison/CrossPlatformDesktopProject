@@ -243,6 +243,7 @@ namespace CrossPlatformDesktopProject
         public void AddBlock(int x, int y, string type)
         {
             StationBlock s = new StationBlock(x, y, type, blocks[0]);
+            blocks.Add(s);
         }
         public void AddBlock(StationBlock s)
         {
@@ -293,8 +294,11 @@ namespace CrossPlatformDesktopProject
             diam = 40;
             texture = _globals.textures[2,0];
             pos = stationOrigin;
-            Vector2 offset = new Vector2(-20, -20);
+            Vector2 offset = new Vector2(-(float)(diam / 2), -(float)(diam / 2));
             drawPos = pos + offset;
+            hitBox = new Rectangle(
+                new Point((int)drawPos.X, (int)drawPos.Y),
+                new Point((int)diam, (int)diam));
             posDot = new Vector2(0, 0);
         }
         public StationBlock(int x, int y, string typ, StationBlock core)
@@ -331,11 +335,32 @@ namespace CrossPlatformDesktopProject
             }
 
             pos = new Vector2((float)(core.pos.X + diam * gridPos[0]), (float)(core.pos.Y + diam * gridPos[1]));
-            Vector2 offset = new Vector2(-20, -20);
+            Vector2 offset = new Vector2(-(float)(diam / 2), -(float)(diam / 2));
             drawPos = pos + offset;
+            hitBox = new Rectangle(
+                new Point((int)drawPos.X, (int)drawPos.Y),
+                new Point((int)diam, (int)diam));
             posDot = new Vector2(0, 0);
 
+            //expPos = 
+        }
+        public Vector2 ScaleAbout(double scalar, Vector2 pt0, Vector2 center)
+        {
+            Vector2 ptPrime = center;
+            ptPrime.X = ptPrime.X + (float)(scalar * (pt0.X - center.X));
+            ptPrime.Y = ptPrime.Y + (float)(scalar * (pt0.Y - center.Y));
+            return ptPrime;
+        }
+        public Rectangle ScaleRectAbout(double scalar, Rectangle r0, Vector2 center)
+        {
+            Rectangle rPrime = r0;
+            rPrime.Location = new Point(
+                (int)(center.X + scalar * (rPrime.X - center.X)),
+                (int)(center.Y + scalar * (rPrime.Y - center.Y))
+                );
+            rPrime.Size = new Point((int)(scalar * rPrime.Size.X), (int)(scalar * rPrime.Size.Y));
 
+            return rPrime;
         }
     }
 

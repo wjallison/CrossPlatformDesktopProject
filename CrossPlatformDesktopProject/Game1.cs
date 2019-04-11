@@ -44,7 +44,8 @@ namespace CrossPlatformDesktopProject
             Loading = 1,
             MainState = 2,
             Paused = 3,
-            BuildMenuPaused = 4
+            BuildMenuPaused = 4,
+            SideMenuPaused = 5
         }
 
 
@@ -204,7 +205,10 @@ namespace CrossPlatformDesktopProject
             linear = new LinearEffect(a, b);
             linear.rect = r;
 
-            station = new Station(new Vector2(graphics.PreferredBackBufferWidth / 3 * 2, graphics.PreferredBackBufferHeight / 2));
+            station = new Station(
+                new Vector2(
+                    graphics.PreferredBackBufferWidth / 3 * 2, 
+                graphics.PreferredBackBufferHeight / 2));
         }
 
         /// <summary>
@@ -224,24 +228,24 @@ namespace CrossPlatformDesktopProject
         protected override void Update(GameTime gameTime)
         {
 
-        //    enum GameState
-        //{
-        //    MainMenu = 0,
-        //    Loading = 1,
-        //    MainState = 2,
-        //    Paused = 3,
-        //    GameMenuPaused = 4
-        //}
+            //    enum GameState
+            //{
+            //    MainMenu = 0,
+            //    Loading = 1,
+            //    MainState = 2,
+            //    Paused = 3,
+            //    BuildMenuPaused = 4
+            //}
 
-            if(gameState == 0)
+            if (gameState == (int)GameState.MainMenu)
             {
 
             }
-            else if(gameState == 1)
+            else if (gameState == (int)GameState.Loading)
             {
 
             }
-            else if (gameState == 2)
+            else if (gameState == (int)GameState.MainState)
             {
                 //if (firstInitUpdate)
                 //{
@@ -356,10 +360,10 @@ namespace CrossPlatformDesktopProject
                 {
                     radial.Update(physEntList[radial.followingIndex]);
                 }
-                
+
 
                 #region click actions
-                var mState = Mouse.GetState();                
+                var mState = Mouse.GetState();
 
                 if (mouseClicked == false)
                 {
@@ -371,7 +375,7 @@ namespace CrossPlatformDesktopProject
 
                         if (r.Intersects(radial.drawBox))
                         {
-                            for(int i = 0; i < radial.buttons.Length; i++)
+                            for (int i = 0; i < radial.buttons.Length; i++)
                             {
                                 if (radial.buttons[i].enabled)
                                 {
@@ -410,9 +414,20 @@ namespace CrossPlatformDesktopProject
                         {
                             radial.Off();
                         }
+                        else if (r.Intersects(station.blocks[0].hitBox))
+                        {
+                            gameState = (int)GameState.BuildMenuPaused;
+                            return;
+                        }
 
                         else
                         {
+                            //for(int i = 0; i < station.blocks.Count; i++)
+                            //{
+                            //    if(r.Intersects(station.blocks))
+                            //}
+
+
                             //radial.isOn = true;
                             radial.isFollowing = false;
                             for (int i = 0; i < physEntList.Count; i++)
@@ -421,7 +436,7 @@ namespace CrossPlatformDesktopProject
                                 {
                                     radial.Follow(physEntList[i], i);
 
-                                    
+
 
                                     bool[] s = new bool[] { true, false, false, false, false, false };
 
@@ -429,7 +444,7 @@ namespace CrossPlatformDesktopProject
                                     //{
                                     //    s[1] = true;
                                     //}
-                                    if(physEntList[i].type == "asteroid")
+                                    if (physEntList[i].type == "asteroid")
                                     {
                                         switch (physEntList[selectedEntIndex].type)
                                         {
@@ -442,7 +457,7 @@ namespace CrossPlatformDesktopProject
                                         }
                                     }
                                     //else if(physEntList[i].type = "dockingStation")
-                                    
+
 
                                     if (physEntList[i].playerControled)
                                     {
@@ -495,12 +510,12 @@ namespace CrossPlatformDesktopProject
                         physEntList.RemoveAt(i);
                         if (radial.isFollowing)
                         {
-                            if(radial.followingIndex > i)
+                            if (radial.followingIndex > i)
                             {
                                 radial.followingIndex--;
                             }
                         }
-                        i--;                        
+                        i--;
                     }
                 }
 
@@ -533,15 +548,41 @@ namespace CrossPlatformDesktopProject
 
                 base.Update(gameTime);
             }
-            else if (gameState == 3)
+            else if (gameState == (int)GameState.Paused)
             {
 
             }
-            else if (gameState == 4)
+            else if (gameState == (int)GameState.BuildMenuPaused)
             {
-                
+                var mState = Mouse.GetState();
+
+                if (mouseClicked == false)
+                {
+                    if (mState.LeftButton == ButtonState.Pressed)
+                    {
+                        mouseClicked = true;
+
+
+
+
+
+
+
+
+                    }
+                }
+                else
+                {
+                    if (mState.LeftButton == ButtonState.Released)
+                    {
+                        mouseClicked = false;
+                    }
+                }
             }
-            
+            else if(gameState == (int)GameState.SideMenuPaused)
+            {
+
+            }
         }
 
         public Vector2 ScaleAbout(double scalar, Vector2 pt0, Vector2 center)
@@ -558,6 +599,12 @@ namespace CrossPlatformDesktopProject
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            DrawStation();
+
             if (gameState == 0)
             {
 
@@ -568,11 +615,9 @@ namespace CrossPlatformDesktopProject
             }
             else if(gameState == 2)
             {
-                GraphicsDevice.Clear(Color.CornflowerBlue);
+                
 
-                // TODO: Add your drawing code here
-                spriteBatch.Begin();
-
+                
                 
 
                 //spriteBatch.DrawString(font, displayValue.ToString(), new Vector2(200, -200), Color.Black);
@@ -702,7 +747,7 @@ namespace CrossPlatformDesktopProject
                 
 
 
-                spriteBatch.End();
+                
 
                 base.Draw(gameTime);
             }
@@ -715,6 +760,8 @@ namespace CrossPlatformDesktopProject
             {
                 
             }
+
+            spriteBatch.End();
         }
 
         public void DrawRadialMenu()
@@ -738,6 +785,27 @@ namespace CrossPlatformDesktopProject
                     spriteBatch.Draw(radial.SwitchButton.textureEnabled, radial.SwitchButton.box, Color.White);
                 }
             }
+        }
+
+        public void DrawStation()
+        {
+            //spriteBatch.Draw(station.)
+            if(gameState == (int)GameState.MainState)
+            {
+                for (int i = 0; i < station.blocks.Count; i++)
+                {
+                    spriteBatch.Draw(station.blocks[i].texture, station.blocks[i].hitBox, Color.White);
+                }
+            }
+            if(gameState == (int)GameState.BuildMenuPaused)
+            {
+                station.ScaleAllAbout(2, station.blocks[0].pos);
+                for (int i = 0; i < station.blocks.Count; i++)
+                {
+                    spriteBatch.Draw(station.blocks[i].texture, station.blocks[i].expRect, Color.White);
+                }
+            }
+            
         }
 
         public void IssueCommand(int command)
