@@ -165,7 +165,7 @@ namespace CrossPlatformDesktopProject
                 else
                 {
                     double a = -Math.Pow(posDot.Length(), 2) / (2 * relTarget.Length());
-                    if(Math.Abs(a) < thrustMax)
+                    if(Math.Abs(a) < thrustMax / mass)
                     {
                         posDotDot = new Vector2(
                             (float)(thrustMax / relTarget.Length() * relTarget.X / mass),
@@ -275,7 +275,7 @@ namespace CrossPlatformDesktopProject
             float x = (float)((pt.X - pos.X) / (pt - pos).Length() * (50));
             float y = (float)((pt.Y - pos.Y) / (pt - pos).Length() * (50));
 
-            UpdateTarget((new Vector2(x, y)) + pos);
+            UpdateTarget((new Vector2(x, y)) + pt);
         }
 
         public double DealDamage()
