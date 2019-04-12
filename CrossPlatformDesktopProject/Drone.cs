@@ -70,7 +70,7 @@ namespace CrossPlatformDesktopProject
             double x = 0, double y = 0, double xDot = 0, double yDot = 0, StationBlock homeBlock = null)
         {
             type = "miningDrone";
-            baseDamage = 1;
+            baseDamage = 10;
             idNo = name;
 
             theta = 0;
@@ -253,7 +253,7 @@ namespace CrossPlatformDesktopProject
             }
             if (miningEnabled)
             {
-                if((pos - target).Length() < 50)
+                if((pos - targetPhysEnt.pos).Length() < 100)
                 {
                     //MineResources
                     //test(this, new EventArgs());
@@ -338,6 +338,7 @@ namespace CrossPlatformDesktopProject
                     else
                     {
                         ApproachPt(targetPt);
+                        targetIndex = 0;
                         miningEnabled = false;
                         dockingEnabled = false;
                         approaching = false;

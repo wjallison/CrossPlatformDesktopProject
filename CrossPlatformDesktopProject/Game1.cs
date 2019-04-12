@@ -146,7 +146,7 @@ namespace CrossPlatformDesktopProject
 
             textureBall = Content.Load<Texture2D>("ball");
 
-            #region UI Elements
+            #region Textures
             //textureRadialMenu = Content.Load<Texture2D>("asteroidProject_touchMenu");
             _globals.textures[4,0] = Content.Load<Texture2D>("asteroidProject_touchMenu");
             _globals.textures[4,1] = Content.Load<Texture2D>("Goto");
@@ -597,6 +597,13 @@ namespace CrossPlatformDesktopProject
                             if (d.miningProx)
                             {
                                 physEntList[d.targetIndex].TakeDamage(d.DealDamage());
+
+                                if(physEntList[d.targetIndex].health < 0)
+                                {
+                                    SpawnDebris((Asteroid)physEntList[d.targetIndex]);
+                                    DestroyAt(d.targetIndex);
+                                    d.ReceiveOrder(0, d.home.pos);
+                                }
                             }
                             
                         }
@@ -688,10 +695,15 @@ namespace CrossPlatformDesktopProject
             }
             if(source.diam > 50)
             {
-                if(r.Next(0,2) == 1)
+                if(1 == 1)
+                //if(r.Next(0,2) == 1)
                 {
-                    Asteroid a = source;
-                    a.diam = source.diam / 2;
+                    //Asteroid a = source;
+                    //a.diam = source.diam / 2;
+                    //a.health = 650;
+                    //a.idNo = "test";
+                    Asteroid a = new Asteroid(source);
+                    a.idNo = "HHHHHHHHHHHHHHHHHHH";
                     physEntList.Add(a);
                 }
             }
@@ -712,9 +724,10 @@ namespace CrossPlatformDesktopProject
                 if (physEntList[j].GetType() == (new Drone()).GetType())
                 {
                     Drone d = (Drone)physEntList[j];
-                    if (d.targetIndex > i)
+                    if (d.targetIndex >= i)
                     {
                         d.targetIndex--;
+                        d.targetPhysEnt = physEntList[d.targetIndex];
                         physEntList[j] = d;
                     }
                 }
@@ -779,6 +792,7 @@ namespace CrossPlatformDesktopProject
                     0f
                     );
 
+                #region testing lines
                 Vector2 offset = new Vector2(0, 0);
                 //Vector2 ob = new Vector2(textureBall.Width / 2, textureBall.Height / 2);
                 Vector2 ob = new Vector2(0, 0);
@@ -830,7 +844,7 @@ namespace CrossPlatformDesktopProject
                 //Rectangle r = new Rectangle()
                 //spriteBatch.Draw(linear.texture, linear.rect, Color.White);
                 //spriteBatch.
-
+                #endregion
                 if (physEntList.Count > 0)
                 {
                     for (int i = 0; i < physEntList.Count; i++)
@@ -1241,7 +1255,7 @@ namespace CrossPlatformDesktopProject
                 case 0:
                     newAsteroid = new Asteroid(
                         1,
-                        50,
+                        51,
                         "a0",
                         Math.Pow(diam / 2, 2),
                         station.blocks[0].pos.X - 200,
@@ -1257,7 +1271,7 @@ namespace CrossPlatformDesktopProject
                     speed = (int)(speedRandMult * r.NextDouble() + speedMin);
                     direction = new Vector2(xSpawn - xTarget, -graphics.PreferredBackBufferHeight);
                     //(int lane, double diameter, string name, double m, double x = 0, double y = 0, double xDot = 0, double yDot = 0)
-                    diam = (50 * r.NextDouble() + 25);
+                    diam = (50 * r.NextDouble() + 40);
                     
                     break;
             }

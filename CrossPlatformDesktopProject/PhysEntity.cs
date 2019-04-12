@@ -240,6 +240,29 @@ namespace CrossPlatformDesktopProject
             texture = _globals.textures[0,0];
             playerControled = false;
         }
+        public Asteroid(Asteroid source)
+        {
+            idNo = source.idNo;
+            content = source.content;
+            type = source.type;
+            theta = 0;
+            thetaDot = source.thetaDot;
+            pos = source.pos;
+            posDot = source.posDot;
+            posDotDot = source.posDotDot;
+            diam = source.diam / 2;
+            maxHealth = source.maxHealth;
+            health = maxHealth;
+            mass = source.mass / 4;
+            drawPos = new Vector2(
+                pos.X - (float)(diam * .5),
+                pos.Y - (float)(diam * .5)
+                );
+            hitBox = new Rectangle((int)drawPos.X, (int)drawPos.Y, (int)diam, (int)diam);
+            hitCircle = new Circle(pos, (float)diam);
+            texture = source.texture;
+            playerControled = false;
+        }
         public override void TakeDamage(double damage)
         {
             //damage = damage * (100 - damResist) / 100;
