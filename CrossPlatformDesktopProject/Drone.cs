@@ -21,11 +21,13 @@ namespace CrossPlatformDesktopProject
         
         public double range = 100;        
 
-        public int physEntListTargetIndex;
+        //public int physEntListTargetIndex;
 
         public StationBlock home;
 
         public double thetaDotDotMax = 10;
+
+        public PhysEntity subjectEntity;
 
         
 
@@ -37,11 +39,12 @@ namespace CrossPlatformDesktopProject
         #region Orders
 
         public PhysEntity targetPhysEnt;
-        public int targetIndex;
+        public int targetIndex = 0;
         public bool miningEnabled = false;
         public bool dockingEnabled = false;
         public bool approaching = false;
         public bool targetSet = false;
+        public bool miningProx = false;
         public Vector2 target;
         public Vector2 relTarget = new Vector2(0, 0);
 
@@ -59,7 +62,7 @@ namespace CrossPlatformDesktopProject
 
         #endregion
 
-
+        public Drone() { }
         //public Drone() { }
         public Drone(Texture2D text,
             double thrust, double diameter,
@@ -67,6 +70,7 @@ namespace CrossPlatformDesktopProject
             double x = 0, double y = 0, double xDot = 0, double yDot = 0, StationBlock homeBlock = null)
         {
             type = "miningDrone";
+            baseDamage = 1;
             idNo = name;
 
             theta = 0;
@@ -217,13 +221,13 @@ namespace CrossPlatformDesktopProject
 
         public override void individualUpdate()
         {
-        //    public enum OrderState
-        //{
-        //    none = 0,
-        //    goTo = 1,
-        //    mine = 2,
-        //    gather = 3
-        //}
+            //    public enum OrderState
+            //{
+            //    none = 0,
+            //    goTo = 1,
+            //    mine = 2,
+            //    gather = 3
+            //}
             //switch (orderState)
             //{
             //    case 0:
@@ -241,13 +245,26 @@ namespace CrossPlatformDesktopProject
 
             //        break;
             //}
+            //test(this,new EventArgs());
 
             if (approaching)
             {
                 Approach(targetPhysEnt, targetIndex);
             }
+            if (miningEnabled)
+            {
+                if((pos - target).Length() < 50)
+                {
+                    //MineResources
+                    //test(this, new EventArgs());
+                    miningProx = true;
+                }
+                else { miningProx = false; }
+            }
             TargetUpdate();
         }
+
+        public event EventHandler test;
 
         public void Approach(PhysEntity target, int ind)
         {
@@ -275,6 +292,7 @@ namespace CrossPlatformDesktopProject
         public void Mine(PhysEntity targetEnt, int ind)
         {
             Approach(targetEnt, ind);
+            subjectEntity = targetEnt;
             approaching = true;
             miningEnabled = true;
             dockingEnabled = false;
@@ -320,6 +338,9 @@ namespace CrossPlatformDesktopProject
                     else
                     {
                         ApproachPt(targetPt);
+                        miningEnabled = false;
+                        dockingEnabled = false;
+                        approaching = false;
                     }
                     break;
                 case 1:

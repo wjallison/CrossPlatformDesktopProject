@@ -531,6 +531,22 @@ namespace CrossPlatformDesktopProject
                                 radial.followingIndex--;
                             }
                         }
+                        for(int j = 0; j < physEntList.Count; j++)
+                        {
+                            if(physEntList[j].GetType() == (new Drone()).GetType())
+                            {
+                                Drone d = (Drone)physEntList[j];
+                                if(d.targetIndex > i)
+                                {
+                                    d.targetIndex--;
+                                    physEntList[j] = d;
+                                }
+                            }
+                        }
+                        //for(int j = 0; j < physEntList.Count; j++)
+                        //{
+                        //    //if(physEntList[j].type )
+                        //}
                         i--;
                     }
                 }
@@ -539,10 +555,12 @@ namespace CrossPlatformDesktopProject
 
                 if (physEntList.Count > 0)
                 {
+                    Drone d = (Drone)physEntList[0];
                     dV1 = physEntList[0].theta;
                     dV2 = physEntList[0].posDot.X;
                     dV3 = physEntList[0].posDotDot.X;
-                    dV4 = physEntList[0].health;
+                    //dV4 = physEntList[0].health;
+                    dV4 = physEntList[d.targetIndex].health;
                 }
 
                 //mState.
@@ -554,6 +572,10 @@ namespace CrossPlatformDesktopProject
 
 
                 //Mining
+
+
+
+
                 for(int i = 0; i < station.blocks.Count; i++)
                 {
                     //int counter = 0;
@@ -584,6 +606,26 @@ namespace CrossPlatformDesktopProject
 
                 for (int i = 0; i < physEntList.Count; i++)
                 {
+                    
+
+                    if(physEntList[i].type == "miningDrone")
+                    {
+                        //d.test += _Event;
+                        Drone d = (Drone)physEntList[i];
+                        if(d.targetIndex != 0)
+                        {
+                            if (d.miningProx)
+                            {
+                                physEntList[d.targetIndex].TakeDamage(d.DealDamage());
+                            }
+                            
+                        }
+                        //d.test += _Event;
+                        //d.test += _Event;
+                        
+
+                        physEntList[i] = d;
+                    }
                     physEntList[i].Update(gameTime);
                 }
 
@@ -625,6 +667,21 @@ namespace CrossPlatformDesktopProject
 
             }
         }
+
+        //public event EventHandler _Event;
+
+        //public virtual void Event(EventArgs e)
+        //{
+        //    EventHandler handler = _Event;
+        //    handler?.Invoke(this, e);
+        //    int i = 0;
+        //}
+
+        //public virtual void _Event(object sender, EventArgs e)
+        //{
+        //    Drone d = (Drone)sender;
+        //    physEntList[d.targetIndex].TakeDamage(d.DealDamage());
+        //}
 
         public Vector2 ScaleAbout(double scalar, Vector2 pt0, Vector2 center)
         {
@@ -959,7 +1016,15 @@ namespace CrossPlatformDesktopProject
             res1 = new Vector2(r1x * elasticity, r1y * elasticity);
             res2 = new Vector2(r2x * elasticity, r2y * elasticity);
             //res1 = 5 * res2;
+            double KE10 = 0.5 * ent1.mass * Math.Pow(ent1.posDot.Length(), 2);
+            double KE20 = 0.5 * ent2.mass * Math.Pow(ent2.posDot.Length(), 2);
+            double KE11 = 0.5 * ent1.mass * Math.Pow(res1.Length(), 2);
+            double KE21 = 0.5 * ent2.mass * Math.Pow(res2.Length(), 2);
+            double d1 = Math.Abs(KE10 - KE11);
+            double d2 = Math.Abs(KE20 - KE21);
 
+            ent1.TakeDamage(d1);
+            ent2.TakeDamage(d2);
             return new Vector2[] { res1, res2 };
 
         }
@@ -986,12 +1051,12 @@ namespace CrossPlatformDesktopProject
                     if (physEntList[i].hitCircle.Overlaps(physEntList[j].hitCircle))
                     {
                         Vector2[] newVects = Collision(physEntList[i], physEntList[j]);
-                        double[] dams = DetermineDamage(new PhysEntity[] { physEntList[i], physEntList[j] }, newVects);
+                        //double[] dams = DetermineDamage(new PhysEntity[] { physEntList[i], physEntList[j] }, newVects);
                         physEntList[i].posDot = newVects[0];
                         physEntList[j].posDot = newVects[1];
 
-                        physEntList[i].TakeDamage(dams[0]);
-                        physEntList[j].TakeDamage(dams[1]);
+                        //physEntList[i].TakeDamage(dams[0]);
+                        //physEntList[j].TakeDamage(dams[1]);
                     }
                     //if (physEntList[i].hitBox.Intersects(physEntList[j].hitBox))
                     //{
@@ -1164,7 +1229,14 @@ namespace CrossPlatformDesktopProject
                         direction.X / direction.Length() * speed,
                         direction.Y / direction.Length() * speed
                         );
-
+            for(int i = 0; i < physEntList.Count; i++)
+            {
+                if (newAsteroid.hitCircle.Overlaps(physEntList[i].hitCircle))
+                {
+                    //SpawnAsteroid(lane);
+                    return;
+                }
+            }
             physEntList.Add(newAsteroid);
         }
 

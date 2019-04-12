@@ -234,7 +234,7 @@ namespace CrossPlatformDesktopProject
         }
         public override void TakeDamage(double damage)
         {
-            damage = damage * damResist / 100;
+            //damage = damage * (100 - damResist) / 100;
 
             health = health - damage;
         }
