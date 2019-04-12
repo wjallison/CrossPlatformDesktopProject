@@ -290,15 +290,15 @@ namespace CrossPlatformDesktopProject
                 #endregion
 
                 #region testing collisions
-                if (kstate.IsKeyDown(Keys.NumPad0))
-                {
-                    //SpawnAsteroid();
-                    if (temp1)
-                    {
-                        physEntList.Add(new Asteroid(textureBall, 1, 50, "01", 10, 50, 50, 50, 0));
-                        temp1 = false;
-                    }
-                }
+                //if (kstate.IsKeyDown(Keys.NumPad0))
+                //{
+                //    //SpawnAsteroid();
+                //    if (temp1)
+                //    {
+                //        physEntList.Add(new Asteroid(textureBall, 1, 50, "01", 10, 50, 50, 50, 0));
+                //        temp1 = false;
+                //    }
+                //}
                 //if (kstate.IsKeyDown(Keys.NumPad1))
                 //{
                 //    if (temp2)
@@ -310,45 +310,45 @@ namespace CrossPlatformDesktopProject
                 #endregion
 
                 #region testing drone line pathing
-                if (kstate.IsKeyDown(Keys.NumPad4))
-                {
-                    if (temp1)
-                    {
-                        //Drone spawns at 300,50,0deg
-                        physEntList.Add(new Drone(textureBall, 100, 50, "d1", 300, 250, 300, 50));
-                        temp1 = false;
-                    }
-                }
-                if (kstate.IsKeyDown(Keys.NumPad5))
-                {
-                    if (!temp1 && temp2)
-                    {
-                        //Drone's target is updated to 500,50
-                        //Drone d = (Drone)physEntList[0];
-                        //d.UpdateTarget(new Vector2(500, 50));
-                        //physEntList[0] = d;
+                //if (kstate.IsKeyDown(Keys.NumPad4))
+                //{
+                //    if (temp1)
+                //    {
+                //        //Drone spawns at 300,50,0deg
+                //        physEntList.Add(new Drone(textureBall, 100, 50, "d1", 300, 250, 300, 50));
+                //        temp1 = false;
+                //    }
+                //}
+                //if (kstate.IsKeyDown(Keys.NumPad5))
+                //{
+                //    if (!temp1 && temp2)
+                //    {
+                //        //Drone's target is updated to 500,50
+                //        //Drone d = (Drone)physEntList[0];
+                //        //d.UpdateTarget(new Vector2(500, 50));
+                //        //physEntList[0] = d;
 
-                        //Drone's target is updated to 500,100
-                        Drone d = (Drone)physEntList[0];
-                        d.UpdateTarget(new Vector2(300, 150));
-                        //physEntList.Add(new Asteroid(1, 50, "a1", 10, 300, 150, 0, 0));
-                        physEntList[0] = d;
-                        temp2 = false;
-                    }
-                }
+                //        //Drone's target is updated to 500,100
+                //        Drone d = (Drone)physEntList[0];
+                //        d.UpdateTarget(new Vector2(300, 150));
+                //        //physEntList.Add(new Asteroid(1, 50, "a1", 10, 300, 150, 0, 0));
+                //        physEntList[0] = d;
+                //        temp2 = false;
+                //    }
+                //}
                 #endregion
 
                 #region testing drone following
 
-                if (kstate.IsKeyDown(Keys.NumPad7))
-                {
-                    if (temp1)
-                    {
-                        physEntList.Add(new Asteroid(textureBall, 1, 50, "a1", 10, 300, 150, 10, 0));
-                        physEntList.Add(new Drone(textureBall, 100, 50, "d1", 10, 300, 200, 250, 0, 0));
-                        temp1 = false;
-                    }
-                }
+                //if (kstate.IsKeyDown(Keys.NumPad7))
+                //{
+                //    if (temp1)
+                //    {
+                //        physEntList.Add(new Asteroid(textureBall, 1, 50, "a1", 10, 300, 150, 10, 0));
+                //        physEntList.Add(new Drone(textureBall, 100, 50, "d1", 10, 300, 200, 250, 0, 0));
+                //        temp1 = false;
+                //    }
+                //}
                 //if (kstate.IsKeyDown(Keys.NumPad8))
                 //{
                 //    if (!temp1 && temp2)
@@ -363,6 +363,19 @@ namespace CrossPlatformDesktopProject
                 //}
 
                 ballAngle += 0.01f;
+                #endregion
+
+                #region testing drone asteroid interactions
+
+                if (kstate.IsKeyDown(Keys.NumPad0))
+                {
+                    if (temp1)
+                    {
+                        SpawnAsteroid(0);
+                        temp1 = false;
+                    }
+                }
+
                 #endregion
 
                 #endregion
@@ -397,7 +410,7 @@ namespace CrossPlatformDesktopProject
                                     }
                                 }
                             }
-                            if (radial.switchToAvaliable)
+                            if (radial.SwitchButton.enabled)
                             {
                                 if (r.Intersects(radial.SwitchButton.box))
                                 {
@@ -435,22 +448,12 @@ namespace CrossPlatformDesktopProject
 
                         else
                         {
-                            //for(int i = 0; i < station.blocks.Count; i++)
-                            //{
-                            //    if(r.Intersects(station.blocks))
-                            //}
-
-
-                            //radial.isOn = true;
                             radial.isFollowing = false;
                             for (int i = 0; i < physEntList.Count; i++)
                             {
                                 if (r.Intersects(physEntList[i].hitBox))
                                 {
                                     radial.Follow(physEntList[i], i);
-
-
-
                                     bool[] s = new bool[] { true, false, false, false, false, false };
 
                                     //if(physEntList[selectedEntIndex].type == "miningDrone")
@@ -740,7 +743,7 @@ namespace CrossPlatformDesktopProject
                             );
                         if(physEntList[i].posDotDot.Length() != 0)
                         {
-                            DrawLine(physEntList[i].pos, physEntList[i].pos + physEntList[i].posDotDot);
+                            DrawLine(physEntList[i].pos, physEntList[i].pos + physEntList[i].posDotDot, Color.White);
                             DrawLinearEffect(physEntList[i].pos, physEntList[i].pos + physEntList[i].posDot);
                         }
                     }
@@ -888,6 +891,7 @@ namespace CrossPlatformDesktopProject
                     }
                     break;
                 case 1:
+                    d.ReceiveOrder(1, new Vector2(0, 0), physEntList[radial.followingIndex], radial.followingIndex);
                     break;
                 case 2:
                     break;
@@ -1126,6 +1130,19 @@ namespace CrossPlatformDesktopProject
 
             switch (lane)
             {
+                case 0:
+                    newAsteroid = new Asteroid(
+                        1,
+                        50,
+                        "a0",
+                        Math.Pow(diam / 2, 2),
+                        station.blocks[0].pos.X - 200,
+                        station.blocks[0].pos.Y,
+                        0, 0
+                        );
+                    physEntList.Add(newAsteroid);
+                    return;
+                    break;
                 case 1:
                     xSpawn = (float)(25 * r.NextDouble() / 100 * graphics.PreferredBackBufferWidth);
                     xTarget = (float)((37.5 * r.NextDouble() / 100 - .1) * graphics.PreferredBackBufferWidth);
@@ -1152,7 +1169,7 @@ namespace CrossPlatformDesktopProject
         }
 
 
-        public void DrawLine(Vector2 start, Vector2 end)
+        public void DrawLine(Vector2 start, Vector2 end, Color c)
         {
             Vector2 edge = end - start;
             // calculate angle to rotate line

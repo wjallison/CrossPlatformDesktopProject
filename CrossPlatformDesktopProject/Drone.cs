@@ -19,9 +19,7 @@ namespace CrossPlatformDesktopProject
         public double shield;
         public double baseDamage;
         
-        public double range = 75;
-
-        
+        public double range = 100;        
 
         public int physEntListTargetIndex;
 
@@ -68,7 +66,7 @@ namespace CrossPlatformDesktopProject
             string name, double m, double hp,
             double x = 0, double y = 0, double xDot = 0, double yDot = 0, StationBlock homeBlock = null)
         {
-            type = "drone";
+            type = "miningDrone";
             idNo = name;
 
             theta = 0;
@@ -126,7 +124,7 @@ namespace CrossPlatformDesktopProject
             {
                 relTarget = target - pos;
 
-                if (relTarget.Length() < 10)
+                if (relTarget.Length() < 5)
                 {
                     if (posDot.X > 0)
                     {
@@ -182,28 +180,6 @@ namespace CrossPlatformDesktopProject
                     posDotDot.X += -(float).01 * perp.X;
                     posDotDot.Y += -(float).01 * perp.Y;
                 }
-                //if (ApproxEquals(Math.Atan2(relTarget.Y, relTarget.X), theta))
-                //{
-                //    thetaDot = 0;
-                //    double a = -Math.Pow(posDot.Length(), 2) / (2 * relTarget.Length());
-                //    if (Math.Abs(a) < negThrustMax)
-                //    {
-                //        posDotDot = new Vector2(
-                //            (float)(thrustMax / relTarget.Length() * relTarget.X / mass),
-                //            (float)(thrustMax / relTarget.Length() * relTarget.Y / mass));
-                //    }
-                //    else
-                //    {
-                //        posDotDot = new Vector2(
-                //            (float)(-negThrustMax / relTarget.Length() * relTarget.X / mass),
-                //            (float)(-negThrustMax / relTarget.Length() * relTarget.Y / mass));
-                //    }
-                //}
-                //else
-                //{
-                //    posDotDot = new Vector2(0, 0);
-                //    thetaDot = 10 * (Math.Atan2(relTarget.Y, relTarget.X) - theta);
-                //}
             }
 
         }
@@ -275,19 +251,19 @@ namespace CrossPlatformDesktopProject
 
         public void Approach(PhysEntity target, int ind)
         {
-            float x = (float)((target.pos.X - pos.X) / (target.pos - pos).Length() * (target.diam / 2 + 100));
-            float y = (float)((target.pos.Y - pos.Y) / (target.pos - pos).Length() * (target.diam / 2 + 100));
+            float x = (float)((target.pos.X - pos.X) / (target.pos - pos).Length() * (target.diam / 2 + 25));
+            float y = (float)((target.pos.Y - pos.Y) / (target.pos - pos).Length() * (target.diam / 2 + 25));
 
             targetPhysEnt = target;
             targetIndex = ind;
-            UpdateTarget(new Vector2(x, y) + target.pos);
+            UpdateTarget(-(new Vector2(x, y)) + target.pos);
         }
         public void ApproachPt(Vector2 pt)
         {
             float x = (float)((pt.X - pos.X) / (pt - pos).Length() * (10));
             float y = (float)((pt.Y - pos.Y) / (pt - pos).Length() * (10));
 
-            UpdateTarget((new Vector2(x, y)) + pt);
+            UpdateTarget(-(new Vector2(x, y)) + pt);
         }
 
         public double DealDamage()
@@ -296,9 +272,9 @@ namespace CrossPlatformDesktopProject
         }
 
         #region Orders
-        public void Mine(PhysEntity target, int ind)
+        public void Mine(PhysEntity targetEnt, int ind)
         {
-            Approach(target, ind);
+            Approach(targetEnt, ind);
             approaching = true;
             miningEnabled = true;
             dockingEnabled = false;
@@ -345,6 +321,9 @@ namespace CrossPlatformDesktopProject
                     {
                         ApproachPt(targetPt);
                     }
+                    break;
+                case 1:
+                    Mine(targetEnt, targetInd);
                     break;
             }
         }
