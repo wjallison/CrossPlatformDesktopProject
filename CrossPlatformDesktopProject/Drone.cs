@@ -126,7 +126,7 @@ namespace CrossPlatformDesktopProject
             {
                 relTarget = target - pos;
 
-                if (relTarget.Length() < 1)
+                if (relTarget.Length() < 10)
                 {
                     if (posDot.X > 0)
                     {
@@ -284,8 +284,8 @@ namespace CrossPlatformDesktopProject
         }
         public void ApproachPt(Vector2 pt)
         {
-            float x = (float)((pt.X - pos.X) / (pt - pos).Length() * (50));
-            float y = (float)((pt.Y - pos.Y) / (pt - pos).Length() * (50));
+            float x = (float)((pt.X - pos.X) / (pt - pos).Length() * (10));
+            float y = (float)((pt.Y - pos.Y) / (pt - pos).Length() * (10));
 
             UpdateTarget((new Vector2(x, y)) + pt);
         }
