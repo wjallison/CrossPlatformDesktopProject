@@ -126,7 +126,7 @@ namespace CrossPlatformDesktopProject
             {
                 relTarget = target - pos;
 
-                if (relTarget.Length() < 10)
+                if (relTarget.Length() < 1)
                 {
                     if (posDot.X > 0)
                     {
@@ -177,6 +177,10 @@ namespace CrossPlatformDesktopProject
                             -(float)(thrustMax / relTarget.Length() * relTarget.X / mass),
                             -(float)(thrustMax / relTarget.Length() * relTarget.Y / mass));
                     }
+
+                    Vector2 perp = PerpVel();
+                    posDotDot.X += -(float).01 * perp.X;
+                    posDotDot.Y += -(float).01 * perp.Y;
                 }
                 //if (ApproxEquals(Math.Atan2(relTarget.Y, relTarget.X), theta))
                 //{
@@ -202,6 +206,14 @@ namespace CrossPlatformDesktopProject
                 //}
             }
 
+        }
+
+        public Vector2 PerpVel()
+        {
+            //double dot = _globals.Dot(posDot, target);
+            Vector2 perpToTarget = _globals.Rot(true, relTarget);
+            double dot = _globals.Dot(posDot, perpToTarget) / perpToTarget.Length();
+            return new Vector2((float)(dot * perpToTarget.X), (float)(dot * perpToTarget.Y));
         }
 
         public override void TakeDamage(double damage)

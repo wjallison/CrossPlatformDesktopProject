@@ -92,5 +92,27 @@ namespace CrossPlatformDesktopProject
             "Money",
             "Fuel"
         };
+
+        public static double Dot(Vector2 a, Vector2 b)
+        {
+            double ret = a.X * b.X + a.Y * b.Y;
+            return ret;
+        }
+        public static Vector2 Rot(bool up, Vector2 vect)
+        {
+            Vector2 ret = new Vector2(1, 1);
+            if (up)
+            {
+                ret.X = -1 * vect.Y;
+                ret.Y = vect.X;
+            }
+            else
+            {
+                ret.X = vect.Y;
+                ret.Y = -1 * vect.X;
+            }
+
+            return ret;
+        }
     }
 }

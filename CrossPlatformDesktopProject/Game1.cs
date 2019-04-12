@@ -735,6 +735,11 @@ namespace CrossPlatformDesktopProject
                             physEntList[i].hitBox,
                             Color.White
                             );
+                        if(physEntList[i].posDotDot.Length() != 0)
+                        {
+                            DrawLine(physEntList[i].pos, physEntList[i].pos + physEntList[i].posDotDot);
+                            DrawLinearEffect(physEntList[i].pos, physEntList[i].pos + physEntList[i].posDot);
+                        }
                     }
                 }
 
@@ -1142,7 +1147,7 @@ namespace CrossPlatformDesktopProject
         }
 
 
-        public void DrawLine(SpriteBatch sb, Vector2 start, Vector2 end)
+        public void DrawLine(Vector2 start, Vector2 end)
         {
             Vector2 edge = end - start;
             // calculate angle to rotate line
@@ -1150,7 +1155,7 @@ namespace CrossPlatformDesktopProject
                 (float)Math.Atan2(edge.Y, edge.X);
 
 
-            sb.Draw(textureBlackLine,
+            spriteBatch.Draw(textureBlackLine,
                 new Rectangle(// rectangle defines shape of line and position of start of line
                     (int)start.X,
                     (int)start.Y,
