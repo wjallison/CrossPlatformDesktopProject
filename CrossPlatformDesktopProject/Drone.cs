@@ -165,7 +165,7 @@ namespace CrossPlatformDesktopProject
                 else
                 {
                     double a = -Math.Pow(posDot.Length(), 2) / (2 * relTarget.Length());
-                    if(Math.Abs(a) < thrustMax / mass)
+                    if(Math.Abs(a) < thrustMax / mass / 2)
                     {
                         posDotDot = new Vector2(
                             (float)(thrustMax / relTarget.Length() * relTarget.X / mass),
@@ -275,12 +275,12 @@ namespace CrossPlatformDesktopProject
 
         public void Approach(PhysEntity target, int ind)
         {
-            float x = (float)((target.pos.X - pos.X) / (target.pos - pos).Length() * (target.diam / 2 + 50));
-            float y = (float)((target.pos.Y - pos.Y) / (target.pos - pos).Length() * (target.diam / 2 + 50));
+            float x = (float)((target.pos.X - pos.X) / (target.pos - pos).Length() * (target.diam / 2 + 100));
+            float y = (float)((target.pos.Y - pos.Y) / (target.pos - pos).Length() * (target.diam / 2 + 100));
 
             targetPhysEnt = target;
             targetIndex = ind;
-            UpdateTarget(new Vector2(x, y));
+            UpdateTarget(new Vector2(x, y) + target.pos);
         }
         public void ApproachPt(Vector2 pt)
         {

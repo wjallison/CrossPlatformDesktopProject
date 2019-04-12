@@ -914,19 +914,19 @@ namespace CrossPlatformDesktopProject
 
         public Vector2[] Collision(PhysEntity ent1, PhysEntity ent2)
         {
-            double elasticity;
-            //elasticity = .9;
-            elasticity = 1;
+            float elasticity;
+            elasticity = 0.9f;
+            //elasticity = 1;
             
             Vector2 res1, res2;
             float r1x, r1y, r2x, r2y;
 
             double p1, p2, p3, p4, p5;
-            p1 = ent1.posDot.X;
-            p2 = 2 * ent2.mass / (ent1.mass + ent2.mass);
-            p3 = VectDot(ent1.posDot - ent2.posDot, ent1.pos - ent2.pos);
-            p4 = Math.Pow((ent1.pos - ent2.pos).Length(), 2);
-            p5 = (ent1.pos.X - ent2.pos.X);
+            //p1 = ent1.posDot.X;
+            //p2 = 2 * ent2.mass / (ent1.mass + ent2.mass);
+            //p3 = VectDot(ent1.posDot - ent2.posDot, ent1.pos - ent2.pos);
+            //p4 = Math.Pow((ent1.pos - ent2.pos).Length(), 2);
+            //p5 = (ent1.pos.X - ent2.pos.X);
             r1x = (float)(
                 ent1.posDot.X 
                 
@@ -943,17 +943,17 @@ namespace CrossPlatformDesktopProject
                 VectDot(ent1.posDot - ent2.posDot, ent1.pos - ent2.pos) /
                 Math.Pow((ent1.pos - ent2.pos).Length(), 2) *
                 (ent1.pos.Y - ent2.pos.Y));
-            r2x = (float)(ent2.posDot.X - 2 * ent2.mass / (ent1.mass + ent2.mass) *
+            r2x = (float)(ent2.posDot.X - 2 * ent1.mass / (ent1.mass + ent2.mass) *
                 VectDot(ent2.posDot - ent1.posDot, ent2.pos - ent1.pos) /
                 Math.Pow((ent2.pos - ent1.pos).Length(), 2) *
                 (ent2.pos.X - ent1.pos.X));
-            r2y = (float)(ent2.posDot.Y - 2 * ent2.mass / (ent1.mass + ent2.mass) *
+            r2y = (float)(ent2.posDot.Y - 2 * ent1.mass / (ent1.mass + ent2.mass) *
                 VectDot(ent2.posDot - ent1.posDot, ent2.pos - ent1.pos) /
                 Math.Pow((ent2.pos - ent1.pos).Length(), 2) *
                 (ent2.pos.Y - ent1.pos.Y));
 
-            res1 = new Vector2(r1x, r1y);
-            res2 = new Vector2(r2x, r2y);
+            res1 = new Vector2(r1x * elasticity, r1y * elasticity);
+            res2 = new Vector2(r2x * elasticity, r2y * elasticity);
             //res1 = 5 * res2;
 
             return new Vector2[] { res1, res2 };
@@ -1120,6 +1120,8 @@ namespace CrossPlatformDesktopProject
             float xTarget;
             double diam = 0;
             int speed = 0;
+            double speedRandMult = 20;
+            double speedMin = 5;
             Vector2 direction = new Vector2(0,0);
 
             switch (lane)
@@ -1127,7 +1129,7 @@ namespace CrossPlatformDesktopProject
                 case 1:
                     xSpawn = (float)(25 * r.NextDouble() / 100 * graphics.PreferredBackBufferWidth);
                     xTarget = (float)((37.5 * r.NextDouble() / 100 - .1) * graphics.PreferredBackBufferWidth);
-                    speed = (int)(40 * r.NextDouble() + 10);
+                    speed = (int)(speedRandMult * r.NextDouble() + speedMin);
                     direction = new Vector2(xSpawn - xTarget, -graphics.PreferredBackBufferHeight);
                     //(int lane, double diameter, string name, double m, double x = 0, double y = 0, double xDot = 0, double yDot = 0)
                     diam = (50 * r.NextDouble() + 25);

@@ -219,7 +219,7 @@ namespace CrossPlatformDesktopProject
             maxHealth = Math.Pow(diameter * .5, 2);
             health = maxHealth;
 
-            mass = m;
+            mass = 1000 * Math.Pow(diam * .5, 2);
 
             drawPos = new Vector2(
                 pos.X - (float)(diam * .5),
@@ -429,7 +429,8 @@ namespace CrossPlatformDesktopProject
             //double x = 0, double y = 0, double xDot = 0, double yDot = 0, StationBlock homeBlock = null)
             //physEntList.Add(new Drone(textureBall, 100, 50, "d1", 300, 250, 300, 50));
             Drone d = new Drone(_globals.textures[1, 1],
-                10000, 50, idNo + "d", 300, 250,
+                1000, 20, 
+                idNo + "d", 10, 250,
                 pos.X, pos.Y,
                 0, 0,
                 this
