@@ -173,6 +173,65 @@ namespace CrossPlatformDesktopProject
             texture = text;
             playerControled = false;
         }
+        public Asteroid(int lane, double diameter, string name, double m, double x = 0, double y = 0, double xDot = 0, double yDot = 0)
+        {
+
+            #region content based on lane
+            Random rand = new Random();
+            switch (lane)
+            {
+                case 0:
+                    for (int i = 0; i < _globals.materials.Count(); i++)
+                    {
+                        if (_globals.materials[i] == "Fe")
+                        {
+                            content.Add("Fe", 100 * 0.4 * rand.NextDouble());
+                        }
+                        else if (_globals.materials[i] == "H2O")
+                        {
+                            content.Add("H2O", 100 * 0.4 * rand.NextDouble());
+                        }
+                        else if (_globals.materials[i] == "Cu")
+                        {
+                            content.Add("Cu", 100 * 0.2 * rand.NextDouble());
+                        }
+                        else
+                        {
+                            content.Add(_globals.materials[i], 0);
+                        }
+                        content["Rock"] = 100 - content["Fe"] - content["H2O"] - content["Cu"];
+                    }
+                    break;
+            }
+            #endregion
+
+            idNo = name;
+            type = "asteroid";
+
+            theta = 0;
+            thetaDot = 0.01f * PlusMinusOne();
+            pos = new Vector2((float)x, (float)y);
+            posDot = new Vector2((float)xDot, (float)yDot);
+            posDotDot = new Vector2(0, 0);
+
+            diam = diameter;
+
+            maxHealth = Math.Pow(diameter * .5, 2);
+            health = maxHealth;
+
+            mass = m;
+
+            drawPos = new Vector2(
+                pos.X - (float)(diam * .5),
+                pos.Y - (float)(diam * .5)
+                );
+
+            hitBox = new Rectangle((int)drawPos.X, (int)drawPos.Y, (int)diam, (int)diam);
+            hitCircle = new Circle(pos, (float)diam);
+
+            texture = _globals.textures[0,0];
+            playerControled = false;
+        }
         public override void TakeDamage(double damage)
         {
             damage = damage * damResist / 100;

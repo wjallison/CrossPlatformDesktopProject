@@ -20,7 +20,7 @@ namespace CrossPlatformDesktopProject
         float ballSpeed;
         float ballAngle = 0;
 
-        //double lane1SpawnCounter = 0;
+        double lane1SpawnCounter = 0;
 
         //bool firstInitUpdate = true;
         //bool firstInitDraw = true;
@@ -182,6 +182,8 @@ namespace CrossPlatformDesktopProject
 
             _globals.textures[2,0] = Content.Load<Texture2D>("Core");
             _globals.textures[2,1] = Content.Load<Texture2D>("StationDock");
+
+            _globals.textures[0, 0] = Content.Load<Texture2D>("asteroid");
 
             #endregion
 
@@ -502,13 +504,13 @@ namespace CrossPlatformDesktopProject
 
                 #region spawn asteroids
 
-                //lane1SpawnCounter += gameTime.ElapsedGameTime.TotalSeconds;
-                ////roughly every 3 seconds
-                //if(lane1SpawnCounter > 3)
-                //{
-                //    lane1SpawnCounter = 0;
-                //    SpawnAsteroid(1);
-                //}
+                lane1SpawnCounter += gameTime.ElapsedGameTime.TotalSeconds;
+                //roughly every 3 seconds
+                if (lane1SpawnCounter > 3)
+                {
+                    lane1SpawnCounter = 0;
+                    SpawnAsteroid(1);
+                }
 
                 #endregion
 
@@ -552,6 +554,7 @@ namespace CrossPlatformDesktopProject
                 for(int i = 0; i < station.blocks.Count; i++)
                 {
                     //int counter = 0;
+                    //TODO: Fix
                     //Not the right way, but I feel lazy
                     if (station.blocks[i].spawnsDrones)
                     {
@@ -1132,7 +1135,7 @@ namespace CrossPlatformDesktopProject
                     break;
             }
 
-            newAsteroid = new Asteroid(textureBall,
+            newAsteroid = new Asteroid(
                         1,
                         diam,
                         "a" + physEntList.Count.ToString(),
