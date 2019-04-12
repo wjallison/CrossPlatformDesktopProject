@@ -113,6 +113,14 @@ namespace CrossPlatformDesktopProject
     {
         public IDictionary<string, double> content = new Dictionary<string, double>();
 
+        public Asteroid()
+        {
+
+        }
+        //public reCalc()
+        //{
+
+        //}
 
         public Asteroid(Texture2D text, int lane, double diameter, string name, double m, double x = 0, double y = 0, double xDot = 0, double yDot = 0)
         {
@@ -238,6 +246,16 @@ namespace CrossPlatformDesktopProject
 
             health = health - damage;
         }
+
+        public override void individualUpdate()
+        {
+            if(health < 0)
+            {
+
+            }
+        }
+
+        //public 
     }
 
     //public class Debris : NonCollideEntity

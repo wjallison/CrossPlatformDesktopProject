@@ -82,6 +82,7 @@ namespace CrossPlatformDesktopProject
         public double dV1 = 0, dV2 = 0, dV3 = 0, dV4 = 0, dV5 = 0, dV6 = 0;
 
         public List<PhysEntity> physEntList = new List<PhysEntity>();
+        public List<Debris> debrisList = new List<Debris>();
         //public List<Object> asteroidList = new List<object>();
         public _selectedPhysEnt selectedPhysEnt = new _selectedPhysEnt(0, new PhysEntity());
         //public int selectedEntIndex;
@@ -521,32 +522,11 @@ namespace CrossPlatformDesktopProject
 
                 for (int i = 0; i < physEntList.Count; i++)
                 {
-                    if (physEntList[i].pos.Y < -75)
+                    if (physEntList[i].pos.Y < -75 || physEntList[i].pos.X > graphics.PreferredBackBufferWidth + 75
+                        || physEntList[i].pos.Y > graphics.PreferredBackBufferHeight + 200 || physEntList[i].pos.X < -75)
                     {
-                        physEntList.RemoveAt(i);
-                        if (radial.isFollowing)
-                        {
-                            if (radial.followingIndex > i)
-                            {
-                                radial.followingIndex--;
-                            }
-                        }
-                        for(int j = 0; j < physEntList.Count; j++)
-                        {
-                            if(physEntList[j].GetType() == (new Drone()).GetType())
-                            {
-                                Drone d = (Drone)physEntList[j];
-                                if(d.targetIndex > i)
-                                {
-                                    d.targetIndex--;
-                                    physEntList[j] = d;
-                                }
-                            }
-                        }
-                        //for(int j = 0; j < physEntList.Count; j++)
-                        //{
-                        //    //if(physEntList[j].type )
-                        //}
+                        
+                        DestroyAt(i);
                         i--;
                     }
                 }
@@ -627,6 +607,22 @@ namespace CrossPlatformDesktopProject
                         physEntList[i] = d;
                     }
                     physEntList[i].Update(gameTime);
+
+                    if(physEntList[i].type == "asteroid")
+                    {
+                        if(physEntList[i].health < 0)
+                        {
+                            SpawnDebris((Asteroid)physEntList[i]);
+
+
+
+                            DestroyAt(i);
+                            i--;
+
+
+
+                        }
+                    }
                 }
 
                 base.Update(gameTime);
@@ -682,6 +678,53 @@ namespace CrossPlatformDesktopProject
         //    Drone d = (Drone)sender;
         //    physEntList[d.targetIndex].TakeDamage(d.DealDamage());
         //}
+        public void SpawnDebris(Asteroid source)
+        {
+            Random r = new Random();
+            for(int i = 0; i < r.Next(1, 3); i++)
+            {
+                Debris d = new Debris(source);
+                debrisList.Add(d);
+            }
+            if(source.diam > 50)
+            {
+                if(r.Next(0,2) == 1)
+                {
+                    Asteroid a = source;
+                    a.diam = source.diam / 2;
+                    physEntList.Add(a);
+                }
+            }
+        }
+
+        public void DestroyAt(int i)
+        {
+            physEntList.RemoveAt(i);
+            if (radial.isFollowing)
+            {
+                if (radial.followingIndex > i)
+                {
+                    radial.followingIndex--;
+                }
+            }
+            for (int j = 0; j < physEntList.Count; j++)
+            {
+                if (physEntList[j].GetType() == (new Drone()).GetType())
+                {
+                    Drone d = (Drone)physEntList[j];
+                    if (d.targetIndex > i)
+                    {
+                        d.targetIndex--;
+                        physEntList[j] = d;
+                    }
+                }
+            }
+            //for(int j = 0; j < physEntList.Count; j++)
+            //{
+            //    //if(physEntList[j].type )
+            //}
+            //i--;
+        }
 
         public Vector2 ScaleAbout(double scalar, Vector2 pt0, Vector2 center)
         {
