@@ -313,10 +313,11 @@ namespace CrossPlatformDesktopProject
             drawPos = new Vector2((float)(pos.X - 12.5), (float)(pos.Y - 12.5));
             hitBox = new Rectangle(new Point((int)drawPos.X, (int)drawPos.Y),
                 new Point(25, 25));
+            hitCircle = new Circle(pos, (float)diam);
             playerControled = false;
             //idNo = 
 
-            //texture = _globals.textures[1004];
+            texture = _globals.textures[3, 0];
             content = source.content;
             
             foreach(string k in content.Keys)
@@ -518,7 +519,7 @@ namespace CrossPlatformDesktopProject
         public double PlusMinusOne()
         {
             Random rand = new Random();
-            double d = rand.Next() * 2 - 1;
+            double d = rand.Next(0,2) * 2 - 1;
             return d;
         }
     }

@@ -50,7 +50,7 @@ namespace CrossPlatformDesktopProject
          * [2,0]: Core (station core)
          * [2,1]: StationDock
          * 
-         * [3,x]: debris
+         * [3,0]: debris
          * 
          * [4,0]: radial menu
          * [4,1]: rb 1

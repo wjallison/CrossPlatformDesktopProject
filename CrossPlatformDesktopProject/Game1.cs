@@ -186,6 +186,8 @@ namespace CrossPlatformDesktopProject
 
             _globals.textures[0, 0] = Content.Load<Texture2D>("asteroid");
 
+            _globals.textures[3, 0] = Content.Load<Texture2D>("debris");
+
             #endregion
 
             textureBlackLine = new Texture2D(GraphicsDevice, 1, 1);
@@ -631,6 +633,10 @@ namespace CrossPlatformDesktopProject
                         }
                     }
                 }
+                for(int i = 0; i < debrisList.Count; i++)
+                {
+                    debrisList[i].Update(gameTime);
+                }
 
                 base.Update(gameTime);
             }
@@ -860,6 +866,17 @@ namespace CrossPlatformDesktopProject
                             DrawLine(physEntList[i].pos, physEntList[i].pos + physEntList[i].posDotDot, Color.White);
                             DrawLinearEffect(physEntList[i].pos, physEntList[i].pos + physEntList[i].posDot);
                         }
+                    }
+                }
+                if (debrisList.Count > 0)
+                {
+                    for(int i = 0; i < debrisList.Count; i++)
+                    {
+                        spriteBatch.Draw(
+                            debrisList[i].texture,
+                            debrisList[i].hitBox,
+                            Color.White
+                            );
                     }
                 }
 
