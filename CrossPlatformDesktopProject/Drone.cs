@@ -409,6 +409,17 @@ namespace CrossPlatformDesktopProject
             }
         }
 
+        public void DonateResources()
+        {
+            foreach(string k in content.Keys)
+            {
+                if(content[k] > 0)
+                {
+                    content[k] -= 1;
+                }
+            }
+        }
+
         public void ReceiveOrder(int order, Vector2 targetPt, PhysEntity targetEnt = null, int targetInd = 0)
         {
             //orderState 

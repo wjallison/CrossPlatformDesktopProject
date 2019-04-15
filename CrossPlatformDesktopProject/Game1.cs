@@ -16,6 +16,8 @@ namespace CrossPlatformDesktopProject
 
         UIItem resourcesPanel, selectedEntityPanel, menuButtonPanel, groupButtonsPanel;
 
+        public IDictionary<string, double> playerResources = new Dictionary<string, double>();
+
         Vector2 ballPos;
         float ballSpeed;
         float ballAngle = 0;
@@ -52,7 +54,7 @@ namespace CrossPlatformDesktopProject
 
         int gameState = 2;
 
-        public int[] playerResources = new int[15];
+        //public int[] playerResources = new int[15];
         //"Waste",
         //    "Fe",
         //    "Rock",
@@ -72,7 +74,8 @@ namespace CrossPlatformDesktopProject
         public Rectangle resourcesPanelRect,
             selectedEntityPanelRect,
             MenuButtonRect,
-            GroupButtonsRect;
+            GroupButtonsRect,
+            PauseButtonRect;
 
         //List<Rectangle> uiElements = new List<Rectangle>();
 
@@ -117,6 +120,7 @@ namespace CrossPlatformDesktopProject
             selectedEntityPanelRect = new Rectangle(50, graphics.PreferredBackBufferHeight - 60, graphics.PreferredBackBufferWidth - 100, 60);
             GroupButtonsRect = new Rectangle(graphics.PreferredBackBufferWidth - 30, 20, 30, graphics.PreferredBackBufferHeight - 50);
             MenuButtonRect = new Rectangle(graphics.PreferredBackBufferWidth - 50, graphics.PreferredBackBufferHeight - 50, 50, 50);
+            PauseButtonRect = new Rectangle(0, graphics.PreferredBackBufferHeight - 50, 50, 50);
 
             ballPos = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
             ballSpeed = 100f;
@@ -129,6 +133,10 @@ namespace CrossPlatformDesktopProject
             //uiElements.Add(selectedEntityPanelRect);
             //uiElements.Add(GroupButtonsRect);
             //uiElements.Add(MenuButtonRect);
+            for(int i = 0; i < _globals.materials.Length; i++)
+            {
+                playerResources.Add(_globals.materials[i], 0);
+            }
 
             base.Initialize();
         }
@@ -402,136 +410,137 @@ namespace CrossPlatformDesktopProject
 
                 #region click actions
                 var mState = Mouse.GetState();
+                DealWithMouseEvent(mState);
+                #region mouseDeprecated
+                //if (mouseClicked == false)
+                //{
+                //    if (mState.LeftButton == ButtonState.Pressed)
+                //    {
+                //        mouseClicked = true;
 
-                if (mouseClicked == false)
-                {
-                    if (mState.LeftButton == ButtonState.Pressed)
-                    {
-                        mouseClicked = true;
+                //        Rectangle r = new Rectangle(mState.Position.X, mState.Y, 1, 1);
 
-                        Rectangle r = new Rectangle(mState.Position.X, mState.Y, 1, 1);
+                //        if (r.Intersects(radial.drawBox))
+                //        {
+                //            for (int i = 0; i < radial.buttons.Length; i++)
+                //            {
+                //                if (radial.buttons[i].enabled)
+                //                {
+                //                    if (r.Intersects(radial.buttons[i].box))
+                //                    {
+                //                        IssueCommand(i);
+                //                    }
+                //                }
+                //            }
+                //            if (radial.SwitchButton.enabled)
+                //            {
+                //                if (r.Intersects(radial.SwitchButton.box))
+                //                {
+                //                    selectedPhysEnt.entity = physEntList[radial.followingIndex];
+                //                    selectedPhysEnt.index = radial.followingIndex;
 
-                        if (r.Intersects(radial.drawBox))
-                        {
-                            for (int i = 0; i < radial.buttons.Length; i++)
-                            {
-                                if (radial.buttons[i].enabled)
-                                {
-                                    if (r.Intersects(radial.buttons[i].box))
-                                    {
-                                        IssueCommand(i);
-                                    }
-                                }
-                            }
-                            if (radial.SwitchButton.enabled)
-                            {
-                                if (r.Intersects(radial.SwitchButton.box))
-                                {
-                                    selectedPhysEnt.entity = physEntList[radial.followingIndex];
-                                    selectedPhysEnt.index = radial.followingIndex;
+                //                }
+                //            }
+                //        }
+                //        else if (r.Intersects(resourcesPanelRect))
+                //        {
+                //            //radialMenuOn = false;
+                //            //radial.isOn 
+                //            radial.Off();
+                //        }
+                //        else if (r.Intersects(selectedEntityPanelRect))
+                //        {
+                //            //radialMenuOn = false;
+                //            radial.Off();
+                //        }
+                //        else if (r.Intersects(GroupButtonsRect))
+                //        {
+                //            //radialMenuOn = false;
+                //            radial.Off();
+                //        }
+                //        else if (r.Intersects(MenuButtonRect))
+                //        {
+                //            radial.Off();
+                //        }
+                //        else if (r.Intersects(station.blocks[0].hitBox))
+                //        {
+                //            gameState = (int)GameState.BuildMenuPaused;
+                //            return;
+                //        }
 
-                                }
-                            }
-                        }
-                        else if (r.Intersects(resourcesPanelRect))
-                        {
-                            //radialMenuOn = false;
-                            //radial.isOn 
-                            radial.Off();
-                        }
-                        else if (r.Intersects(selectedEntityPanelRect))
-                        {
-                            //radialMenuOn = false;
-                            radial.Off();
-                        }
-                        else if (r.Intersects(GroupButtonsRect))
-                        {
-                            //radialMenuOn = false;
-                            radial.Off();
-                        }
-                        else if (r.Intersects(MenuButtonRect))
-                        {
-                            radial.Off();
-                        }
-                        else if (r.Intersects(station.blocks[0].hitBox))
-                        {
-                            gameState = (int)GameState.BuildMenuPaused;
-                            return;
-                        }
+                //        else
+                //        {
+                //            radial.isFollowing = false;
+                //            for (int i = 0; i < physEntList.Count; i++)
+                //            {
+                //                if (r.Intersects(physEntList[i].hitBox))
+                //                {
+                //                    radial.Follow(physEntList[i], i);
+                //                    bool[] s = new bool[] { true, false, false, false, false, false };
 
-                        else
-                        {
-                            radial.isFollowing = false;
-                            for (int i = 0; i < physEntList.Count; i++)
-                            {
-                                if (r.Intersects(physEntList[i].hitBox))
-                                {
-                                    radial.Follow(physEntList[i], i);
-                                    bool[] s = new bool[] { true, false, false, false, false, false };
-
-                                    //if(physEntList[selectedEntIndex].type == "miningDrone")
-                                    //{
-                                    //    s[1] = true;
-                                    //}
-                                    if (physEntList[i].type == "asteroid")
-                                    {
-                                        switch (physEntList[selectedPhysEnt.index].type)
-                                        {
-                                            case "miningDrone":
-                                                s[1] = true;
-                                                break;
-                                            case "harvestingDrone":
-                                                //s[2] = true;
-                                                break;
-                                        }
-                                    }
-                                    //else if(physEntList[i].type = "dockingStation")
+                //                    //if(physEntList[selectedEntIndex].type == "miningDrone")
+                //                    //{
+                //                    //    s[1] = true;
+                //                    //}
+                //                    if (physEntList[i].type == "asteroid")
+                //                    {
+                //                        switch (physEntList[selectedPhysEnt.index].type)
+                //                        {
+                //                            case "miningDrone":
+                //                                s[1] = true;
+                //                                break;
+                //                            case "harvestingDrone":
+                //                                //s[2] = true;
+                //                                break;
+                //                        }
+                //                    }
+                //                    //else if(physEntList[i].type = "dockingStation")
 
 
-                                    if (physEntList[i].playerControled)
-                                    {
-                                        s[5] = true;
-                                    }
+                //                    if (physEntList[i].playerControled)
+                //                    {
+                //                        s[5] = true;
+                //                    }
 
-                                    radial.SetState(s);
-                                    radial.followingType = 1;
-                                    //physEntList[i].radialMenuFollows = true;
-                                    break;
-                                }
-                            }
-                            for(int i = 0; i < debrisList.Count; i++)
-                            {
-                                if (r.Intersects(debrisList[i].hitBox))
-                                {
-                                    radial.Follow(debrisList[i], i);
-                                    bool[] s = new bool[] { true, false, false, false, false, false };
+                //                    radial.SetState(s);
+                //                    radial.followingType = 1;
+                //                    //physEntList[i].radialMenuFollows = true;
+                //                    break;
+                //                }
+                //            }
+                //            for(int i = 0; i < debrisList.Count; i++)
+                //            {
+                //                if (r.Intersects(debrisList[i].hitBox))
+                //                {
+                //                    radial.Follow(debrisList[i], i);
+                //                    bool[] s = new bool[] { true, false, false, false, false, false };
 
-                                    if(physEntList[selectedPhysEnt.index].type == "harvestDrone")
-                                    {
-                                        s[2] = true;
-                                    }
-                                    radial.SetState(s);
-                                }
-                            }
-                            if (!radial.isFollowing)
-                            {
-                                radial.UpdateSpace(new Vector2((float)mState.Position.X, (float)mState.Position.Y));
-                                bool[] s = new bool[] { true, false, false, false, false, false };
-                                radial.SetState(s);
-                                radial.followingType = 2;
-                            }
-                        }
+                //                    if(physEntList[selectedPhysEnt.index].type == "harvestDrone")
+                //                    {
+                //                        s[2] = true;
+                //                    }
+                //                    radial.SetState(s);
+                //                }
+                //            }
+                //            if (!radial.isFollowing)
+                //            {
+                //                radial.UpdateSpace(new Vector2((float)mState.Position.X, (float)mState.Position.Y));
+                //                bool[] s = new bool[] { true, false, false, false, false, false };
+                //                radial.SetState(s);
+                //                radial.followingType = 2;
+                //            }
+                //        }
 
-                    }
-                }
-                else
-                {
-                    if (mState.LeftButton == ButtonState.Released)
-                    {
-                        mouseClicked = false;
-                    }
-                }
-
+                //    }
+                //}
+                //else
+                //{
+                //    if (mState.LeftButton == ButtonState.Released)
+                //    {
+                //        mouseClicked = false;
+                //    }
+                //}
+                #endregion
                 #endregion
 
                 #region spawn asteroids
@@ -694,11 +703,29 @@ namespace CrossPlatformDesktopProject
                     }
                 }
 
+                //Docking
+                for(int i = 0; i < physEntList.Count; i++)
+                {
+                    if(physEntList[i].GetType() == (new Drone()).GetType())
+                    {
+                        Drone d = (Drone)physEntList[i];
+                        if (d.dockingEnabled)
+                        {
+                            if(d.relTarget.Length() < 50)
+                            {
+                                ReceiveResources(d);
+                                d.DonateResources();
+                            }
+                        }
+                    }
+                }
+
                 base.Update(gameTime);
             }
             else if (gameState == (int)GameState.Paused)
             {
-
+                var mState = Mouse.GetState();
+                DealWithMouseEvent(mState);
             }
             else if (gameState == (int)GameState.BuildMenuPaused)
             {
@@ -709,11 +736,6 @@ namespace CrossPlatformDesktopProject
                     if (mState.LeftButton == ButtonState.Pressed)
                     {
                         mouseClicked = true;
-
-
-
-
-
 
 
 
@@ -730,6 +752,150 @@ namespace CrossPlatformDesktopProject
             else if(gameState == (int)GameState.SideMenuPaused)
             {
 
+            }
+        }
+
+        public void DealWithMouseEvent(MouseState mState)
+        {
+            if (mouseClicked == false)
+            {
+                if (mState.LeftButton == ButtonState.Pressed)
+                {
+                    mouseClicked = true;
+
+                    Rectangle r = new Rectangle(mState.Position.X, mState.Y, 1, 1);
+
+                    if (r.Intersects(radial.drawBox))
+                    {
+                        for (int i = 0; i < radial.buttons.Length; i++)
+                        {
+                            if (radial.buttons[i].enabled)
+                            {
+                                if (r.Intersects(radial.buttons[i].box))
+                                {
+                                    IssueCommand(i);
+                                }
+                            }
+                        }
+                        if (radial.SwitchButton.enabled)
+                        {
+                            if (r.Intersects(radial.SwitchButton.box))
+                            {
+                                selectedPhysEnt.entity = physEntList[radial.followingIndex];
+                                selectedPhysEnt.index = radial.followingIndex;
+
+                            }
+                        }
+                    }
+                    else if (r.Intersects(resourcesPanelRect))
+                    {
+                        //radialMenuOn = false;
+                        //radial.isOn 
+                        radial.Off();
+                    }
+                    else if (r.Intersects(selectedEntityPanelRect))
+                    {
+                        //radialMenuOn = false;
+                        radial.Off();
+                    }
+                    else if (r.Intersects(GroupButtonsRect))
+                    {
+                        //radialMenuOn = false;
+                        radial.Off();
+                    }
+                    else if (r.Intersects(MenuButtonRect))
+                    {
+                        radial.Off();
+                    }
+                    else if (r.Intersects(station.blocks[0].hitBox))
+                    {
+                        gameState = (int)GameState.BuildMenuPaused;
+                        return;
+                    }
+                    else if (r.Intersects(PauseButtonRect))
+                    {
+                        if(gameState == (int)GameState.Paused)
+                        {
+                            gameState = (int)GameState.MainState;
+                        }
+                        else
+                        {
+                            gameState = (int)GameState.Paused;
+                        }
+                        //gameState = (int)GameState.Paused;
+                        return;
+                    }
+                    else
+                    {
+                        radial.isFollowing = false;
+                        for (int i = 0; i < physEntList.Count; i++)
+                        {
+                            if (r.Intersects(physEntList[i].hitBox))
+                            {
+                                radial.Follow(physEntList[i], i);
+                                bool[] s = new bool[] { true, false, false, false, false, false };
+
+                                //if(physEntList[selectedEntIndex].type == "miningDrone")
+                                //{
+                                //    s[1] = true;
+                                //}
+                                if (physEntList[i].type == "asteroid")
+                                {
+                                    switch (physEntList[selectedPhysEnt.index].type)
+                                    {
+                                        case "miningDrone":
+                                            s[1] = true;
+                                            break;
+                                        case "harvestingDrone":
+                                            //s[2] = true;
+                                            break;
+                                    }
+                                }
+                                //else if(physEntList[i].type = "dockingStation")
+
+
+                                if (physEntList[i].playerControled)
+                                {
+                                    s[5] = true;
+                                }
+
+                                radial.SetState(s);
+                                radial.followingType = 1;
+                                //physEntList[i].radialMenuFollows = true;
+                                break;
+                            }
+                        }
+                        for (int i = 0; i < debrisList.Count; i++)
+                        {
+                            if (r.Intersects(debrisList[i].hitBox))
+                            {
+                                radial.Follow(debrisList[i], i);
+                                bool[] s = new bool[] { true, false, false, false, false, false };
+
+                                if (physEntList[selectedPhysEnt.index].type == "harvestDrone")
+                                {
+                                    s[2] = true;
+                                }
+                                radial.SetState(s);
+                            }
+                        }
+                        if (!radial.isFollowing)
+                        {
+                            radial.UpdateSpace(new Vector2((float)mState.Position.X, (float)mState.Position.Y));
+                            bool[] s = new bool[] { true, false, false, false, false, false };
+                            radial.SetState(s);
+                            radial.followingType = 2;
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                if (mState.LeftButton == ButtonState.Released)
+                {
+                    mouseClicked = false;
+                }
             }
         }
 
@@ -837,164 +1003,19 @@ namespace CrossPlatformDesktopProject
             }
             else if(gameState == 2)
             {
-                
 
-                
-                
+                DrawRegular();
 
-                //spriteBatch.DrawString(font, displayValue.ToString(), new Vector2(200, -200), Color.Black);
-                //spriteBatch.DrawString(font, "test", new Vector2(200, 100), Color.Black);
-                spriteBatch.DrawString(font, "Theta: " + dV1.ToString(), new Vector2(200, 100), Color.Black);
-                spriteBatch.DrawString(font, dV2.ToString(), new Vector2(200, 120), Color.Black);
-                spriteBatch.DrawString(font, dV3.ToString(), new Vector2(200, 140), Color.Black);
-                spriteBatch.DrawString(font, dV4.ToString(), new Vector2(200, 160), Color.Black);
-                //spriteBatch.Draw(textureBall, ballPos, Color.White);
-                spriteBatch.Draw(textureBall,
-                    ballPos,
-                    null,
-                    Color.White,
-                    ballAngle,
-                    new Vector2(textureBall.Width / 2, textureBall.Height / 2),
-                    Vector2.One,
-                    SpriteEffects.None,
-                    0f
-                    );
-
-                #region testing lines
-                Vector2 offset = new Vector2(0, 0);
-                //Vector2 ob = new Vector2(textureBall.Width / 2, textureBall.Height / 2);
-                Vector2 ob = new Vector2(0, 0);
-                spriteBatch.Draw(linear.texture,
-                    linear.start + offset,
-                    //new Rectangle((int)linear.start.X, (int)linear.start.Y, 200, 100),
-                    new Rectangle(0, 0, 200, 5),
-                    //null,
-                    Color.White,
-                    (Single)(3.14/6),
-                    ob,
-                    Vector2.One,
-                    SpriteEffects.None,
-                    0f);
-                //Vector2 offset = new Vector2(0, 0);
-                spriteBatch.Draw(linear.texture,
-                    linear.start + offset,
-                    //new Rectangle((int)linear.start.X, (int)linear.start.Y, 200, 100),
-                    new Rectangle(0, 0, 200, 5),
-                    //null,
-                    Color.White,
-                    0f,
-                    ob,
-                    Vector2.One,
-                    SpriteEffects.None,
-                    0f);
-                spriteBatch.Draw(linear.texture,
-                    linear.start + offset,
-                    //new Rectangle((int)linear.start.X, (int)linear.start.Y, 200, 100),
-                    new Rectangle(0, 0, 200, 5),
-                    //null,
-                    Color.White,
-                    (Single)(3.14 / 3),
-                    ob,
-                    Vector2.One,
-                    SpriteEffects.None,
-                    0f);
-                spriteBatch.Draw(linear.texture,
-                    linear.start + offset,
-                    //new Rectangle((int)linear.start.X, (int)linear.start.Y, 200, 100),
-                    new Rectangle(0, 0, 200, 5),
-                    //null,
-                    Color.White,
-                    (Single)(3.14 / 2),
-                    ob,
-                    Vector2.One,
-                    SpriteEffects.None,
-                    0f);
-                //Rectangle r = new Rectangle()
-                //spriteBatch.Draw(linear.texture, linear.rect, Color.White);
-                //spriteBatch.
-                #endregion
-                if (physEntList.Count > 0)
-                {
-                    for (int i = 0; i < physEntList.Count; i++)
-                    {
-                        //physEntList[i]
-                        spriteBatch.Draw(
-                            physEntList[i].texture,
-                            physEntList[i].hitBox,
-                            Color.White
-                            );
-                        if(physEntList[i].posDotDot.Length() != 0)
-                        {
-                            DrawLine(physEntList[i].pos, physEntList[i].pos + physEntList[i].posDotDot, Color.White);
-                            DrawLinearEffect(physEntList[i].pos, physEntList[i].pos + physEntList[i].posDot);
-                        }
-                    }
-                }
-                if (debrisList.Count > 0)
-                {
-                    for(int i = 0; i < debrisList.Count; i++)
-                    {
-                        spriteBatch.Draw(
-                            debrisList[i].texture,
-                            debrisList[i].hitBox,
-                            Color.White
-                            );
-                    }
-                }
-
-                DrawSelectedDisplay();
-                if (radial.isOn)
-                {
-                    //spriteBatch.Draw(
-                    //    textureRadialMenu,
-                    //    radialMenuRect,
-                    //    Color.White
-                    //    );
-                    DrawRadialMenu();
-
-                }
-
-
-                #region UI
-
-                spriteBatch.Draw(
-                    resourcesPanel.texture,
-                    resourcesPanel.box,
-                    Color.White
-                    );
-                //spriteBatch.Draw(selectedEntityPanel.texture, selectedEntityPanel.box, Color.White);
-                //if
-                //if (firstInitDraw)
-                //{
-                //    selectedEntityPanel.AddRelControl(
-                //    new UIControl(
-                //        new Vector2((float)25, 10), new Vector2(25, 25), selectedPhysEnt.entity.texture));
-                //}
-
-                //if (PhysEntSelected)
-                //{
-                //    selectedEntityPanel.controls[0].texture = selectedPhysEnt.entity.texture;
-                //    spriteBatch.Draw(selectedEntityPanel.controls[0].texture,
-                //                selectedEntityPanel.controls[0].box,
-                //                Color.White);
-                //}
-
-                //spriteBatch.Draw(textureBall, new Rectangle(new Point(selectedEntityPanel.box.X, selectedEntityPanel.box.Y), new Point(10, 10)), Color.White);
-
-                #endregion
-
-                //spriteBatch.Draw(textureBall,)
-                
-
-
-                
 
                 base.Draw(gameTime);
             }
             
             else if (gameState == 3)
             {
+                DrawRegular();
 
+
+                base.Draw(gameTime);
             }
             else if (gameState == 4)
             {
@@ -1002,6 +1023,146 @@ namespace CrossPlatformDesktopProject
             }
 
             spriteBatch.End();
+        }
+        public void DrawRegular()
+        {
+
+            
+
+
+            //spriteBatch.DrawString(font, displayValue.ToString(), new Vector2(200, -200), Color.Black);
+            //spriteBatch.DrawString(font, "test", new Vector2(200, 100), Color.Black);
+            spriteBatch.DrawString(font, "Theta: " + dV1.ToString(), new Vector2(200, 100), Color.Black);
+            spriteBatch.DrawString(font, dV2.ToString(), new Vector2(200, 120), Color.Black);
+            spriteBatch.DrawString(font, dV3.ToString(), new Vector2(200, 140), Color.Black);
+            spriteBatch.DrawString(font, dV4.ToString(), new Vector2(200, 160), Color.Black);
+            //spriteBatch.Draw(textureBall, ballPos, Color.White);
+            spriteBatch.Draw(textureBall,
+                ballPos,
+                null,
+                Color.White,
+                ballAngle,
+                new Vector2(textureBall.Width / 2, textureBall.Height / 2),
+                Vector2.One,
+                SpriteEffects.None,
+                0f
+                );
+
+            #region testing lines
+            Vector2 offset = new Vector2(0, 0);
+            //Vector2 ob = new Vector2(textureBall.Width / 2, textureBall.Height / 2);
+            Vector2 ob = new Vector2(0, 0);
+            spriteBatch.Draw(linear.texture,
+                linear.start + offset,
+                //new Rectangle((int)linear.start.X, (int)linear.start.Y, 200, 100),
+                new Rectangle(0, 0, 200, 5),
+                //null,
+                Color.White,
+                (Single)(3.14 / 6),
+                ob,
+                Vector2.One,
+                SpriteEffects.None,
+                0f);
+            //Vector2 offset = new Vector2(0, 0);
+            spriteBatch.Draw(linear.texture,
+                linear.start + offset,
+                //new Rectangle((int)linear.start.X, (int)linear.start.Y, 200, 100),
+                new Rectangle(0, 0, 200, 5),
+                //null,
+                Color.White,
+                0f,
+                ob,
+                Vector2.One,
+                SpriteEffects.None,
+                0f);
+            spriteBatch.Draw(linear.texture,
+                linear.start + offset,
+                //new Rectangle((int)linear.start.X, (int)linear.start.Y, 200, 100),
+                new Rectangle(0, 0, 200, 5),
+                //null,
+                Color.White,
+                (Single)(3.14 / 3),
+                ob,
+                Vector2.One,
+                SpriteEffects.None,
+                0f);
+            spriteBatch.Draw(linear.texture,
+                linear.start + offset,
+                //new Rectangle((int)linear.start.X, (int)linear.start.Y, 200, 100),
+                new Rectangle(0, 0, 200, 5),
+                //null,
+                Color.White,
+                (Single)(3.14 / 2),
+                ob,
+                Vector2.One,
+                SpriteEffects.None,
+                0f);
+            //Rectangle r = new Rectangle()
+            //spriteBatch.Draw(linear.texture, linear.rect, Color.White);
+            //spriteBatch.
+            #endregion
+            if (physEntList.Count > 0)
+            {
+                for (int i = 0; i < physEntList.Count; i++)
+                {
+                    //physEntList[i]
+                    spriteBatch.Draw(
+                        physEntList[i].texture,
+                        physEntList[i].hitBox,
+                        Color.White
+                        );
+                    if (physEntList[i].posDotDot.Length() != 0)
+                    {
+                        DrawLine(physEntList[i].pos, physEntList[i].pos + physEntList[i].posDotDot, Color.White);
+                        DrawLinearEffect(physEntList[i].pos, physEntList[i].pos + physEntList[i].posDot);
+                    }
+                }
+            }
+            if (debrisList.Count > 0)
+            {
+                for (int i = 0; i < debrisList.Count; i++)
+                {
+                    spriteBatch.Draw(
+                        debrisList[i].texture,
+                        debrisList[i].hitBox,
+                        Color.White
+                        );
+                }
+            }
+
+            DrawSelectedDisplay();
+            if (radial.isOn)
+            {
+                DrawRadialMenu();
+            }
+
+            #region UI
+
+            spriteBatch.Draw(
+                resourcesPanel.texture,
+                resourcesPanel.box,
+                Color.White
+                );
+            //spriteBatch.Draw(selectedEntityPanel.texture, selectedEntityPanel.box, Color.White);
+            //if
+            //if (firstInitDraw)
+            //{
+            //    selectedEntityPanel.AddRelControl(
+            //    new UIControl(
+            //        new Vector2((float)25, 10), new Vector2(25, 25), selectedPhysEnt.entity.texture));
+            //}
+
+            //if (PhysEntSelected)
+            //{
+            //    selectedEntityPanel.controls[0].texture = selectedPhysEnt.entity.texture;
+            //    spriteBatch.Draw(selectedEntityPanel.controls[0].texture,
+            //                selectedEntityPanel.controls[0].box,
+            //                Color.White);
+            //}
+
+            //spriteBatch.Draw(textureBall, new Rectangle(new Point(selectedEntityPanel.box.X, selectedEntityPanel.box.Y), new Point(10, 10)), Color.White);
+            DrawResources();
+            #endregion
         }
 
         public void DrawRadialMenu()
@@ -1066,6 +1227,26 @@ namespace CrossPlatformDesktopProject
 
         }
 
+        public void DrawResources()
+        {
+            //spriteBatch.DrawString(font, "test", new Vector2(50, 5), Color.White);
+            //spriteBatch.DrawString(font, "test", new Vector2(50, 25), Color.White);
+            int i = 0;
+            int j = 0;
+            foreach(string s in playerResources.Keys)
+            {
+                spriteBatch.DrawString(font, s,
+                    new Vector2(50 + j * 100, 5 + 20 * i),
+                    Color.White);
+                spriteBatch.DrawString(font,
+                    playerResources[s].ToString(),
+                    new Vector2(105 + j * 100, 5 + 20 * i),
+                    Color.White);
+                if(i == 0) { i++; }
+                else { i--; j++; }
+            }
+        }
+
         public void IssueCommand(int command)
         {
             Drone d = (Drone)physEntList[selectedPhysEnt.index];
@@ -1093,6 +1274,17 @@ namespace CrossPlatformDesktopProject
                     break;
                 case 4:
                     break;
+            }
+        }
+
+        public void ReceiveResources(Drone drone)
+        {
+            foreach(string k in drone.content.Keys)
+            {
+                if(drone.content[k] > 0)
+                {
+                    playerResources[k] += 1;
+                }
             }
         }
 
