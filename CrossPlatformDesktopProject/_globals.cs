@@ -114,5 +114,25 @@ namespace CrossPlatformDesktopProject
 
             return ret;
         }
+
+        //public static DroneDefs[] = new DroneDefs[5];
+    }
+
+    public struct DroneDefs
+    {
+        string type;
+        double maxThrust;
+        double maxHealth;
+        double mass;
+        double diameter;
+        
+        public DroneDefs(string t, double mT, double mH, double m, double d)
+        {
+            type = t;
+            maxThrust = mT;
+            maxHealth = mH;
+            mass = m;
+            diameter = d;
+        }
     }
 }

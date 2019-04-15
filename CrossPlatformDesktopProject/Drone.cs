@@ -18,6 +18,7 @@ namespace CrossPlatformDesktopProject
         public double maxShield;
         public double shield;
         public double baseDamage;
+        public double maxResources;
         
         public double range = 100;        
 
@@ -64,6 +65,54 @@ namespace CrossPlatformDesktopProject
 
         public Drone() { }
         //public Drone() { }
+        public Drone(string typeOfDrone,
+            string name, 
+            double x = 0, double y = 0, double xDot = 0, double yDot = 0, StationBlock homeBlock = null)
+        {
+            type = typeOfDrone;
+            pos = new Vector2((float)x, (float)y);
+            posDot = new Vector2(0, 0);
+            home = homeBlock;
+            idNo = name;
+            playerControled = true;
+            switch (typeOfDrone)
+            {
+                case "miningDrone":
+                    baseDamage = 10;
+                    thrustMax = 1000;
+                    maxHealth = 250;
+                    health = maxHealth;
+                    maxShield = maxHealth * .1;
+                    shield = maxShield;
+                    mass = 10;
+                    diam = 20;
+                    maxResources = 0;
+                    texture = _globals.textures[1, 1];
+                    break;
+                case "harvestDrone":
+                    baseDamage = 10;
+                    thrustMax = 1000;
+                    maxHealth = 250;
+                    health = maxHealth;
+                    maxShield = maxHealth * .1;
+                    shield = maxShield;
+                    mass = 10;
+                    diam = 20;
+                    maxResources = 100;
+                    texture = _globals.textures[1, 2];
+                    break;
+            }
+            drawPos = new Vector2(
+                        pos.X - (float)(diam * .5),
+                        pos.Y - (float)(diam * .5)
+                        );
+            hitBox = new Rectangle((int)drawPos.X, (int)drawPos.Y, (int)diam, (int)diam);
+            hitCircle = new Circle(pos, (float)diam);
+            for (int i = 0; i < resources.Count(); i++)
+            {
+                resources[i] = 0;
+            }
+        }
         public Drone(Texture2D text,
             double thrust, double diameter,
             string name, double m, double hp,
