@@ -14,6 +14,7 @@ namespace CrossPlatformDesktopProject
     {
         public bool isFollowing = false;
         public int followingIndex = 0;
+        public int followingType = 0;
         public bool isOn = false;
         public Vector2 center = new Vector2(0, 0);
         public Rectangle drawBox = new Rectangle(new Point(-50, -50), new Point(100, 100));

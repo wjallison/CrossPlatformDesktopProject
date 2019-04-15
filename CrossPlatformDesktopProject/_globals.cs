@@ -87,7 +87,6 @@ namespace CrossPlatformDesktopProject
             "H2O",
             "H2",
             "O2",
-            "Cu",
             "CO2",
             "Money",
             "Fuel"

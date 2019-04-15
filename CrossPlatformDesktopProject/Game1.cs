@@ -224,6 +224,7 @@ namespace CrossPlatformDesktopProject
                     graphics.PreferredBackBufferWidth / 3 * 2, 
                 graphics.PreferredBackBufferHeight / 2));
             station.AddBlock(1, 0, "stationDock");
+            station.AddBlock(0, 1, "stationDockHarvester");
         }
 
         /// <summary>
@@ -386,7 +387,16 @@ namespace CrossPlatformDesktopProject
 
                 if (radial.isFollowing)
                 {
-                    radial.Update(physEntList[radial.followingIndex]);
+                    //if(radial.fol)
+                    if(radial.followingType == 1)
+                    {
+                        radial.Update(physEntList[radial.followingIndex]);
+                    }
+                    else if(radial.followingType == 2)
+                    {
+                        radial.Update(debrisList[radial.followingIndex]);
+                    }
+                    
                 }
 
 
@@ -471,7 +481,7 @@ namespace CrossPlatformDesktopProject
                                                 s[1] = true;
                                                 break;
                                             case "harvestingDrone":
-                                                s[2] = true;
+                                                //s[2] = true;
                                                 break;
                                         }
                                     }
@@ -484,8 +494,23 @@ namespace CrossPlatformDesktopProject
                                     }
 
                                     radial.SetState(s);
+                                    radial.followingType = 1;
                                     //physEntList[i].radialMenuFollows = true;
                                     break;
+                                }
+                            }
+                            for(int i = 0; i < debrisList.Count; i++)
+                            {
+                                if (r.Intersects(debrisList[i].hitBox))
+                                {
+                                    radial.Follow(debrisList[i], i);
+                                    bool[] s = new bool[] { true, false, false, false, false, false };
+
+                                    if(physEntList[selectedPhysEnt.index].type == "harvestDrone")
+                                    {
+                                        s[2] = true;
+                                    }
+                                    radial.SetState(s);
                                 }
                             }
                             if (!radial.isFollowing)
@@ -493,6 +518,7 @@ namespace CrossPlatformDesktopProject
                                 radial.UpdateSpace(new Vector2((float)mState.Position.X, (float)mState.Position.Y));
                                 bool[] s = new bool[] { true, false, false, false, false, false };
                                 radial.SetState(s);
+                                radial.followingType = 2;
                             }
                         }
 
@@ -553,7 +579,6 @@ namespace CrossPlatformDesktopProject
                 ballPos.Y = Math.Min(Math.Max(textureBall.Height / 2, ballPos.Y), graphics.PreferredBackBufferHeight - textureBall.Height / 2);
 
 
-                //Mining
 
 
 
@@ -586,6 +611,7 @@ namespace CrossPlatformDesktopProject
 
                 ScanForCollisions(gameTime);
 
+                //mining
                 for (int i = 0; i < physEntList.Count; i++)
                 {
                     
@@ -633,9 +659,39 @@ namespace CrossPlatformDesktopProject
                         }
                     }
                 }
+                
+                //debris
                 for(int i = 0; i < debrisList.Count; i++)
                 {
                     debrisList[i].Update(gameTime);
+                }
+
+                //Harvesting
+                for(int i = 0; i < physEntList.Count; i++)
+                {
+                    if(physEntList[i].type == "harvestDrone")
+                    {
+                        Drone d = (Drone)physEntList[i];
+                        if (d.harvestingEnabled)
+                        {
+                            if(d.relTarget.Length() < 75)
+                            {
+                                Debris deb = (Debris)d.targetPhysEnt;
+                                Harvest(d, deb);
+                                
+
+                                if (deb.kill)
+                                {
+                                    d.GoHome();
+                                    debrisList.Remove(deb);
+                                }
+
+                                physEntList[i] = d;
+                            }
+                        }
+
+
+                    }
                 }
 
                 base.Update(gameTime);
@@ -713,6 +769,12 @@ namespace CrossPlatformDesktopProject
                     physEntList.Add(a);
                 }
             }
+        }
+
+        public void Harvest(Drone d, Debris debris)
+        {
+            d.ReceiveResources(debris);
+            debris.RemoveResources();
         }
 
         public void DestroyAt(int i)
@@ -1025,6 +1087,7 @@ namespace CrossPlatformDesktopProject
                     d.ReceiveOrder(1, new Vector2(0, 0), physEntList[radial.followingIndex], radial.followingIndex);
                     break;
                 case 2:
+                    d.ReceiveOrder(2, new Vector2(0, 0), debrisList[radial.followingIndex], radial.followingIndex);
                     break;
                 case 3:
                     break;

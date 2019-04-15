@@ -207,8 +207,9 @@ namespace CrossPlatformDesktopProject
                         {
                             content.Add(_globals.materials[i], 0);
                         }
-                        content["Rock"] = 100 - content["Fe"] - content["H2O"] - content["Cu"];
+                        
                     }
+                    content["Rock"] = 100 - content["Fe"] - content["H2O"] - content["Cu"];
                     break;
             }
             #endregion
@@ -285,6 +286,7 @@ namespace CrossPlatformDesktopProject
     public class Debris : PhysEntity
     {
         public IDictionary<string, double> content = new Dictionary<string, double>();
+        public bool kill = false;
         //public double diam;
         //public Rectangle hitBox;
         ////public Circle hitCircle;
@@ -319,6 +321,10 @@ namespace CrossPlatformDesktopProject
 
             texture = _globals.textures[3, 0];
             content = source.content;
+            foreach(string k in content.Keys)
+            {
+                content[k] = content[k] * .3;
+            }
             
             foreach(string k in content.Keys)
             {
@@ -326,7 +332,19 @@ namespace CrossPlatformDesktopProject
             }
         }
 
-
+        public void RemoveResources()
+        {
+            kill = true; 
+            foreach (string k in content.Keys)
+            {
+                
+                if (content[k] > 0)
+                {
+                    content[k] -= 1;
+                    kill = false;
+                }
+            }
+        }
         
     }
 
@@ -426,6 +444,11 @@ namespace CrossPlatformDesktopProject
                     spawnsDrones = true;
                     droneType = "miningDrone";
                     break;
+                case "stationDockHarvester":
+                    texture = _globals.textures[2, 1];
+                    spawnsDrones = true;
+                    droneType = "harvestDrone";
+                    break;
                 case "stationStorage":
 
                     break;
@@ -470,13 +493,20 @@ namespace CrossPlatformDesktopProject
             //string name, double m, double hp,
             //double x = 0, double y = 0, double xDot = 0, double yDot = 0, StationBlock homeBlock = null)
             //physEntList.Add(new Drone(textureBall, 100, 50, "d1", 300, 250, 300, 50));
-            Drone d = new Drone(_globals.textures[1, 1],
-                1000, 20, 
-                idNo + "d", 10, 250,
-                pos.X, pos.Y,
-                0, 0,
-                this
-                );
+            //Drone d = new Drone(_globals.textures[1, 1],
+            //    1000, 20, 
+            //    idNo + "d", 10, 250,
+            //    pos.X, pos.Y,
+            //    0, 0,
+            //    this
+            //    );
+            Drone d = new Drone(droneType, "replaceLater", pos.X, pos.Y, 0, 0, this);
+            //switch (droneType)
+            //{
+            //    case "miningDrone":
+            //        d = new Drone(droneType, "replaceLater", pos.X, pos.Y, 0, 0, this);
+            //        break;
+            //}
             return d;
         }
 

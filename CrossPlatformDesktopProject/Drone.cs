@@ -30,11 +30,12 @@ namespace CrossPlatformDesktopProject
 
         public PhysEntity subjectEntity;
 
-        
+
 
         //private double thrust;
 
-        public int[] resources = new int[15];
+        //public double[] resources = new double[15];
+        public IDictionary<string, double> content = new Dictionary<string, double>();
 
 
         #region Orders
@@ -46,8 +47,10 @@ namespace CrossPlatformDesktopProject
         public bool approaching = false;
         public bool targetSet = false;
         public bool miningProx = false;
+        public bool harvestingEnabled = false;
         public Vector2 target;
         public Vector2 relTarget = new Vector2(0, 0);
+        //public int orderState = 0;
 
         public enum OrderState
         {
@@ -108,9 +111,13 @@ namespace CrossPlatformDesktopProject
                         );
             hitBox = new Rectangle((int)drawPos.X, (int)drawPos.Y, (int)diam, (int)diam);
             hitCircle = new Circle(pos, (float)diam);
-            for (int i = 0; i < resources.Count(); i++)
+            //for (int i = 0; i < resources.Count(); i++)
+            //{
+            //    resources[i] = 0;
+            //}
+            foreach(string k in _globals.materials)
             {
-                resources[i] = 0;
+                content.Add(k, 0);
             }
         }
         public Drone(Texture2D text,
@@ -150,9 +157,14 @@ namespace CrossPlatformDesktopProject
             hitBox = new Rectangle((int)drawPos.X, (int)drawPos.Y, (int)diam, (int)diam);
             hitCircle = new Circle(pos, (float)diam);
 
-            for (int i = 0; i < resources.Count(); i++)
+            //for (int i = 0; i < resources.Count(); i++)
+            //{
+            //    resources[i] = 0;
+            //}
+
+            foreach (string k in _globals.materials)
             {
-                resources[i] = 0;
+                content.Add(k, 0);
             }
 
             texture = text;
@@ -345,6 +357,17 @@ namespace CrossPlatformDesktopProject
             approaching = true;
             miningEnabled = true;
             dockingEnabled = false;
+            harvestingEnabled = false;
+        }
+
+        public void Harvest(PhysEntity targetEnt, int ind)
+        {
+            Approach(targetEnt, ind);
+            subjectEntity = targetEnt;
+            approaching = true;
+            miningEnabled = false;
+            dockingEnabled = false;
+            harvestingEnabled = true;
         }
 
         public void GoTo(Vector2 posTarget)
@@ -353,6 +376,7 @@ namespace CrossPlatformDesktopProject
             miningEnabled = false;
             dockingEnabled = false;
             approaching = false;
+            harvestingEnabled = false;
         }
         //public void GoTo(PhysEntity a)
         //{
@@ -369,6 +393,20 @@ namespace CrossPlatformDesktopProject
             dockingEnabled = true;
             miningEnabled = false;
             approaching = false;
+            harvestingEnabled = false;
+        }
+
+        public void ReceiveResources(Debris debris)
+        {
+            foreach(string k in debris.content.Keys)
+            {
+                if(debris.content[k] > 0)
+                {
+                    content[k] += 1;
+                    //debris.content[k] -= 1;
+                }
+                
+            }
         }
 
         public void ReceiveOrder(int order, Vector2 targetPt, PhysEntity targetEnt = null, int targetInd = 0)
@@ -377,7 +415,8 @@ namespace CrossPlatformDesktopProject
             switch (order)
             {
                 case 0:
-                    if(targetEnt != null)
+                    orderState = 0;
+                    if (targetEnt != null)
                     {
                         Approach(targetEnt, targetInd);
                         miningEnabled = false;
@@ -394,7 +433,12 @@ namespace CrossPlatformDesktopProject
                     }
                     break;
                 case 1:
+                    orderState = 1;
                     Mine(targetEnt, targetInd);
+                    break;
+                case 2:
+                    orderState = 2;
+                    Harvest(targetEnt, targetInd);
                     break;
             }
         }
