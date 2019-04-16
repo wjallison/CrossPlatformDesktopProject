@@ -115,5 +115,13 @@ namespace CrossPlatformDesktopProject
             texture = text;
             rect = new Rectangle(x, y, width, height);
         }
+        public Button(Texture2D text, Rectangle container, Vector2 relPos, int width, int height)
+        {
+            texture = text;
+            rect = new Rectangle(
+                (int)(container.X + relPos.X),
+                (int)(container.Y + relPos.Y),
+                width, height);
+        }
     }
 }
