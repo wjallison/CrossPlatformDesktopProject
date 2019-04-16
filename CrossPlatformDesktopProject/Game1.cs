@@ -16,6 +16,8 @@ namespace CrossPlatformDesktopProject
 
         UIItem resourcesPanel, selectedEntityPanel, menuButtonPanel, groupButtonsPanel;
 
+        BuildScreen buildScreen;
+
         public IDictionary<string, double> playerResources = new Dictionary<string, double>();
 
         Vector2 ballPos;
@@ -221,6 +223,8 @@ namespace CrossPlatformDesktopProject
                 graphics.PreferredBackBufferHeight / 2));
             station.AddBlock(1, 0, "stationDock");
             station.AddBlock(0, 1, "stationDockHarvester");
+
+            buildScreen = new BuildScreen(graphics);
         }
 
         /// <summary>
