@@ -761,10 +761,21 @@ namespace CrossPlatformDesktopProject
             physEntList.RemoveAt(i);
             if (radial.isFollowing)
             {
-                if (radial.followingIndex > i)
+                if(radial.followingType == 1)
                 {
-                    radial.followingIndex--;
+                    if (radial.followingIndex > i)
+                    {
+                        radial.followingIndex--;
+                    }
+                    else if(radial.followingIndex == i)
+                    {
+                        radial.followingIndex = 0;
+                        radial.followingType = 0;
+                        radial.Off();
+                    }
                 }
+                
+                //else if(radial.followingIndex)
             }
             for (int j = 0; j < physEntList.Count; j++)
             {
@@ -832,6 +843,7 @@ namespace CrossPlatformDesktopProject
 
             spriteBatch.End();
         }
+
         public void DrawRegular()
         {
             spriteBatch.DrawString(font, "Theta: " + dV1.ToString(), new Vector2(200, 100), Color.Black);
@@ -942,19 +954,27 @@ namespace CrossPlatformDesktopProject
 
         public void DrawSelectedDisplay()
         {
+            //if(selectedEntityPanel.)
             spriteBatch.Draw(selectedEntityPanel.texture, selectedEntityPanel.box, Color.White);
             //spriteBatch.DrawString(font, dV4.ToString(), new Vector2(200, 160), Color.Black);
-            if (PhysEntSelected)
+            if(selectedPhysEnt.entity.texture != null)
             {
                 selectedEntityPanel.controls[0].texture = selectedPhysEnt.entity.texture;
-                spriteBatch.Draw(selectedEntityPanel.controls[0].texture,
-                            selectedEntityPanel.controls[0].box,
-                            Color.White);
-                //located at 25, 10, and box is 25,25
-                //-> extends to 50,35
-
+                spriteBatch.Draw(selectedEntityPanel.controls[0].texture, selectedEntityPanel.controls[0].box, Color.White);
                 spriteBatch.DrawString(font, selectedPhysEnt.entity.idNo, new Vector2((float)selectedEntityPanel.box.Location.X, (float)selectedEntityPanel.box.Location.Y), Color.Black);
             }
+            
+            //if (PhysEntSelected)
+            //{
+            //    selectedEntityPanel.controls[0].texture = selectedPhysEnt.entity.texture;
+            //    spriteBatch.Draw(selectedEntityPanel.controls[0].texture,
+            //                selectedEntityPanel.controls[0].box,
+            //                Color.White);
+            //    //located at 25, 10, and box is 25,25
+            //    //-> extends to 50,35
+
+            //    spriteBatch.DrawString(font, selectedPhysEnt.entity.idNo, new Vector2((float)selectedEntityPanel.box.Location.X, (float)selectedEntityPanel.box.Location.Y), Color.Black);
+            //}
 
         }
 
