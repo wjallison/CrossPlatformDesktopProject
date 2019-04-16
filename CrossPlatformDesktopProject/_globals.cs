@@ -40,7 +40,7 @@ namespace CrossPlatformDesktopProject
          * 
          * [6] UI
          * [6,0] bounding box 
-         * 
+         * [6,1] building menu blank space     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
          */
         public static Texture2D[,] textures = new Texture2D[30,15];
 

@@ -954,28 +954,25 @@ namespace CrossPlatformDesktopProject
 
         public void DrawSelectedDisplay()
         {
-            //if(selectedEntityPanel.)
             spriteBatch.Draw(selectedEntityPanel.texture, selectedEntityPanel.box, Color.White);
-            //spriteBatch.DrawString(font, dV4.ToString(), new Vector2(200, 160), Color.Black);
             if(selectedPhysEnt.entity.texture != null)
             {
                 selectedEntityPanel.controls[0].texture = selectedPhysEnt.entity.texture;
                 spriteBatch.Draw(selectedEntityPanel.controls[0].texture, selectedEntityPanel.controls[0].box, Color.White);
-                spriteBatch.DrawString(font, selectedPhysEnt.entity.idNo, new Vector2((float)selectedEntityPanel.box.Location.X, (float)selectedEntityPanel.box.Location.Y), Color.Black);
+
+
+                Vector2 offset = new Vector2(55, 5);
+                Vector2 boxPos = new Vector2((float)selectedEntityPanel.box.Location.X, (float)selectedEntityPanel.box.Location.Y);
+                //idNo
+                spriteBatch.DrawString(font, selectedPhysEnt.entity.idNo, 
+                    offset + boxPos,
+                    Color.White);
+                //type
+                offset = new Vector2(55, 25);
+                spriteBatch.DrawString(font, selectedPhysEnt.entity.type,
+                    boxPos + offset,
+                    Color.White);
             }
-            
-            //if (PhysEntSelected)
-            //{
-            //    selectedEntityPanel.controls[0].texture = selectedPhysEnt.entity.texture;
-            //    spriteBatch.Draw(selectedEntityPanel.controls[0].texture,
-            //                selectedEntityPanel.controls[0].box,
-            //                Color.White);
-            //    //located at 25, 10, and box is 25,25
-            //    //-> extends to 50,35
-
-            //    spriteBatch.DrawString(font, selectedPhysEnt.entity.idNo, new Vector2((float)selectedEntityPanel.box.Location.X, (float)selectedEntityPanel.box.Location.Y), Color.Black);
-            //}
-
         }
 
         public void DrawResources()
@@ -994,6 +991,30 @@ namespace CrossPlatformDesktopProject
                 if(i == 0) { i++; }
                 else { i--; j++; }
             }
+        }
+
+        public void DrawBuildScreen()
+        {
+            DrawBuildGrid();
+        }
+
+        public void DrawBuildGrid()
+        {
+            Texture2D tex = _globals.textures[6, 1];
+            Texture2D[,] grid = new Texture2D[11, 11]; 
+            for (int i = -5; i < 6; i++)
+            {
+                for(int j = -5; j < 6; j++)
+                {
+                    grid[i, j] = tex;
+                }
+            }
+            for(int i = 0; i < station.blocks.Count; i++)
+            {
+                grid[(int)station.blocks[i].gridPos[0], (int)station.blocks[i].gridPos[1]] = station.blocks[i].texture;
+            }
+
+
         }
 
         public void IssueCommand(int command)
