@@ -404,9 +404,16 @@ namespace CrossPlatformDesktopProject
                     if (physEntList[i].pos.Y < -75 || physEntList[i].pos.X > graphics.PreferredBackBufferWidth + 75
                         || physEntList[i].pos.Y > graphics.PreferredBackBufferHeight + 200 || physEntList[i].pos.X < -75)
                     {
+                        if(physEntList[i].GetType() == (new Drone()).GetType())
+                        {
+                            GoHomeYoureDrunk(i);
+                        }
+                        else
+                        {
+                            DestroyAt(i);
+                            i--;
+                        }
                         
-                        DestroyAt(i);
-                        i--;
                     }
                 }
 
@@ -782,7 +789,7 @@ namespace CrossPlatformDesktopProject
                 if (physEntList[j].GetType() == (new Drone()).GetType())
                 {
                     Drone d = (Drone)physEntList[j];
-                    if (d.targetIndex >= i)
+                    if (d.targetPhysEnt.GetType() != (new Debris()).GetType() && d.targetIndex >= i)
                     {
                         d.targetIndex--;
                         d.targetPhysEnt = physEntList[d.targetIndex];
@@ -1014,6 +1021,13 @@ namespace CrossPlatformDesktopProject
                 grid[(int)station.blocks[i].gridPos[0], (int)station.blocks[i].gridPos[1]] = station.blocks[i].texture;
             }
 
+        }
+        
+        public void GoHomeYoureDrunk(int subjInd)
+        {
+            Drone d = (Drone)physEntList[subjInd];
+            d.GoHome();
+            physEntList[subjInd] = d;
         }
 
         public void IssueCommand(int command)

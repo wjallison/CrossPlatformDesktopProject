@@ -251,6 +251,8 @@ namespace CrossPlatformDesktopProject
         public IDictionary<string, double> content = new Dictionary<string, double>();
         public bool kill = false;
 
+
+        public Debris() { }
         public Debris(Asteroid source)
         {
             solid = false;
