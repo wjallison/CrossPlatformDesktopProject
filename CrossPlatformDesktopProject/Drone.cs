@@ -411,11 +411,18 @@ namespace CrossPlatformDesktopProject
 
         public void DonateResources()
         {
-            foreach(string k in content.Keys)
+            //foreach(string k in content.Keys)
+            //{
+            //    if(content[k] > 0)
+            //    {
+            //        content[k] -= 1;
+            //    }
+            //}
+            for(int i = 0; i < _globals.materials.Length; i++)
             {
-                if(content[k] > 0)
+                if(content[_globals.materials[i]] > 0)
                 {
-                    content[k] -= 1;
+                    content[_globals.materials[i]] -= 1;
                 }
             }
         }

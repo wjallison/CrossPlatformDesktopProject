@@ -188,7 +188,7 @@ namespace CrossPlatformDesktopProject
             Random rand = new Random();
             switch (lane)
             {
-                case 0:
+                case 1:
                     for (int i = 0; i < _globals.materials.Count(); i++)
                     {
                         if (_globals.materials[i] == "Fe")
@@ -321,26 +321,45 @@ namespace CrossPlatformDesktopProject
 
             texture = _globals.textures[3, 0];
             content = source.content;
-            foreach(string k in content.Keys)
+            //string[] temp = new string[content.Keys.Count];
+            //int tempind = 0;
+            //foreach(string k in content.Keys)
+            //{
+            //    temp[tempind] = k;
+
+            //}
+            //foreach(string k in source.content.Keys)
+            //{
+            //    content[k] = content[k] * .3;
+            //}
+            for(int i = 0; i < _globals.materials.Length; i++)
             {
-                content[k] = content[k] * .3;
+                content[_globals.materials[i]] = content[_globals.materials[i]] * .3;
             }
-            
-            foreach(string k in content.Keys)
-            {
-                content[k] *= .1;                
-            }
+
+            //foreach(string k in content.Keys)
+            //{
+            //    content[k] *= .1;                
+            //}
         }
 
         public void RemoveResources()
         {
             kill = true; 
-            foreach (string k in content.Keys)
-            {
+            //foreach (string k in content.Keys)
+            //{
                 
-                if (content[k] > 0)
+            //    if (content[k] > 0)
+            //    {
+            //        content[k] -= 1;
+            //        kill = false;
+            //    }
+            //}
+            for(int i = 0; i < _globals.materials.Length; i++)
+            {
+                if(content[_globals.materials[i]] > 0)
                 {
-                    content[k] -= 1;
+                    content[_globals.materials[i]] -= 1;
                     kill = false;
                 }
             }

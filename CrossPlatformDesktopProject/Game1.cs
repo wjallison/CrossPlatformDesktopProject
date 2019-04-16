@@ -693,6 +693,8 @@ namespace CrossPlatformDesktopProject
                                 {
                                     d.GoHome();
                                     debrisList.Remove(deb);
+                                    radial.followingIndex = selectedPhysEnt.index;
+                                    radial.followingType = 1;
                                 }
 
                                 physEntList[i] = d;
@@ -1279,11 +1281,18 @@ namespace CrossPlatformDesktopProject
 
         public void ReceiveResources(Drone drone)
         {
-            foreach(string k in drone.content.Keys)
+            //foreach(string k in drone.content.Keys)
+            //{
+            //    if(drone.content[k] > 0)
+            //    {
+            //        playerResources[k] += 1;
+            //    }
+            //}
+            for(int i = 0; i < _globals.materials.Length; i++)
             {
-                if(drone.content[k] > 0)
+                if(drone.content[_globals.materials[i]] > 0)
                 {
-                    playerResources[k] += 1;
+                    playerResources[_globals.materials[i]] += 1;
                 }
             }
         }
