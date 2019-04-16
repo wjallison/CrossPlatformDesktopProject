@@ -1014,7 +1014,6 @@ namespace CrossPlatformDesktopProject
                 grid[(int)station.blocks[i].gridPos[0], (int)station.blocks[i].gridPos[1]] = station.blocks[i].texture;
             }
 
-
         }
 
         public void IssueCommand(int command)
