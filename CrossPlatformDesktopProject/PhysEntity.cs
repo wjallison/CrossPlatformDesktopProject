@@ -10,30 +10,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CrossPlatformDesktopProject
 {
-    //public class NonCollideEntity : Clickable
-    //{
-    //    public double diam;
-    //    public Rectangle hitBox;
-    //    //public Circle hitCircle;
-    //    public bool radialMenuFollows = false;
-    //    public bool playerControlled;
-    //    public string idNo;
-
-    //    public Texture2D texture;
-
-    //    public Vector2 pos, posDot, posDotDot, drawPos;
-
-    //    public double theta;
-    //    public double thetaDot;
-
-    //    public void Update(GameTime gameTime)
-    //    {
-
-    //    }
-
-    //    public virtual void IndividualUpdate(GameTime gameTime) { }
-    //}
-
     public class PhysEntity : Clickable
     {
 
@@ -53,11 +29,6 @@ namespace CrossPlatformDesktopProject
 
         public Texture2D texture;
 
-        //double doubles
-        //public double[] pos = new double[] { 0, 0 };  //Note: pos is to center of mass.
-        //public double[] posDot = new double[] { 0, 0 };
-        //public double[] posDotDot = new double[] { 0, 0 };
-        //public double[] drawPos = new double[] { 0, 0 }; //Note: drawPos is to upper left corner.
         public Vector2 pos, posDot, posDotDot, drawPos;
 
         //strings
@@ -117,10 +88,6 @@ namespace CrossPlatformDesktopProject
         {
 
         }
-        //public reCalc()
-        //{
-
-        //}
 
         public Asteroid(Texture2D text, int lane, double diameter, string name, double m, double x = 0, double y = 0, double xDot = 0, double yDot = 0)
         {
@@ -266,8 +233,6 @@ namespace CrossPlatformDesktopProject
         }
         public override void TakeDamage(double damage)
         {
-            //damage = damage * (100 - damResist) / 100;
-
             health = health - damage;
         }
 
@@ -279,28 +244,15 @@ namespace CrossPlatformDesktopProject
             }
         }
 
-        //public 
     }
 
-    //public class Debris : NonCollideEntity
     public class Debris : PhysEntity
     {
         public IDictionary<string, double> content = new Dictionary<string, double>();
         public bool kill = false;
-        //public double diam;
-        //public Rectangle hitBox;
-        ////public Circle hitCircle;
-        //public bool radialMenuFollows = false;
-        //public bool playerControlled;
-        //public string idNo;
-
-        //public Texture2D texture;
-
-        //public Vector2 pos, posDot, posDotDot, drawPos;
 
         public Debris(Asteroid source)
         {
-            //Random rand = new Random();
             solid = false;
 
             pos = source.pos;
@@ -317,44 +269,18 @@ namespace CrossPlatformDesktopProject
                 new Point(25, 25));
             hitCircle = new Circle(pos, (float)diam);
             playerControled = false;
-            //idNo = 
 
             texture = _globals.textures[3, 0];
             content = source.content;
-            //string[] temp = new string[content.Keys.Count];
-            //int tempind = 0;
-            //foreach(string k in content.Keys)
-            //{
-            //    temp[tempind] = k;
-
-            //}
-            //foreach(string k in source.content.Keys)
-            //{
-            //    content[k] = content[k] * .3;
-            //}
             for(int i = 0; i < _globals.materials.Length; i++)
             {
                 content[_globals.materials[i]] = content[_globals.materials[i]] * .3;
             }
-
-            //foreach(string k in content.Keys)
-            //{
-            //    content[k] *= .1;                
-            //}
         }
 
         public void RemoveResources()
         {
             kill = true; 
-            //foreach (string k in content.Keys)
-            //{
-                
-            //    if (content[k] > 0)
-            //    {
-            //        content[k] -= 1;
-            //        kill = false;
-            //    }
-            //}
             for(int i = 0; i < _globals.materials.Length; i++)
             {
                 if(content[_globals.materials[i]] > 0)

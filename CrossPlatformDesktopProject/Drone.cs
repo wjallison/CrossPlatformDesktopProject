@@ -21,20 +21,11 @@ namespace CrossPlatformDesktopProject
         public double maxResources;
         
         public double range = 100;        
-
-        //public int physEntListTargetIndex;
-
         public StationBlock home;
 
         public double thetaDotDotMax = 10;
 
         public PhysEntity subjectEntity;
-
-
-
-        //private double thrust;
-
-        //public double[] resources = new double[15];
         public IDictionary<string, double> content = new Dictionary<string, double>();
 
 
@@ -67,7 +58,6 @@ namespace CrossPlatformDesktopProject
         #endregion
 
         public Drone() { }
-        //public Drone() { }
         public Drone(string typeOfDrone,
             string name, 
             double x = 0, double y = 0, double xDot = 0, double yDot = 0, StationBlock homeBlock = null)
@@ -111,10 +101,6 @@ namespace CrossPlatformDesktopProject
                         );
             hitBox = new Rectangle((int)drawPos.X, (int)drawPos.Y, (int)diam, (int)diam);
             hitCircle = new Circle(pos, (float)diam);
-            //for (int i = 0; i < resources.Count(); i++)
-            //{
-            //    resources[i] = 0;
-            //}
             foreach(string k in _globals.materials)
             {
                 content.Add(k, 0);
@@ -251,7 +237,6 @@ namespace CrossPlatformDesktopProject
 
         public Vector2 PerpVel()
         {
-            //double dot = _globals.Dot(posDot, target);
             Vector2 perpToTarget = _globals.Rot(true, relTarget);
             double dot = _globals.Dot(posDot, perpToTarget) / perpToTarget.Length();
             return new Vector2((float)(dot * perpToTarget.X), (float)(dot * perpToTarget.Y));
@@ -378,14 +363,6 @@ namespace CrossPlatformDesktopProject
             approaching = false;
             harvestingEnabled = false;
         }
-        //public void GoTo(PhysEntity a)
-        //{
-        //    Approach(a);
-
-        //    miningEnabled = false;
-        //    dockingEnabled = false;
-        //    approaching = true;
-        //}
 
         public void GoHome()
         {
@@ -403,7 +380,6 @@ namespace CrossPlatformDesktopProject
                 if(debris.content[k] > 0)
                 {
                     content[k] += 1;
-                    //debris.content[k] -= 1;
                 }
                 
             }
@@ -411,13 +387,6 @@ namespace CrossPlatformDesktopProject
 
         public void DonateResources()
         {
-            //foreach(string k in content.Keys)
-            //{
-            //    if(content[k] > 0)
-            //    {
-            //        content[k] -= 1;
-            //    }
-            //}
             for(int i = 0; i < _globals.materials.Length; i++)
             {
                 if(content[_globals.materials[i]] > 0)
@@ -464,8 +433,4 @@ namespace CrossPlatformDesktopProject
         #endregion
     }
 
-    //public class MiningDrone : Drone
-    //{
-
-    //}
 }

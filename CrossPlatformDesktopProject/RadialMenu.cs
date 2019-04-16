@@ -26,29 +26,7 @@ namespace CrossPlatformDesktopProject
         public bool switchToAvaliable = false;
         public RadialButton SwitchButton;
 
-        //public Enum buttons { }
-
-        //RadialMenu Items
-        /*
-         * GoTo
-         * Attack / Mine
-         * Gather
-         * Attach
-         * Dock
-         * 
-         * 
-         */
-        //public RadialMenu(Texture2D[] textures)
-        //{
-        //    for(int i = 0; i < 5; i++)
-        //    {
-        //        buttonRectangles[i] = new Rectangle(
-        //            new Point((int)(60 * Math.Cos(90 - i * 18)), (int)(60 * Math.Sin(90 - i * 18))),
-        //            new Point(50, 50)
-        //            );
-        //        buttons[0] = new RadialButton(buttonRectangles[i], textures[i]);
-        //    }
-        //}
+        
         public RadialMenu()
         {
             texture = _globals.textures[4,0];
@@ -73,8 +51,6 @@ namespace CrossPlatformDesktopProject
             isOn = false;
         }
 
-        //public void Update
-        //public void UpdateToSpace
         public void UpdateOff()
         {
             isFollowing = false;
@@ -87,7 +63,6 @@ namespace CrossPlatformDesktopProject
             isOn = true;
 
             Center(pt);
-            //ButtonsSpatial();
         }
 
         public void SetState(bool[] states)
@@ -106,7 +81,6 @@ namespace CrossPlatformDesktopProject
             followingIndex = ind;
 
             Center(a.pos);
-            //ButtonsSpatial();
         }
 
         public void Follow(PhysEntity phys, int ind)
@@ -119,7 +93,6 @@ namespace CrossPlatformDesktopProject
         }
         public void Update(PhysEntity selected, Clickable focus = null)
         {
-            //center = selected.pos;
             Center(selected.pos);
         }
 
