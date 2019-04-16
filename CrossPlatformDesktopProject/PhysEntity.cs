@@ -192,10 +192,10 @@ namespace CrossPlatformDesktopProject
 
             diam = diameter;
 
-            maxHealth = Math.Pow(diameter * .5, 2);
+            maxHealth = 1000 * Math.Pow(diameter * .5, 2);
             health = maxHealth;
 
-            mass = 1000 * Math.Pow(diam * .5, 2);
+            mass = 100000 * Math.Pow(diam * .5, 2);
 
             drawPos = new Vector2(
                 pos.X - (float)(diam * .5),

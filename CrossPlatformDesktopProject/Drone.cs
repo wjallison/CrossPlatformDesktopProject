@@ -176,6 +176,7 @@ namespace CrossPlatformDesktopProject
                 relTarget = target - pos;
 
                 if (relTarget.Length() < 5)
+                //if(false)
                 {
                     if (posDot.X > 0)
                     {
@@ -183,7 +184,7 @@ namespace CrossPlatformDesktopProject
                         {
                             posDot.X = 0;
                         }
-                        else { posDot.X = (float)(.7 * posDot.X); }
+                        //else { posDot.X = (float)(.7 * posDot.X); }
                     }
                     else
                     {
@@ -191,7 +192,7 @@ namespace CrossPlatformDesktopProject
                         {
                             posDot.X = 0;
                         }
-                        else { posDot.X = (float)(.7 * posDot.X); }
+                        //else { posDot.X = (float)(.7 * posDot.X); }
                     }
 
                     if (posDot.Y > 0)
@@ -200,7 +201,7 @@ namespace CrossPlatformDesktopProject
                         {
                             posDot.Y = 0;
                         }
-                        else { posDot.Y = (float)(.7 * posDot.Y); }
+                        //else { posDot.Y = (float)(.7 * posDot.Y); }
                     }
                     else
                     {
@@ -208,7 +209,7 @@ namespace CrossPlatformDesktopProject
                         {
                             posDot.Y = 0;
                         }
-                        else { posDot.Y = (float)(.7 * posDot.Y); }
+                        //else { posDot.Y = (float)(.7 * posDot.Y); }
                     }
                 }
                 else

@@ -793,11 +793,16 @@ namespace CrossPlatformDesktopProject
                 if (physEntList[j].GetType() == (new Drone()).GetType())
                 {
                     Drone d = (Drone)physEntList[j];
-                    if (d.targetPhysEnt.GetType() != (new Debris()).GetType() && d.targetIndex >= i)
+
+                    if (d.targetIndex >= i)
                     {
-                        d.targetIndex--;
-                        d.targetPhysEnt = physEntList[d.targetIndex];
-                        physEntList[j] = d;
+                        if(d.targetPhysEnt.GetType() != (new Debris()).GetType())
+                        {
+                            d.targetIndex--;
+                            d.targetPhysEnt = physEntList[d.targetIndex];
+                            physEntList[j] = d;
+                        }
+                        
                     }
                 }
             }
