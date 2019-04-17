@@ -244,7 +244,7 @@ namespace CrossPlatformDesktopProject
         }
         void buildScreen_addStationBlockEvent(string type, int x, int y)
         {
-            station.AddBlock(x, y, type);
+            station.AddBlock(x - 5, y - 5, type);
             buildScreen.Update(station);
         }
 
@@ -597,6 +597,7 @@ namespace CrossPlatformDesktopProject
             }
             else if (gameState == (int)GameState.BuildMenuPaused)
             {
+                buildScreen.Update(station);
                 var mState = Mouse.GetState();
 
                 if (mouseClicked == false)
@@ -848,7 +849,7 @@ namespace CrossPlatformDesktopProject
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            DrawStation();
+            
 
             if (gameState == (int)GameState.MainMenu)
             {
@@ -860,7 +861,7 @@ namespace CrossPlatformDesktopProject
             }
             else if(gameState == (int)GameState.MainState)
             {
-
+                DrawStation();
                 DrawRegular();
 
 
@@ -869,6 +870,7 @@ namespace CrossPlatformDesktopProject
             
             else if (gameState == (int)GameState.Paused)
             {
+                DrawStation();
                 DrawRegular();
 
 

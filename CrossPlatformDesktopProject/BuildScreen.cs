@@ -66,8 +66,8 @@ namespace CrossPlatformDesktopProject
                 {
                     textureGrid[i, j] = _globals.textures[6, 1];
                     boxGrid[i, j] = new Rectangle(
-                        (int)((i - 5) * boxSize),
-                        (int)((j - 5) * boxSize),
+                        (int)((i) * boxSize),
+                        (int)((j) * boxSize),
                         (int)boxSize, (int)boxSize);
                     isStationBlockGrid[i, j] = false;
 
@@ -144,8 +144,8 @@ namespace CrossPlatformDesktopProject
         {
             for(int i = 0; i < station.blocks.Count; i++)
             {
-                int x = (int)station.blocks[i].gridPos[0];
-                int y = (int)station.blocks[i].gridPos[1];
+                int x = (int)station.blocks[i].gridPos[0] + 5;
+                int y = (int)station.blocks[i].gridPos[1] + 5;
                 textureGrid[x, y] = station.blocks[i].texture;
                 isStationBlockGrid[x, y] = true;
             }
@@ -169,7 +169,7 @@ namespace CrossPlatformDesktopProject
     {
         public Texture2D texture;
         public Rectangle baseRect;
-        public List<Button> buttons;
+        public List<Button> buttons = new List<Button>();
         public Button exitButton;
         public bool enabled = false;
 
@@ -190,7 +190,7 @@ namespace CrossPlatformDesktopProject
             buttons.Add(new Button(_globals.textures[2, 1], baseRect, new Vector2(10, 40), 20, 20));
             buttons[0].AddText("Mining Drone Dock", new Vector2(30, 0),0,0);
             buttons.Add(new Button(_globals.textures[2, 1], baseRect, new Vector2(10, 70), 20, 20));
-            buttons[0].AddText("Harvest Drone Dock", new Vector2(30, 0), 0, 0);
+            buttons[1].AddText("Harvest Drone Dock", new Vector2(30, 0), 0, 0);
             //buttons[0].
 
             enabled = true;
