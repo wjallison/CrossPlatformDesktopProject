@@ -229,6 +229,23 @@ namespace CrossPlatformDesktopProject
             station.AddBlock(0, 1, "stationDockHarvester");
 
             buildScreen = new BuildScreen(graphics);
+            buildScreen.reduceResourcesEvent += buildScreen_reduceResourcesEvent;
+            buildScreen.addStationBlockEvent += buildScreen_addStationBlockEvent;
+        }
+
+        void buildScreen_reduceResourcesEvent(string resource, double qty)
+        {
+            if(playerResources[resource] > qty)
+            {
+                playerResources[resource] -= qty;
+            }
+
+            //buildScreen.ProceedWithTransaction();
+        }
+        void buildScreen_addStationBlockEvent(string type, int x, int y)
+        {
+            station.AddBlock(x, y, type);
+            buildScreen.Update(station);
         }
 
         /// <summary>
@@ -587,7 +604,8 @@ namespace CrossPlatformDesktopProject
                     if (mState.LeftButton == ButtonState.Pressed)
                     {
                         mouseClicked = true;
-
+                        Rectangle r = new Rectangle(mState.Position.X, mState.Y, 1, 1);
+                        buildScreen.MouseClick(r);
 
 
                     }
@@ -832,15 +850,15 @@ namespace CrossPlatformDesktopProject
             spriteBatch.Begin();
             DrawStation();
 
-            if (gameState == 0)
+            if (gameState == (int)GameState.MainMenu)
             {
 
             }
-            else if (gameState == 1)
+            else if (gameState == (int)GameState.Loading)
             {
 
             }
-            else if(gameState == 2)
+            else if(gameState == (int)GameState.MainState)
             {
 
                 DrawRegular();
@@ -849,20 +867,22 @@ namespace CrossPlatformDesktopProject
                 base.Draw(gameTime);
             }
             
-            else if (gameState == 3)
+            else if (gameState == (int)GameState.Paused)
             {
                 DrawRegular();
 
 
                 base.Draw(gameTime);
             }
-            else if (gameState == 4)
+            else if (gameState == (int)GameState.BuildMenuPaused)
             {
-                
+                DrawBuildScreen();
             }
 
             spriteBatch.End();
         }
+
+        //public void Draw
 
         public void DrawRegular()
         {
@@ -1015,7 +1035,28 @@ namespace CrossPlatformDesktopProject
 
         public void DrawBuildScreen()
         {
-            DrawBuildGrid();
+            //DrawBuildGrid();
+            for(int i = 0; i < 11; i++)
+            {
+                for(int j = 0; j < 11; j++)
+                {
+                    spriteBatch.Draw(buildScreen.textureGrid[i, j], buildScreen.boxGrid[i, j], Color.White);
+                }
+            }
+            if (buildScreen.buildOptionsMenu.enabled)
+            {
+                spriteBatch.Draw(buildScreen.buildOptionsMenu.texture, buildScreen.buildOptionsMenu.baseRect, Color.White);
+                for(int i = 0; i < buildScreen.buildOptionsMenu.buttons.Count; i++)
+                {
+                    spriteBatch.Draw(buildScreen.buildOptionsMenu.buttons[i].texture,
+                        buildScreen.buildOptionsMenu.buttons[i].rect,
+                        Color.White);
+                    spriteBatch.DrawString(font, 
+                        buildScreen.buildOptionsMenu.buttons[i].content,
+                        buildScreen.buildOptionsMenu.buttons[i].contentPos,
+                        Color.White);
+                }
+            }
         }
 
         public void DrawBuildGrid()

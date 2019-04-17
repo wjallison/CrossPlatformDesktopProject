@@ -22,6 +22,19 @@ namespace CrossPlatformDesktopProject
 
         public BuildOptionsMenu buildOptionsMenu;
 
+        public int transactionStage;
+        public List<string> transactionResources = new List<string>();
+        public List<double> transactionResCost = new List<double>();
+        public string transactionTargetType;
+        public string transactionTarget;
+        public int transactionTargetX, transactionTargetY;
+
+        public delegate void ReduceResources(string resource, double qty);
+        public event ReduceResources reduceResourcesEvent;
+
+        public delegate void AddStationBlock(string type, int x, int y);
+        public event AddStationBlock addStationBlockEvent;
+
         public BuildScreen()
         {
             for(int i = 0; i < 11; i++)
@@ -62,6 +75,71 @@ namespace CrossPlatformDesktopProject
             }
         }
 
+        public void ProceedWithTransaction()
+        {
+            if(transactionStage < transactionResources.Count-1)
+            {
+                transactionStage++;
+                reduceResourcesEvent(transactionResources[transactionStage], transactionResCost[transactionStage]);
+            }
+            else
+            {
+
+                switch (transactionTargetType)
+                {
+                    case "station":
+                        addStationBlockEvent(transactionTarget, transactionTargetX, transactionTargetY);
+                        break;
+                    
+                }
+
+            }
+        }
+
+        public void MouseClick(Rectangle m)
+        {
+            if (buildOptionsMenu.enabled)
+            {
+                if (m.Intersects(buildOptionsMenu.baseRect))
+                {
+                    for(int i = 0; i < buildOptionsMenu.buttons.Count; i++)
+                    {
+                        if (buildOptionsMenu.buttons[i].enabled)
+                        {
+                            if (m.Intersects(buildOptionsMenu.buttons[i].rect))
+                            {
+                                transactionTarget = buildOptionsMenu.buttons[i].target;
+                                transactionTargetType = buildOptionsMenu.buttons[i].targetType;
+                                transactionResources = buildOptionsMenu.buttons[i].costString;
+                                transactionResCost = buildOptionsMenu.buttons[i].costDouble;
+                                transactionTargetX = buildOptionsMenu.buttons[i].targetX;
+                                transactionTargetY = buildOptionsMenu.buttons[i].targetY;
+                                transactionStage = 0;
+                                reduceResourcesEvent(transactionResources[0], transactionResCost[0]);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    buildOptionsMenu.enabled = false;
+                }
+            }
+            else
+            {
+                for(int i = 0; i < 11; i++)
+                {
+                    for(int j = 0; j < 11; j++)
+                    {
+                        if (m.Intersects(boxGrid[i, j]))
+                        {
+                            buildOptionsMenu.ShowBuildOptions(i, j);
+                        }
+                    }
+                }
+            }
+        }
+
         public void Update(Station station)
         {
             for(int i = 0; i < station.blocks.Count; i++)
@@ -93,6 +171,9 @@ namespace CrossPlatformDesktopProject
         public Rectangle baseRect;
         public List<Button> buttons;
         public Button exitButton;
+        public bool enabled = false;
+
+        
 
         public BuildOptionsMenu(Rectangle rect)
         {
@@ -101,12 +182,27 @@ namespace CrossPlatformDesktopProject
 
         }
 
-        public void ShowBuildOptions()
+        public void ShowBuildOptions(int x, int y)
         {
-            //buttons.Add(new Button(_globals.textures[2, 0], baseRect, new Vector2(10, 10), 20, 20));
-            //buttons[0].AddText("Core")
+            
+            buttons.Clear();
+
             buttons.Add(new Button(_globals.textures[2, 1], baseRect, new Vector2(10, 40), 20, 20));
-            buttons[0].AddText("Mining Drone Dock", new Vector2(30, 0));
+            buttons[0].AddText("Mining Drone Dock", new Vector2(30, 0),0,0);
+            buttons.Add(new Button(_globals.textures[2, 1], baseRect, new Vector2(10, 70), 20, 20));
+            buttons[0].AddText("Harvest Drone Dock", new Vector2(30, 0), 0, 0);
+            //buttons[0].
+
+            enabled = true;
+        }
+
+        public void ShowUpgradeOptions(StationBlock s)
+        {
+            buttons.Clear();
+
+
+
+            enabled = true;
         }
 
     }
@@ -120,6 +216,15 @@ namespace CrossPlatformDesktopProject
         public Rectangle rect;
         public string content;
         public Vector2 contentPos;
+        public bool visible;
+        public bool enabled;
+
+        public string target;
+        public string targetType;
+        public List<string> costString = new List<string>();
+        public List<double> costDouble = new List<double>();
+        public int targetX = 0;
+        public int targetY = 0;
 
 
         public Button(Texture2D text, int x, int y, int width, int height)
@@ -135,10 +240,31 @@ namespace CrossPlatformDesktopProject
                 (int)(container.Y + relPos.Y),
                 width, height);
         }
-        public void AddText(string txt, Vector2 relPos)
+        public void AddText(string txt, Vector2 relPos, int x = 0, int y = 0)
         {
             content = txt;
             contentPos = relPos + new Vector2((float)rect.X, (float)rect.Y);
+
+            switch (txt)
+            {
+                case "Mining Drone Dock":
+                    targetType = "station";
+                    target = "stationDock";
+                    costString.Add("Fe");
+                    costDouble.Add(10);
+                    targetX = x;
+                    targetY = y;
+                    break;
+                case "Harvest Drone Dock":
+                    targetType = "station";
+                    target = "stationDockHarvester";
+                    costString.Add("Fe");
+                    costDouble.Add(10);
+                    targetX = x;
+                    targetY = y;
+                    break;
+            }
         }
+        //public void AddCost()
     }
 }
