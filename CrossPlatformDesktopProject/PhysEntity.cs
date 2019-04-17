@@ -502,12 +502,12 @@ namespace CrossPlatformDesktopProject
             return d;
         }
 
-        public delegate void Clicked();
+        public delegate void Clicked(object source);
         public event Clicked clickedEvent;
 
         public void Click()
         {
-            clickedEvent();
+            clickedEvent(this);
         }
     }
 }

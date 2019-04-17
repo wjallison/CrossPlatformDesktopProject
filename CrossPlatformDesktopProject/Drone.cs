@@ -214,18 +214,28 @@ namespace CrossPlatformDesktopProject
                 }
                 else
                 {
-                    double a = -Math.Pow(posDot.Length(), 2) / (2 * relTarget.Length());
-                    if(Math.Abs(a) < thrustMax / mass / 2)
+                    //double a = -Math.Pow(posDot.Length(), 2) / (2 * relTarget.Length());
+                    if(posDot.X * relTarget.X + posDot.Y * relTarget.Y > 0)
                     {
-                        posDotDot = new Vector2(
-                            (float)(thrustMax / relTarget.Length() * relTarget.X / mass),
-                            (float)(thrustMax / relTarget.Length() * relTarget.Y / mass));
+                        double a = -Math.Pow((posDot.X * relTarget.X + posDot.Y * relTarget.Y) / relTarget.Length(), 2) / (2 * relTarget.Length());
+                        if (Math.Abs(a) < thrustMax / mass / 2)
+                        {
+                            posDotDot = new Vector2(
+                                (float)(thrustMax / relTarget.Length() * relTarget.X / mass),
+                                (float)(thrustMax / relTarget.Length() * relTarget.Y / mass));
+                        }
+                        else
+                        {
+                            posDotDot = new Vector2(
+                                -(float)(thrustMax / relTarget.Length() * relTarget.X / mass),
+                                -(float)(thrustMax / relTarget.Length() * relTarget.Y / mass));
+                        }
                     }
                     else
                     {
                         posDotDot = new Vector2(
-                            -(float)(thrustMax / relTarget.Length() * relTarget.X / mass),
-                            -(float)(thrustMax / relTarget.Length() * relTarget.Y / mass));
+                                (float)(thrustMax / relTarget.Length() * relTarget.X / mass),
+                                (float)(thrustMax / relTarget.Length() * relTarget.Y / mass));
                     }
 
                     Vector2 perp = PerpVel();

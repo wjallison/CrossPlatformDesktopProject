@@ -19,6 +19,13 @@ namespace CrossPlatformDesktopProject
         //public List<Rectangle> layer3 = new List<Rectangle>();
         public List<List<Clickable>> layers = new List<List<Clickable>>();
 
+        public delegate void ContainedClicked(object sender, int i, int j);
+        public event ContainedClicked ContainedClickedEvent;
+
+        //void ContainedClicked_Continuation(object sender)
+        //{
+
+        //}
 
         public LayerTracker()
         {
@@ -40,7 +47,8 @@ namespace CrossPlatformDesktopProject
 
         public void AddClickable(Clickable c, int layer)
         {
-            layers[layer]
+            layers[layer].Add(c);
+
         }
 
         //public int[] 
@@ -52,7 +60,8 @@ namespace CrossPlatformDesktopProject
                 {
                     if (click.Intersects(layers[i][j].hitBox))
                     {
-                        layers[i][j].Click();
+                        //layers[i][j].Click();
+                        ContainedClickedEvent(layers[i][j], i, j);
                     }
                 }
             }

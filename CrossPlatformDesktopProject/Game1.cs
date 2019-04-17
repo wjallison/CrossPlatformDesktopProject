@@ -16,6 +16,9 @@ namespace CrossPlatformDesktopProject
 
         UIItem resourcesPanel, selectedEntityPanel, menuButtonPanel, groupButtonsPanel;
 
+        LayerTracker mainLayers = new LayerTracker();
+        LayerTracker buildMenuLayers = new LayerTracker();
+
         BuildScreen buildScreen;
 
         public IDictionary<string, double> playerResources = new Dictionary<string, double>();
