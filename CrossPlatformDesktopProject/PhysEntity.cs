@@ -21,13 +21,13 @@ namespace CrossPlatformDesktopProject
         public double thetaDot;
         public double diam;
         public double damResist = 100; //% out of 100
-        public Rectangle hitBox;
+        //public Rectangle hitBox;
         public Circle hitCircle;
         public bool radialMenuFollows = false;
         public bool initialized = true;
         public bool playerControled;
 
-        public Texture2D texture;
+        //public Texture2D texture;
 
         public Vector2 pos, posDot, posDotDot, drawPos;
 
@@ -492,12 +492,22 @@ namespace CrossPlatformDesktopProject
     public class Clickable
     {
         public string type;
+        public Rectangle hitBox;
+        public Texture2D texture;
 
         public double PlusMinusOne()
         {
             Random rand = new Random();
             double d = rand.Next(0,2) * 2 - 1;
             return d;
+        }
+
+        public delegate void Clicked();
+        public event Clicked clickedEvent;
+
+        public void Click()
+        {
+            clickedEvent();
         }
     }
 }

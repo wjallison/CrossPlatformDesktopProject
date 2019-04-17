@@ -168,6 +168,7 @@ namespace CrossPlatformDesktopProject
 
             //textureBoundingBox = Content.Load<Texture2D>("BoundingBox");
             _globals.textures[6,0] = Content.Load<Texture2D>("BoundingBox");
+            _globals.textures[6, 1] = Content.Load<Texture2D>("buildBox");
 
             //textureGoToButton = Content.Load<Texture2D>("Goto");
             //textureAttackButton = Content.Load<Texture2D>("Attack");

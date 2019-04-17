@@ -45,6 +45,7 @@
     <Compile Include="BuildScreen.cs" />
     <Compile Include="Circle.cs" />
     <Compile Include="Drone.cs" />
+    <Compile Include="LayerTracker.cs" />
     <Compile Include="Order.cs" />
     <Compile Include="PhysEntity.cs" />
     <Compile Include="Game1.cs" />
