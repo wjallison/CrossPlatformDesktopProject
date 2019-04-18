@@ -26,6 +26,7 @@ namespace CrossPlatformDesktopProject
         public bool switchToAvaliable = false;
         public RadialButton SwitchButton;
 
+        public PhysEntity follow;
         
         public RadialMenu()
         {
@@ -94,6 +95,24 @@ namespace CrossPlatformDesktopProject
         public void Update(PhysEntity selected, Clickable focus = null)
         {
             Center(selected.pos);
+        }
+
+        public void ChangeTarget(PhysEntity selected)
+        {
+            if(follow != null)
+            {
+                follow.UpdateEvent -= follow_updateEvent;
+                follow.radialMenuFollows = false;
+            }
+            follow = selected;
+            follow.UpdateEvent += follow_updateEvent;
+            follow.radialMenuFollows = true;
+        }
+
+        void follow_updateEvent(object sender)
+        {
+            //s(PhysEntity)sender
+            center = follow.pos;
         }
 
         public void Center(Vector2 pt)

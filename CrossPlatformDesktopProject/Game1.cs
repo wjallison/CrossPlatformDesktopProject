@@ -390,18 +390,18 @@ namespace CrossPlatformDesktopProject
                 #endregion
 
 
-                if (radial.isFollowing)
-                {
-                    if(radial.followingType == 1)
-                    {
-                        radial.Update(physEntList[radial.followingIndex]);
-                    }
-                    else if(radial.followingType == 2)
-                    {
-                        radial.Update(debrisList[radial.followingIndex]);
-                    }
+                //if (radial.isFollowing)
+                //{
+                //    if(radial.followingType == 1)
+                //    {
+                //        radial.Update(physEntList[radial.followingIndex]);
+                //    }
+                //    else if(radial.followingType == 2)
+                //    {
+                //        radial.Update(debrisList[radial.followingIndex]);
+                //    }
                     
-                }
+                //}
 
 
                 #region click actions
@@ -698,7 +698,9 @@ namespace CrossPlatformDesktopProject
                         {
                             if (r.Intersects(physEntList[i].hitBox))
                             {
-                                radial.Follow(physEntList[i], i);
+                                //radial.Follow(physEntList[i], i);
+                                //radial.follow.radialMenuFollows = false;
+                                radial.ChangeTarget(physEntList[i]);
                                 bool[] s = new bool[] { true, false, false, false, false, false };
 
                                 //if(physEntList[selectedEntIndex].type == "miningDrone")

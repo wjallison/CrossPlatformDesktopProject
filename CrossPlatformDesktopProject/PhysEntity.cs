@@ -37,6 +37,9 @@ namespace CrossPlatformDesktopProject
         //bools
         public bool solid = true;
 
+        public delegate void updated(object sender);
+        public event updated UpdateEvent;
+
         public PhysEntity()
         {
             initialized = false;
@@ -59,6 +62,16 @@ namespace CrossPlatformDesktopProject
             hitCircle.center = pos;
 
             theta = theta + thetaDot * gameTime.ElapsedGameTime.TotalSeconds;
+
+            //try
+            //{
+            //    UpdateEvent(this);
+            //}
+            //catch { }
+            if (radialMenuFollows)
+            {
+                UpdateEvent(this);
+            }
         }
 
         public virtual void individualUpdate() { }
