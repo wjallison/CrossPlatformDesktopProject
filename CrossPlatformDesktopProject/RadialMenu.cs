@@ -50,6 +50,7 @@ namespace CrossPlatformDesktopProject
         {
             isFollowing = false;
             isOn = false;
+            follow.RadialMenuFollowingOnOff(false);
         }
 
         public void UpdateOff()
@@ -99,20 +100,28 @@ namespace CrossPlatformDesktopProject
 
         public void ChangeTarget(PhysEntity selected)
         {
-            if(follow != null)
+            isOn = true;
+            if (follow != null)
             {
                 follow.UpdateEvent -= follow_updateEvent;
-                follow.radialMenuFollows = false;
+                follow.RadialMenuFollowingOnOff(false);
             }
             follow = selected;
             follow.UpdateEvent += follow_updateEvent;
-            follow.radialMenuFollows = true;
+            follow.RadialMenuFollowingOnOff(true);
+            isFollowing = true;
         }
 
         void follow_updateEvent(object sender)
         {
             //s(PhysEntity)sender
-            center = follow.pos;
+            if (isFollowing)
+            {
+                center = follow.pos;
+                drawBox.Location = new Point((int)center.X - (int)(diam / 2), (int)center.Y - (int)(diam / 2));
+                ButtonsSpatial();
+            }
+            
         }
 
         public void Center(Vector2 pt)

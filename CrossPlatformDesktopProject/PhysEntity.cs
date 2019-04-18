@@ -24,6 +24,7 @@ namespace CrossPlatformDesktopProject
         //public Rectangle hitBox;
         public Circle hitCircle;
         public bool radialMenuFollows = false;
+        public void RadialMenuFollowingOnOff(bool onoff) { radialMenuFollows = onoff; }
         public bool initialized = true;
         public bool playerControled;
 
