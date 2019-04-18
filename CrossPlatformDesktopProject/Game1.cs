@@ -495,16 +495,16 @@ namespace CrossPlatformDesktopProject
                     {
                         //d.test += _Event;
                         Drone d = (Drone)physEntList[i];
-                        if(d.targetIndex != 0)
+                        if(d.targetPhysEnt != null)
                         {
                             if (d.miningProx)
                             {
-                                physEntList[d.targetIndex].TakeDamage(d.DealDamage());
+                                d.targetPhysEnt.TakeDamage(d.DealDamage());
 
-                                if(physEntList[d.targetIndex].health < 0)
+                                if(d.targetPhysEnt.health < 0)
                                 {
-                                    SpawnDebris((Asteroid)physEntList[d.targetIndex]);
-                                    DestroyAt(d.targetIndex);
+                                    SpawnDebris((Asteroid)d.targetPhysEnt);
+                                    DestroyAt(physEntList.IndexOf(d.targetPhysEnt));
                                     d.ReceiveOrder(0, d.home.pos);
                                 }
                             }
@@ -737,7 +737,8 @@ namespace CrossPlatformDesktopProject
                         {
                             if (r.Intersects(debrisList[i].hitBox))
                             {
-                                radial.Follow(debrisList[i], i);
+                                //radial.Follow(debrisList[i], i);
+                                radial.ChangeTarget(debrisList[i]);
                                 bool[] s = new bool[] { true, false, false, false, false, false };
 
                                 if (physEntList[selectedPhysEnt.index].type == "harvestDrone")
@@ -1109,7 +1110,7 @@ namespace CrossPlatformDesktopProject
                 case 0:
                     if (radial.isFollowing)
                     {
-                        d.ReceiveOrder(0, new Vector2(0, 0), physEntList[radial.followingIndex], radial.followingIndex);
+                        d.ReceiveOrder(0, new Vector2(0, 0), radial.follow);
                     }
                     else
                     {
@@ -1117,10 +1118,10 @@ namespace CrossPlatformDesktopProject
                     }
                     break;
                 case 1:
-                    d.ReceiveOrder(1, new Vector2(0, 0), physEntList[radial.followingIndex], radial.followingIndex);
+                    d.ReceiveOrder(1, new Vector2(0, 0), radial.follow);
                     break;
                 case 2:
-                    d.ReceiveOrder(2, new Vector2(0, 0), debrisList[radial.followingIndex], radial.followingIndex);
+                    d.ReceiveOrder(2, new Vector2(0, 0), radial.follow);
                     break;
                 case 3:
                     break;
