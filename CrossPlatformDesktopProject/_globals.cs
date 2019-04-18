@@ -85,6 +85,11 @@ namespace CrossPlatformDesktopProject
 
             return ret;
         }
+        public static Vector2 VectFromRect(Rectangle r)
+        {
+            return new Vector2((float)r.X, (float)r.Y);
+        }
+        //public static 
     }
 
     public struct DroneDefs

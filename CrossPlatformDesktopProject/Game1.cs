@@ -1057,6 +1057,18 @@ namespace CrossPlatformDesktopProject
                         buildScreen.buildOptionsMenu.buttons[i].content,
                         buildScreen.buildOptionsMenu.buttons[i].contentPos,
                         Color.White);
+                    for(int j = 0; j < buildScreen.buildOptionsMenu.buttons[i].costString.Count; j++)
+                    {
+                        spriteBatch.DrawString(font,
+                        buildScreen.buildOptionsMenu.buttons[i].costString[j],
+                        buildScreen.buildOptionsMenu.buttons[i].costPos[j],
+                        Color.White);
+                        spriteBatch.DrawString(font,
+                        buildScreen.buildOptionsMenu.buttons[i].costDouble[j].ToString(),
+                        buildScreen.buildOptionsMenu.buttons[i].costPos[j] + new Vector2(0,14),
+                        Color.White);
+                    }
+                    
                 }
             }
         }

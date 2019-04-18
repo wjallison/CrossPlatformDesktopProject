@@ -223,6 +223,7 @@ namespace CrossPlatformDesktopProject
         public string targetType;
         public List<string> costString = new List<string>();
         public List<double> costDouble = new List<double>();
+        public List<Vector2> costPos = new List<Vector2>();
         public int targetX = 0;
         public int targetY = 0;
 
@@ -252,6 +253,7 @@ namespace CrossPlatformDesktopProject
                     target = "stationDock";
                     costString.Add("Fe");
                     costDouble.Add(10);
+                    costPos.Add(contentPos + new Vector2(200, -7));
                     targetX = x;
                     targetY = y;
                     break;
@@ -260,6 +262,7 @@ namespace CrossPlatformDesktopProject
                     target = "stationDockHarvester";
                     costString.Add("Fe");
                     costDouble.Add(10);
+                    costPos.Add(contentPos + new Vector2(200, -7));
                     targetX = x;
                     targetY = y;
                     break;
