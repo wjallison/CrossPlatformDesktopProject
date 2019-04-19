@@ -296,7 +296,7 @@ namespace CrossPlatformDesktopProject
             //}
         }
 
-        public override void individualUpdate()
+        public override void individualUpdate(GameTime gameTime)
         {
             
 
@@ -323,6 +323,18 @@ namespace CrossPlatformDesktopProject
                 }
             }
             TargetUpdate();
+            if(shield < maxShield)
+            {
+                double scalar = 10;
+                if(shield + gameTime.ElapsedGameTime.TotalSeconds * scalar > maxShield)
+                {
+                    shield = maxShield;
+                }
+                else
+                {
+                    shield += gameTime.ElapsedGameTime.TotalSeconds * scalar;
+                }
+            }
         }
 
         public event EventHandler test;

@@ -51,7 +51,7 @@ namespace CrossPlatformDesktopProject
 
         public void Update(GameTime gameTime)
         {
-            individualUpdate();
+            individualUpdate(gameTime);
             posDot.X = (float)(posDot.X + posDotDot.X * gameTime.ElapsedGameTime.TotalSeconds);
             posDot.Y = (float)(posDot.Y + posDotDot.Y * gameTime.ElapsedGameTime.TotalSeconds);
 
@@ -78,7 +78,7 @@ namespace CrossPlatformDesktopProject
             }
         }
 
-        public virtual void individualUpdate() { }
+        public virtual void individualUpdate(GameTime gameTime) { }
 
         public virtual void TakeDamage(double damage)
         {
@@ -253,7 +253,7 @@ namespace CrossPlatformDesktopProject
             health = health - damage;
         }
 
-        public override void individualUpdate()
+        public override void individualUpdate(GameTime gameTime)
         {
             if(health < 0)
             {
@@ -445,7 +445,7 @@ namespace CrossPlatformDesktopProject
         }
 
 
-        public override void individualUpdate()
+        public override void individualUpdate(GameTime gameTime)
         {
             
         }
