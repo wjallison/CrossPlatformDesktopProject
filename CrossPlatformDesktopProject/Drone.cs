@@ -301,6 +301,13 @@ namespace CrossPlatformDesktopProject
                 }
                 //else { miningProx = false; }
             }
+            if (harvestingEnabled)
+            {
+                if((pos - targetPhysEnt.pos).Length() < 100)
+                {
+                    HarvestEvent(this);
+                }
+            }
             TargetUpdate();
         }
 

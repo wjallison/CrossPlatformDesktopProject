@@ -477,6 +477,7 @@ namespace CrossPlatformDesktopProject
                                 physEntList.Add(station.blocks[i].SpawnDrone());
                                 Drone d = (Drone)physEntList[physEntList.Count - 1];
                                 d.AttackEvent += drone_attackEvent;
+                                d.HarvestEvent += drone_harvestEvent;
                                 station.blocks[i].countUp = 0;
                             }
 
@@ -627,6 +628,25 @@ namespace CrossPlatformDesktopProject
             }
         }
 
+        void drone_harvestEvent(object sender)
+        {
+            Drone d = (Drone)sender;
+            Debris deb = (Debris)d.targetPhysEnt;
+            //d.ReceiveResources(deb);
+            //deb.RemoveResources();
+            Harvest(d, deb);
+            if (deb.kill)
+            {
+                d.GoHome();
+                if (radial.follow == deb)
+                {
+                    radial.Off();
+                }
+                debrisList.Remove(deb);
+                
+            }
+        }
+
         void drone_attackEvent(object sender)
         {
             Drone d = (Drone)sender;
@@ -659,8 +679,10 @@ namespace CrossPlatformDesktopProject
                         {
                             if (r.Intersects(radial.SwitchButton.box))
                             {
-                                selectedPhysEnt.entity = physEntList[radial.followingIndex];
-                                selectedPhysEnt.index = radial.followingIndex;
+                                //selectedPhysEnt.entity = physEntList[radial.followingIndex];
+                                //selectedPhysEnt.index = radial.followingIndex;
+                                selectedPhysEnt.entity = radial.follow;
+                                selectedPhysEnt.index = physEntList.IndexOf(radial.follow);
 
                             }
                         }
