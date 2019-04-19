@@ -34,6 +34,9 @@ namespace CrossPlatformDesktopProject
         public delegate void HarvestDel(object sender);
         public event HarvestDel HarvestEvent;
 
+        public delegate void HarpoonDel(object sender);
+        public event HarpoonDel HarpoonEvent;
+
         #region Orders
 
         public PhysEntity targetPhysEnt;
@@ -48,6 +51,7 @@ namespace CrossPlatformDesktopProject
         public Vector2 relTarget = new Vector2(0, 0);
 
         public PhysEntity hookedEntity;
+        public bool harpoonEnabled = false;
         //public int orderState = 0;
 
         public enum OrderState
@@ -322,6 +326,14 @@ namespace CrossPlatformDesktopProject
                     HarvestEvent(this);
                 }
             }
+            if (harpoonEnabled)
+            {
+                if((pos - targetPhysEnt.pos).Length() < 100)
+                {
+                    HarpoonEvent(this);
+                    harpoonEnabled = false;
+                }
+            }
             TargetUpdate();
             if(shield < maxShield)
             {
@@ -380,6 +392,18 @@ namespace CrossPlatformDesktopProject
             miningEnabled = false;
             dockingEnabled = false;
             harvestingEnabled = true;
+        }
+
+        public void Harpoon(PhysEntity targetEnt, int ind)
+        {
+            Approach(targetEnt, ind);
+            subjectEntity = targetEnt;
+            targetPhysEnt = targetEnt;
+            approaching = true;
+            miningEnabled = false;
+            dockingEnabled = false;
+            harvestingEnabled = false;
+            harpoonEnabled = true;
         }
 
         public void GoTo(Vector2 posTarget)
@@ -453,6 +477,10 @@ namespace CrossPlatformDesktopProject
                 case 2:
                     orderState = 2;
                     Harvest(targetEnt, targetInd);
+                    break;
+                case 3:
+                    orderState = 3;
+                    Harpoon(targetEnt, targetInd);
                     break;
             }
         }

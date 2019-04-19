@@ -413,6 +413,11 @@ namespace CrossPlatformDesktopProject
                     spawnsDrones = true;
                     droneType = "harvestDrone";
                     break;
+                case "stationDockHarpoon":
+                    texture = _globals.textures[2, 1];
+                    spawnsDrones = true;
+                    droneType = "harpoonDrone";
+                    break;
                 case "stationStorage":
 
                     break;

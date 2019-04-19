@@ -628,6 +628,12 @@ namespace CrossPlatformDesktopProject
             }
         }
 
+        void drone_harpoonEvent(object sender)
+        {
+            Drone d = (Drone)sender;
+            d.targetPhysEnt.posDot = d.posDot;
+        }
+
         void drone_harvestEvent(object sender)
         {
             Drone d = (Drone)sender;
@@ -746,6 +752,9 @@ namespace CrossPlatformDesktopProject
                                             break;
                                         case "harvestingDrone":
                                             //s[2] = true;
+                                            break;
+                                        case "harpoonDrone":
+                                            s[3] = true;
                                             break;
                                     }
                                 }
@@ -1175,6 +1184,7 @@ namespace CrossPlatformDesktopProject
                     d.ReceiveOrder(2, new Vector2(0, 0), radial.follow);
                     break;
                 case 3:
+                    d.ReceiveOrder(3, new Vector2(0, 0), radial.follow);
                     break;
                 case 4:
                     break;
