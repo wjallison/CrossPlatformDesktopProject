@@ -436,6 +436,9 @@ namespace CrossPlatformDesktopProject
                 case "stationRepel":
 
                     break;
+                case "stationSapper":
+
+                    break;
             }
 
             pos = new Vector2((float)(core.pos.X + diam * gridPos[0]), (float)(core.pos.Y + diam * gridPos[1]));

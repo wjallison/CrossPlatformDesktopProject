@@ -51,6 +51,7 @@ namespace CrossPlatformDesktopProject
         public Vector2 relTarget = new Vector2(0, 0);
 
         public PhysEntity hookedEntity;
+        public bool currentlyHooked = false;
         public bool harpoonEnabled = false;
         //public int orderState = 0;
 
@@ -328,11 +329,13 @@ namespace CrossPlatformDesktopProject
             }
             if (harpoonEnabled)
             {
-                if((pos - targetPhysEnt.pos).Length() < 100)
+                if ((pos - targetPhysEnt.pos).Length() < 100 || currentlyHooked)
                 {
-                    hookedEntity = targetPhysEnt;
+                    //hookedEntity = targetPhysEnt;
                     HarpoonEvent(this);
+                    currentlyHooked = true;
                     //harpoonEnabled = false;
+                    GoHome();
                 }
             }
             TargetUpdate();
@@ -405,6 +408,7 @@ namespace CrossPlatformDesktopProject
             dockingEnabled = false;
             harvestingEnabled = false;
             harpoonEnabled = true;
+            hookedEntity = targetEnt;
         }
 
         public void GoTo(Vector2 posTarget)
