@@ -90,6 +90,8 @@ namespace CrossPlatformDesktopProject
             return new Vector2((float)r.X, (float)r.Y);
         }
         //public static 
+        //public static IDictionary<Enum,  droneVars
+        //public static DroneDefs droneDefs = new DroneDefs("", 1000, 1000000, 10, 20);
     }
 
     public struct DroneDefs

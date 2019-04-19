@@ -80,42 +80,29 @@ namespace CrossPlatformDesktopProject
             home = homeBlock;
             idNo = name;
             playerControled = true;
+
+            baseDamage = 10000;
+            thrustMax = 1000;
+            maxHealth = 1000000;
+            health = maxHealth;
+            maxShield = maxHealth * .1;
+            shield = maxShield;
+            mass = 10;
+            diam = 15;
+            maxResources = 0;
+
             switch (typeOfDrone)
             {
                 case "miningDrone":
-                    baseDamage = 10;
-                    thrustMax = 1000;
-                    maxHealth = 1000000;
-                    health = maxHealth;
-                    maxShield = maxHealth * .1;
-                    shield = maxShield;
-                    mass = 10;
-                    diam = 20;
-                    maxResources = 0;
+                    baseDamage = 10000;
                     texture = _globals.textures[1, 1];
                     break;
                 case "harvestDrone":
-                    baseDamage = 10;
-                    thrustMax = 1000;
-                    maxHealth = 1000000;
-                    health = maxHealth;
-                    maxShield = maxHealth * .1;
-                    shield = maxShield;
-                    mass = 10;
-                    diam = 20;
                     maxResources = 100;
                     texture = _globals.textures[1, 2];
                     break;
                 case "harpoonDrone":
-                    baseDamage = 10;
                     thrustMax = 10000;
-                    maxHealth = 1000000;
-                    health = maxHealth;
-                    maxShield = maxHealth * .1;
-                    shield = maxShield;
-                    mass = 10;
-                    diam = 20;
-                    maxResources = 100;
                     texture = _globals.textures[1, 3];
                     break;
             }

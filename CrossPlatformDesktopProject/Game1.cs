@@ -475,12 +475,25 @@ namespace CrossPlatformDesktopProject
                             else
                             {
                                 station.blocks[i].droneIndList.Add(physEntList.Count);
-                                physEntList.Add(station.blocks[i].SpawnDrone());
-                                Drone d = (Drone)physEntList[physEntList.Count - 1];
-                                d.AttackEvent += drone_attackEvent;
-                                d.HarvestEvent += drone_harvestEvent;
-                                d.HarpoonEvent += drone_harpoonEvent;
-                                station.blocks[i].countUp = 0;
+                                Drone temp = station.blocks[i].SpawnDrone();
+                                bool fail = false;
+                                for(int j = 0; j < physEntList.Count; j++)
+                                {
+                                    if (temp.hitCircle.Overlaps(physEntList[j].hitCircle))
+                                    {
+                                        fail = true;
+                                    }
+                                }
+                                if (!fail)
+                                {
+                                    physEntList.Add(station.blocks[i].SpawnDrone());
+                                    Drone d = (Drone)physEntList[physEntList.Count - 1];
+                                    d.AttackEvent += drone_attackEvent;
+                                    d.HarvestEvent += drone_harvestEvent;
+                                    d.HarpoonEvent += drone_harpoonEvent;
+                                    station.blocks[i].countUp = 0;
+                                }
+                                
                             }
 
                             

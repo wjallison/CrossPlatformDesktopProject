@@ -209,7 +209,7 @@ namespace CrossPlatformDesktopProject
 
             diam = diameter;
 
-            maxHealth = 1000 * Math.Pow(diameter * .5, 2);
+            maxHealth = 1000000 * Math.Pow(diameter * .5, 2);
             health = maxHealth;
 
             mass = 100000 * Math.Pow(diam * .5, 2);
@@ -381,7 +381,7 @@ namespace CrossPlatformDesktopProject
             solid = false;
             gridPos[0] = 0;
             gridPos[1] = 0;
-            diam = 40;
+            diam = 30;
             texture = _globals.textures[2,0];
             pos = stationOrigin;
             Vector2 offset = new Vector2(-(float)(diam / 2), -(float)(diam / 2));
@@ -400,12 +400,13 @@ namespace CrossPlatformDesktopProject
             gridPos[0] = x;
             gridPos[1] = y;
 
-            diam = 40;
+            diam = 30;
             switch (typ)
             {
                 case "stationDock":
                     texture = _globals.textures[2,1];
                     spawnsDrones = true;
+                    numDrones = 2;
                     droneType = "miningDrone";
                     break;
                 case "stationDockHarvester":
@@ -460,25 +461,9 @@ namespace CrossPlatformDesktopProject
 
         public Drone SpawnDrone()
         {
-            //public Drone(Texture2D text,
-            //double thrust, double diameter,
-            //string name, double m, double hp,
-            //double x = 0, double y = 0, double xDot = 0, double yDot = 0, StationBlock homeBlock = null)
-            //physEntList.Add(new Drone(textureBall, 100, 50, "d1", 300, 250, 300, 50));
-            //Drone d = new Drone(_globals.textures[1, 1],
-            //    1000, 20, 
-            //    idNo + "d", 10, 250,
-            //    pos.X, pos.Y,
-            //    0, 0,
-            //    this
-            //    );
+            
             Drone d = new Drone(droneType, "replaceLater", pos.X, pos.Y, 0, 0, this);
-            //switch (droneType)
-            //{
-            //    case "miningDrone":
-            //        d = new Drone(droneType, "replaceLater", pos.X, pos.Y, 0, 0, this);
-            //        break;
-            //}
+            
             return d;
         }
 
