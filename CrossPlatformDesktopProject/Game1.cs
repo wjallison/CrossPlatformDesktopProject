@@ -961,6 +961,18 @@ namespace CrossPlatformDesktopProject
                         DrawLine(physEntList[i].pos, physEntList[i].pos + physEntList[i].posDotDot, Color.White);
                         DrawLinearEffect(physEntList[i].pos, physEntList[i].pos + physEntList[i].posDot);
                     }
+                    spriteBatch.DrawString(font,
+                        currentHealth(physEntList[i]),
+                        physEntList[i].pos + new Vector2(-20, 10),
+                        Color.White);
+                    if(physEntList[i].GetType() == (new Drone()).GetType())
+                    {
+                        Drone d = (Drone)physEntList[i];
+                        spriteBatch.DrawString(font,
+                            d.shield.ToString(),
+                            d.pos + new Vector2(-10, -10),
+                            Color.Blue);
+                    }
                 }
             }
             if (debrisList.Count > 0)
@@ -1430,6 +1442,14 @@ namespace CrossPlatformDesktopProject
             physEntList.Add(newAsteroid);
         }
 
+        public string currentHealth(PhysEntity ent)
+        {
+            if(ent.health < ent.maxHealth)
+            {
+                return ent.health.ToString() + " / " + ent.maxHealth.ToString();
+            }
+            else { return ent.maxHealth.ToString(); }
+        }
 
         public void DrawLine(Vector2 start, Vector2 end, Color c)
         {

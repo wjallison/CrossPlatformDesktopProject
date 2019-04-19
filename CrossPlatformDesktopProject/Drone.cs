@@ -46,6 +46,8 @@ namespace CrossPlatformDesktopProject
         public bool harvestingEnabled = false;
         public Vector2 target;
         public Vector2 relTarget = new Vector2(0, 0);
+
+        public PhysEntity hookedEntity;
         //public int orderState = 0;
 
         public enum OrderState
@@ -78,7 +80,7 @@ namespace CrossPlatformDesktopProject
                 case "miningDrone":
                     baseDamage = 10;
                     thrustMax = 1000;
-                    maxHealth = 250;
+                    maxHealth = 1000000;
                     health = maxHealth;
                     maxShield = maxHealth * .1;
                     shield = maxShield;
@@ -90,7 +92,7 @@ namespace CrossPlatformDesktopProject
                 case "harvestDrone":
                     baseDamage = 10;
                     thrustMax = 1000;
-                    maxHealth = 250;
+                    maxHealth = 1000000;
                     health = maxHealth;
                     maxShield = maxHealth * .1;
                     shield = maxShield;
@@ -98,6 +100,18 @@ namespace CrossPlatformDesktopProject
                     diam = 20;
                     maxResources = 100;
                     texture = _globals.textures[1, 2];
+                    break;
+                case "harpoonDrone":
+                    baseDamage = 10;
+                    thrustMax = 10000;
+                    maxHealth = 1000000;
+                    health = maxHealth;
+                    maxShield = maxHealth * .1;
+                    shield = maxShield;
+                    mass = 10;
+                    diam = 20;
+                    maxResources = 100;
+                    texture = _globals.textures[1, 3];
                     break;
             }
             drawPos = new Vector2(
