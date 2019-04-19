@@ -331,7 +331,7 @@ namespace CrossPlatformDesktopProject
                 if((pos - targetPhysEnt.pos).Length() < 100)
                 {
                     HarpoonEvent(this);
-                    harpoonEnabled = false;
+                    //harpoonEnabled = false;
                 }
             }
             TargetUpdate();

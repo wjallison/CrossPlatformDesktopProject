@@ -227,6 +227,7 @@ namespace CrossPlatformDesktopProject
                 graphics.PreferredBackBufferHeight / 2));
             station.AddBlock(1, 0, "stationDock");
             station.AddBlock(0, 1, "stationDockHarvester");
+            station.AddBlock(0, 2, "stationDockHarpoon");
 
             buildScreen = new BuildScreen(graphics);
             buildScreen.reduceResourcesEvent += buildScreen_reduceResourcesEvent;
