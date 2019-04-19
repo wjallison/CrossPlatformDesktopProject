@@ -330,6 +330,7 @@ namespace CrossPlatformDesktopProject
             {
                 if((pos - targetPhysEnt.pos).Length() < 100)
                 {
+                    hookedEntity = targetPhysEnt;
                     HarpoonEvent(this);
                     //harpoonEnabled = false;
                 }

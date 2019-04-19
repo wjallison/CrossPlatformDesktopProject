@@ -34,7 +34,7 @@ namespace CrossPlatformDesktopProject
             for (int i = 0; i < 5; i++)
             {
                 buttonRectangles[i] = new Rectangle(
-                    new Point((int)(60 * Math.Cos(90 - i * 18)), (int)(60 * Math.Sin(90 - i * 18))),
+                    new Point((int)(40 * Math.Cos(90 - i * 18)), (int)(40 * Math.Sin(90 - i * 18))),
                     new Point(50, 50)
                     );
                 buttons[i] = new RadialButton(buttonRectangles[i], _globals.textures[4,i + 1], _globals.textures[4, i + 7]);
@@ -140,8 +140,8 @@ namespace CrossPlatformDesktopProject
 
                 buttonRectangles[i] = new Rectangle(
                     new Point(
-                        (int)(60 * Math.Cos(3.14/180 * (90 - i * 18))) + (int)center.X, 
-                    (int)center.Y - (int)(60 * Math.Sin(3.14 / 180 * (90 - i * 18)))),
+                        (int)(50 * Math.Cos(3.14/180 * (90 - i * 18))) + (int)center.X, 
+                    (int)center.Y - (int)(50 * Math.Sin(3.14 / 180 * (90 - i * 18)))),
                     new Point(20, 20)
                     );
                 buttons[i].box = buttonRectangles[i];

@@ -479,6 +479,7 @@ namespace CrossPlatformDesktopProject
                                 Drone d = (Drone)physEntList[physEntList.Count - 1];
                                 d.AttackEvent += drone_attackEvent;
                                 d.HarvestEvent += drone_harvestEvent;
+                                d.HarpoonEvent += drone_harpoonEvent;
                                 station.blocks[i].countUp = 0;
                             }
 
@@ -632,7 +633,7 @@ namespace CrossPlatformDesktopProject
         void drone_harpoonEvent(object sender)
         {
             Drone d = (Drone)sender;
-            d.targetPhysEnt.posDot = d.posDot;
+            d.hookedEntity.posDot = d.posDot;
         }
 
         void drone_harvestEvent(object sender)
