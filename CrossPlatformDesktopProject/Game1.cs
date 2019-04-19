@@ -475,6 +475,8 @@ namespace CrossPlatformDesktopProject
                             {
                                 station.blocks[i].droneIndList.Add(physEntList.Count);
                                 physEntList.Add(station.blocks[i].SpawnDrone());
+                                Drone d = (Drone)physEntList[physEntList.Count - 1];
+                                d.AttackEvent += drone_attackEvent;
                                 station.blocks[i].countUp = 0;
                             }
 
@@ -489,33 +491,33 @@ namespace CrossPlatformDesktopProject
                 //mining
                 for (int i = 0; i < physEntList.Count; i++)
                 {
-                    
 
-                    if(physEntList[i].type == "miningDrone")
-                    {
-                        //d.test += _Event;
-                        Drone d = (Drone)physEntList[i];
-                        if(d.targetPhysEnt != null)
-                        {
-                            if (d.miningProx)
-                            {
-                                d.targetPhysEnt.TakeDamage(d.DealDamage());
 
-                                if(d.targetPhysEnt.health < 0)
-                                {
-                                    SpawnDebris((Asteroid)d.targetPhysEnt);
-                                    DestroyAt(physEntList.IndexOf(d.targetPhysEnt));
-                                    d.ReceiveOrder(0, d.home.pos);
-                                }
-                            }
-                            
-                        }
-                        //d.test += _Event;
-                        //d.test += _Event;
-                        
+                    //if(physEntList[i].type == "miningDrone")
+                    //{
+                    //    //d.test += _Event;
+                    //    Drone d = (Drone)physEntList[i];
+                    //    if(d.targetPhysEnt != null)
+                    //    {
+                    //        if (d.miningProx)
+                    //        {
+                    //            d.targetPhysEnt.TakeDamage(d.DealDamage());
 
-                        physEntList[i] = d;
-                    }
+                    //            if(d.targetPhysEnt.health < 0)
+                    //            {
+                    //                SpawnDebris((Asteroid)d.targetPhysEnt);
+                    //                DestroyAt(physEntList.IndexOf(d.targetPhysEnt));
+                    //                d.ReceiveOrder(0, d.home.pos);
+                    //            }
+                    //        }
+
+                    //    }
+                    //    //d.test += _Event;
+                    //    //d.test += _Event;
+
+
+                    //    physEntList[i] = d;
+                    //}
                     physEntList[i].Update(gameTime);
 
                     if(physEntList[i].type == "asteroid")
@@ -623,6 +625,12 @@ namespace CrossPlatformDesktopProject
             {
 
             }
+        }
+
+        void drone_attackEvent(object sender)
+        {
+            Drone d = (Drone)sender;
+            d.targetPhysEnt.TakeDamage(d.DealDamage());
         }
 
         public void DealWithMouseEvent(MouseState mState)
@@ -795,7 +803,7 @@ namespace CrossPlatformDesktopProject
 
         public void DestroyAt(int i)
         {
-            physEntList.RemoveAt(i);
+            
             if (radial.isFollowing)
             {
                 if(radial.followingType == 1)
@@ -820,18 +828,27 @@ namespace CrossPlatformDesktopProject
                 {
                     Drone d = (Drone)physEntList[j];
 
-                    if (d.targetIndex >= i)
+                    //if (d.targetIndex >= i)
+                    //{
+                    //    if(d.targetPhysEnt.GetType() != (new Debris()).GetType())
+                    //    {
+                    //        d.targetIndex--;
+                    //        d.targetPhysEnt = physEntList[d.targetIndex];
+                    //        physEntList[j] = d;
+                    //    }
+
+                    //}
+                    //else if(d.targetIndex == i)
+                    //{
+                    //    d.ReceiveOrder(0, d.home.pos);
+                    //}
+                    if (d.targetPhysEnt == physEntList[i])
                     {
-                        if(d.targetPhysEnt.GetType() != (new Debris()).GetType())
-                        {
-                            d.targetIndex--;
-                            d.targetPhysEnt = physEntList[d.targetIndex];
-                            physEntList[j] = d;
-                        }
-                        
+                        d.ReceiveOrder(0, d.home.pos);
                     }
                 }
             }
+            physEntList.RemoveAt(i);
         }
 
         public Vector2 ScaleAbout(double scalar, Vector2 pt0, Vector2 center)

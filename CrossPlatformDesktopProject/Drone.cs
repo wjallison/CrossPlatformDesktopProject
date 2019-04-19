@@ -28,6 +28,11 @@ namespace CrossPlatformDesktopProject
         public PhysEntity subjectEntity;
         public IDictionary<string, double> content = new Dictionary<string, double>();
 
+        public delegate void AttackDel(object sender);
+        public event AttackDel AttackEvent;
+
+        public delegate void HarvestDel(object sender);
+        public event HarvestDel HarvestEvent;
 
         #region Orders
 
@@ -52,7 +57,7 @@ namespace CrossPlatformDesktopProject
         }
         public int orderState = 0;
 
-
+        
 
 
         #endregion
@@ -161,6 +166,7 @@ namespace CrossPlatformDesktopProject
                 home = homeBlock;
             }
         }
+
 
         public void UpdateTarget(Vector2 t)
         {
@@ -278,31 +284,7 @@ namespace CrossPlatformDesktopProject
 
         public override void individualUpdate()
         {
-            //    public enum OrderState
-            //{
-            //    none = 0,
-            //    goTo = 1,
-            //    mine = 2,
-            //    gather = 3
-            //}
-            //switch (orderState)
-            //{
-            //    case 0:
-            //        if(home != null)
-            //        {
-            //            ApproachPt(home.pos);
-            //            //Approach(ref p);
-            //        }
-            //        else { UpdateTarget(pos); }
-            //        break;
-            //    case 1:
-
-            //        break;
-            //    case 2:
-
-            //        break;
-            //}
-            //test(this,new EventArgs());
+            
 
             if (approaching)
             {
@@ -314,9 +296,10 @@ namespace CrossPlatformDesktopProject
                 {
                     //MineResources
                     //test(this, new EventArgs());
-                    miningProx = true;
+                    AttackEvent(this);
+                    //miningProx = true;
                 }
-                else { miningProx = false; }
+                //else { miningProx = false; }
             }
             TargetUpdate();
         }
@@ -342,7 +325,7 @@ namespace CrossPlatformDesktopProject
 
         public double DealDamage()
         {
-            return baseDamage;
+            return 1000 * baseDamage;
         }
 
         #region Orders

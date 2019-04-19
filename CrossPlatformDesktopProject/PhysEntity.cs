@@ -41,6 +41,9 @@ namespace CrossPlatformDesktopProject
         public delegate void updated(object sender);
         public event updated UpdateEvent;
 
+
+        
+
         public PhysEntity()
         {
             initialized = false;
