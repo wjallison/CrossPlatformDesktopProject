@@ -16,6 +16,8 @@ namespace CrossPlatformDesktopProject
 
         UIItem resourcesPanel, selectedEntityPanel, menuButtonPanel, groupButtonsPanel;
 
+        MouseTracker mTracker = new MouseTracker();
+
         LayerTracker mainLayers = new LayerTracker();
         LayerTracker buildMenuLayers = new LayerTracker();
 
@@ -134,6 +136,8 @@ namespace CrossPlatformDesktopProject
             {
                 playerResources.Add(_globals.materials[i], 0);
             }
+
+            mTracker.MouseUpEvent += mouse_upEvent;
 
             base.Initialize();
         }
@@ -391,23 +395,11 @@ namespace CrossPlatformDesktopProject
                 #endregion
 
 
-                //if (radial.isFollowing)
-                //{
-                //    if(radial.followingType == 1)
-                //    {
-                //        radial.Update(physEntList[radial.followingIndex]);
-                //    }
-                //    else if(radial.followingType == 2)
-                //    {
-                //        radial.Update(debrisList[radial.followingIndex]);
-                //    }
-                    
-                //}
-
-
+                
                 #region click actions
                 var mState = Mouse.GetState();
-                DealWithMouseEvent(mState);
+                mTracker.Mouse(mState, gameTime);
+                //DealWithMouseEvent(mState);
 
                 #endregion
 
@@ -611,7 +603,8 @@ namespace CrossPlatformDesktopProject
             else if (gameState == (int)GameState.Paused)
             {
                 var mState = Mouse.GetState();
-                DealWithMouseEvent(mState);
+                mTracker.Mouse(mState, gameTime);
+                //DealWithMouseEvent(mState);
             }
             else if (gameState == (int)GameState.BuildMenuPaused)
             {
@@ -643,6 +636,150 @@ namespace CrossPlatformDesktopProject
             }
         }
 
+        void mouse_upEvent(object sender)
+        {
+            MouseTracker m = (MouseTracker)sender;
+            //SelectedAreaMenu's territory
+            if (m.mouseHold)
+            {
+
+            }
+            //RadialMenu's territory
+            else
+            {
+                Rectangle r = new Rectangle((int)m.upPoint.X, (int)m.upPoint.Y, 1, 1);
+
+                if (r.Intersects(radial.drawBox))
+                {
+                    for (int i = 0; i < radial.buttons.Length; i++)
+                    {
+                        if (radial.buttons[i].enabled)
+                        {
+                            if (r.Intersects(radial.buttons[i].box))
+                            {
+                                IssueCommand(i);
+                            }
+                        }
+                    }
+                    if (radial.SwitchButton.enabled)
+                    {
+                        if (r.Intersects(radial.SwitchButton.box))
+                        {
+                            //selectedPhysEnt.entity = physEntList[radial.followingIndex];
+                            //selectedPhysEnt.index = radial.followingIndex;
+                            selectedPhysEnt.entity = radial.follow;
+                            selectedPhysEnt.index = physEntList.IndexOf(radial.follow);
+
+                        }
+                    }
+                }
+                else if (r.Intersects(resourcesPanelRect))
+                {
+                    radial.Off();
+                }
+                else if (r.Intersects(selectedEntityPanelRect))
+                {
+                    radial.Off();
+                }
+                else if (r.Intersects(GroupButtonsRect))
+                {
+                    radial.Off();
+                }
+                else if (r.Intersects(MenuButtonRect))
+                {
+                    radial.Off();
+                }
+                else if (r.Intersects(station.blocks[0].hitBox))
+                {
+                    gameState = (int)GameState.BuildMenuPaused;
+                    return;
+                }
+                else if (r.Intersects(PauseButtonRect))
+                {
+                    if (gameState == (int)GameState.Paused)
+                    {
+                        gameState = (int)GameState.MainState;
+                    }
+                    else
+                    {
+                        gameState = (int)GameState.Paused;
+                    }
+                    //gameState = (int)GameState.Paused;
+                    return;
+                }
+                else
+                {
+                    radial.isFollowing = false;
+                    for (int i = 0; i < physEntList.Count; i++)
+                    {
+                        if (r.Intersects(physEntList[i].hitBox))
+                        {
+                            //radial.Follow(physEntList[i], i);
+                            //radial.follow.radialMenuFollows = false;
+                            radial.ChangeTarget(physEntList[i]);
+                            bool[] s = new bool[] { true, false, false, false, false, false };
+
+                            //if(physEntList[selectedEntIndex].type == "miningDrone")
+                            //{
+                            //    s[1] = true;
+                            //}
+                            if (physEntList[i].type == "asteroid")
+                            {
+                                switch (physEntList[selectedPhysEnt.index].type)
+                                {
+                                    case "miningDrone":
+                                        s[1] = true;
+                                        break;
+                                    case "harvestingDrone":
+                                        //s[2] = true;
+                                        break;
+                                    case "harpoonDrone":
+                                        s[3] = true;
+                                        break;
+                                }
+                            }
+                            //else if(physEntList[i].type = "dockingStation")
+
+
+                            if (physEntList[i].playerControled)
+                            {
+                                s[5] = true;
+                            }
+
+                            radial.SetState(s);
+                            radial.followingType = 1;
+                            //physEntList[i].radialMenuFollows = true;
+                            break;
+                        }
+                    }
+                    for (int i = 0; i < debrisList.Count; i++)
+                    {
+                        if (r.Intersects(debrisList[i].hitBox))
+                        {
+                            //radial.Follow(debrisList[i], i);
+                            radial.ChangeTarget(debrisList[i]);
+                            bool[] s = new bool[] { true, false, false, false, false, false };
+
+                            if (physEntList[selectedPhysEnt.index].type == "harvestDrone")
+                            {
+                                s[2] = true;
+                            }
+                            radial.SetState(s);
+                        }
+                    }
+                    if (!radial.isFollowing)
+                    {
+                        radial.UpdateSpace(new Vector2(m.upPoint.X, m.upPoint.Y));
+                        bool[] s = new bool[] { true, false, false, false, false, false };
+                        radial.SetState(s);
+                        radial.followingType = 2;
+                    }
+                }
+            }
+        }
+
+        //void mouse_holdEvent()
+
         void drone_harpoonEvent(object sender)
         {
             Drone d = (Drone)sender;
@@ -673,6 +810,8 @@ namespace CrossPlatformDesktopProject
             Drone d = (Drone)sender;
             d.targetPhysEnt.TakeDamage(d.DealDamage());
         }
+
+        //public void DealWithMouseEvent()
 
         public void DealWithMouseEvent(MouseState mState)
         {
@@ -1516,6 +1655,72 @@ namespace CrossPlatformDesktopProject
                 new Vector2(0, 0), // point in line about which to rotate
                 SpriteEffects.None,
                 0);
+        }
+    }
+
+    public class MouseTracker
+    {
+        public bool currentlyDown = false;
+        public Vector2 downPoint;
+        public Vector2 upPoint;
+        public double time;
+        public bool mouseHold = false;
+
+
+        public MouseTracker()
+        {
+
+        }
+
+        public delegate void MouseUp(object sender);
+        public event MouseUp MouseUpEvent;
+
+        //public delegate void MouseHold(object sender);
+        //public event MouseHold MouseHoldEvent;
+
+        public void Mouse(MouseState mState, GameTime gameTime)
+        {
+            //If it wasn't previously pressed...
+            if (!currentlyDown)
+            {
+                //And now it is...
+                if(mState.LeftButton == ButtonState.Pressed)
+                {
+                    currentlyDown = true;
+                    downPoint = new Vector2(mState.X, mState.Y);
+                    time = 0;
+                    return;
+                }
+                else
+                {
+                    //time += gameTime.ElapsedGameTime.TotalSeconds;
+                    return;
+                }
+            }
+            //If it was already pressed...
+            else
+            {
+                //and now it's not...
+                if(mState.LeftButton == ButtonState.Released)
+                {
+                    currentlyDown = false;
+                    upPoint = new Vector2(mState.X, mState.Y);
+                    MouseUpEvent(this);
+                    return;
+                }
+                //and it still is...
+                else
+                {
+                    time += gameTime.ElapsedGameTime.TotalSeconds;
+                    if(time > 1)
+                    {
+                        //MouseHoldEvent(this);
+                        mouseHold = true;
+                    }
+                    else { mouseHold = false; }
+                    return;
+                }
+            }
         }
     }
 }
