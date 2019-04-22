@@ -168,4 +168,47 @@ namespace CrossPlatformDesktopProject
             textureDisabled = td;
         }
     }
+
+    public class SelectedAreaMenu
+    {
+        public Rectangle area;
+        public bool active = false;
+        public List<SelectedAreaButton> buttons = new List<SelectedAreaButton>();
+        public Texture2D texture;
+
+        public SelectedAreaMenu()
+        {
+            //texture = 
+        }
+
+        public void Activate(Rectangle r)
+        {
+            area = r;
+            active = true;
+        }
+
+        public void Deactivate()
+        {
+            active = false;
+        }
+        //public void Activate(MouseTracker mt)
+        //{
+
+        //}
+    }
+
+    public class SelectedAreaButton
+    {
+        public Rectangle box;
+        public Texture2D textureEnabled;
+        public Texture2D textureDisabled;
+        public bool enabled = false;
+
+        public SelectedAreaButton(Texture2D tex, Rectangle rect, Texture2D texD)
+        {
+            box = rect;
+            textureEnabled = tex;
+            textureDisabled = texD;
+        }
+    }
 }
