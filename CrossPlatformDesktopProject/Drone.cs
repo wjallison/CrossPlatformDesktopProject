@@ -308,38 +308,7 @@ namespace CrossPlatformDesktopProject
 
         public override void individualUpdate(GameTime gameTime)
         {
-            if (areaActBool)
-            {
-                bool noChange = true;
-                if (targetChanged)
-                {
-                    
-                    SearchAreaEvent(this);
-                    targetChanged = false;
-                    noChange = false;
-                }
-                else if (!targetPhysEnt.hitBox.Intersects(targetArea))
-                {
-                    SearchAreaEvent(this);
-                    noChange = false;
-                }
-
-                if (noChange)
-                {
-
-                }
-                else
-                {
-                    if(type == "miningDrone")
-                    {
-                        ReceiveOrder();
-                    }
-                    else if(type == "harvestDrone")
-                    {
-                        ReceiveOrder();
-                    }
-                }
-            }
+            
 
             if (approaching)
             {

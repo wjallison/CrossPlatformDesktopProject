@@ -1062,7 +1062,8 @@ namespace CrossPlatformDesktopProject
                     //}
                     if (d.targetPhysEnt == physEntList[i])
                     {
-                        d.ReceiveOrder(0, d.home.pos);
+                        //d.ReceiveOrder(0, d.home.pos);
+                        d.TargetKilled();
                     }
                 }
             }
