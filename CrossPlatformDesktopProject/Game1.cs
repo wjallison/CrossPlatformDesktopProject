@@ -483,6 +483,7 @@ namespace CrossPlatformDesktopProject
                                     d.AttackEvent += drone_attackEvent;
                                     d.HarvestEvent += drone_harvestEvent;
                                     d.HarpoonEvent += drone_harpoonEvent;
+                                    d.SearchAreaEvent += drone_searchEvent;
                                     station.blocks[i].countUp = 0;
                                 }
                                 
@@ -779,6 +780,38 @@ namespace CrossPlatformDesktopProject
         }
 
         //void mouse_holdEvent()
+
+        void drone_searchEvent(object sender)
+        {
+            Drone d = (Drone)sender;
+            List<PhysEntity> lst = new List<PhysEntity>();
+            double ymax = 0;
+            string match = "";
+            if(d.type == "miningDrone") { match = "asteroid"; }
+            else if(d.type == "harvestDrone") { match = "debris"; }
+            for(int i = 0; i < physEntList.Count; i++)
+            {
+                if (physEntList[i].type == match && physEntList[i].hitBox.Intersects(d.areaToActIn))
+                {
+                    if(physEntList[i].pos.Y > ymax)
+                    {
+                        ymax = physEntList[i].pos.Y;
+                        lst.Add(physEntList[i]);
+                    }
+                    
+                }
+            }
+
+            switch (d.type)
+            {
+                case "miningDrone":
+                    d.ReceiveOrder(1, new Vector2(0, 0), lst[lst.Count - 1], physEntList.IndexOf(lst[lst.Count - 1]));
+                    break;
+                case "harvestDrone":
+                    d.ReceiveOrder(2, new Vector2(0, 0), lst[lst.Count - 1], physEntList.IndexOf(lst[lst.Count - 1]));
+                    break;
+            }
+        }
 
         void drone_harpoonEvent(object sender)
         {

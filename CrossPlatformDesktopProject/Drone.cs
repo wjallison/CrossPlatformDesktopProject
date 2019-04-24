@@ -28,6 +28,9 @@ namespace CrossPlatformDesktopProject
         public PhysEntity subjectEntity;
         public IDictionary<string, double> content = new Dictionary<string, double>();
 
+        public bool areaActBool = false;
+        public Rectangle areaToActIn;
+
         public delegate void AttackDel(object sender);
         public event AttackDel AttackEvent;
 
@@ -36,6 +39,9 @@ namespace CrossPlatformDesktopProject
 
         public delegate void HarpoonDel(object sender);
         public event HarpoonDel HarpoonEvent;
+
+        public delegate void SearchArea(object sender);
+        public event SearchArea SearchAreaEvent;
 
         #region Orders
 
@@ -288,9 +294,52 @@ namespace CrossPlatformDesktopProject
             //}
         }
 
+        public void TargetKilled()
+        {
+            if (areaActBool)
+            {
+                SearchAreaEvent(this);
+            }
+            else
+            {
+                GoHome();
+            }
+        }
+
         public override void individualUpdate(GameTime gameTime)
         {
-            
+            if (areaActBool)
+            {
+                bool noChange = true;
+                if (targetChanged)
+                {
+                    
+                    SearchAreaEvent(this);
+                    targetChanged = false;
+                    noChange = false;
+                }
+                else if (!targetPhysEnt.hitBox.Intersects(targetArea))
+                {
+                    SearchAreaEvent(this);
+                    noChange = false;
+                }
+
+                if (noChange)
+                {
+
+                }
+                else
+                {
+                    if(type == "miningDrone")
+                    {
+                        ReceiveOrder();
+                    }
+                    else if(type == "harvestDrone")
+                    {
+                        ReceiveOrder();
+                    }
+                }
+            }
 
             if (approaching)
             {
