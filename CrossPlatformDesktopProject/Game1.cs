@@ -17,6 +17,7 @@ namespace CrossPlatformDesktopProject
         UIItem resourcesPanel, selectedEntityPanel, menuButtonPanel, groupButtonsPanel;
 
         MouseTracker mTracker = new MouseTracker();
+        SelectedAreaMenu areaMenu = new SelectedAreaMenu();
 
         LayerTracker mainLayers = new LayerTracker();
         LayerTracker buildMenuLayers = new LayerTracker();
@@ -176,7 +177,7 @@ namespace CrossPlatformDesktopProject
             //textureBoundingBox = Content.Load<Texture2D>("BoundingBox");
             _globals.textures[6,0] = Content.Load<Texture2D>("BoundingBox");
             _globals.textures[6, 1] = Content.Load<Texture2D>("buildBox");
-
+            _globals.textures[6, 2] = Content.Load<Texture2D>("SelectedArea");
             //textureGoToButton = Content.Load<Texture2D>("Goto");
             //textureAttackButton = Content.Load<Texture2D>("Attack");
             //textureGatherButton = Content.Load<Texture2D>("Harvest");
@@ -236,6 +237,8 @@ namespace CrossPlatformDesktopProject
             buildScreen = new BuildScreen(graphics);
             buildScreen.reduceResourcesEvent += buildScreen_reduceResourcesEvent;
             buildScreen.addStationBlockEvent += buildScreen_addStationBlockEvent;
+
+            areaMenu = new SelectedAreaMenu();
         }
 
         void buildScreen_reduceResourcesEvent(string resource, double qty)
@@ -1190,6 +1193,11 @@ namespace CrossPlatformDesktopProject
                 DrawRadialMenu();
             }
 
+            if (mTracker.mouseHold)
+            {
+                DrawHoldAreaSelect();
+            }
+
             #region UI
 
             spriteBatch.Draw(
@@ -1199,6 +1207,21 @@ namespace CrossPlatformDesktopProject
                 );
             DrawResources();
             #endregion
+        }
+
+        public void DrawHoldAreaSelect()
+        {
+            MouseState m = Mouse.GetState();
+
+            int xval = mTracker.downPoint.X < m.X ? (int)mTracker.downPoint.X : (int)m.X;
+            int yval = mTracker.downPoint.Y < m.Y ? (int)mTracker.downPoint.Y : (int)m.Y;
+            int w = (int)Math.Abs(mTracker.downPoint.X - m.X);
+            int h = (int)Math.Abs(mTracker.downPoint.Y - m.Y);
+            Rectangle r = new Rectangle(xval, yval, w, h);
+            areaMenu.Activate(r);
+
+            spriteBatch.Draw(areaMenu.texture, areaMenu.area, Color.White);
+
         }
 
         public void DrawRadialMenu()

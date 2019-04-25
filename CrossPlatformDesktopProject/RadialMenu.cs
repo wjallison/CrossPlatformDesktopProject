@@ -178,7 +178,7 @@ namespace CrossPlatformDesktopProject
 
         public SelectedAreaMenu()
         {
-            //texture = 
+            texture = _globals.textures[6, 2];
         }
 
         public void Activate(Rectangle r)
