@@ -646,11 +646,13 @@ namespace CrossPlatformDesktopProject
             //SelectedAreaMenu's territory
             if (m.mouseHold)
             {
-
+                areaMenu.active = true;
+                mTracker.mouseHold = false;
             }
             //RadialMenu's territory
             else
             {
+                areaMenu.active = false;
                 Rectangle r = new Rectangle((int)m.upPoint.X, (int)m.upPoint.Y, 1, 1);
 
                 if (r.Intersects(radial.drawBox))
@@ -1198,6 +1200,11 @@ namespace CrossPlatformDesktopProject
                 DrawHoldAreaSelect();
             }
 
+            if (areaMenu.active)
+            {
+                DrawAreaSelect();
+            }
+
             #region UI
 
             spriteBatch.Draw(
@@ -1207,6 +1214,20 @@ namespace CrossPlatformDesktopProject
                 );
             DrawResources();
             #endregion
+        }
+
+        public void DrawAreaSelect()
+        {
+            MouseState m = Mouse.GetState();
+
+            int xval = mTracker.downPoint.X < mTracker.upPoint.X ? (int)mTracker.downPoint.X : (int)mTracker.upPoint.X;
+            int yval = mTracker.downPoint.Y < mTracker.upPoint.Y ? (int)mTracker.downPoint.Y : (int)mTracker.upPoint.Y;
+            int w = (int)Math.Abs(mTracker.downPoint.X - mTracker.upPoint.X);
+            int h = (int)Math.Abs(mTracker.downPoint.Y - mTracker.upPoint.Y);
+            Rectangle r = new Rectangle(xval, yval, w, h);
+            areaMenu.Activate(r);
+
+            spriteBatch.Draw(areaMenu.texture, areaMenu.area, Color.White);
         }
 
         public void DrawHoldAreaSelect()
