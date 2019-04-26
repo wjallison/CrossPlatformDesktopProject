@@ -179,6 +179,11 @@ namespace CrossPlatformDesktopProject
             }
         }
 
+        public void ActArea(Rectangle area)
+        {
+            areaActBool = true;
+            areaToActIn = area;
+        }
 
         public void UpdateTarget(Vector2 t)
         {

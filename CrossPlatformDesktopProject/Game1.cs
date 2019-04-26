@@ -443,7 +443,8 @@ namespace CrossPlatformDesktopProject
                 if (physEntList.Count > 0)
                 {
                     Drone d = (Drone)physEntList[0];
-                    dV1 = physEntList[0].theta;
+                    //dV1 = physEntList[0].theta;
+                    //dV1 = 
                     dV2 = physEntList[0].posDot.X;
                     dV3 = physEntList[0].posDotDot.X;
                     //dV4 = physEntList[0].health;
@@ -652,8 +653,24 @@ namespace CrossPlatformDesktopProject
             //RadialMenu's territory
             else
             {
-                areaMenu.active = false;
                 Rectangle r = new Rectangle((int)m.upPoint.X, (int)m.upPoint.Y, 1, 1);
+                if (areaMenu.active)
+                {
+                    //if (r.Intersects(areaMenu.area))
+                    //{
+
+                    //}
+                    if (r.Intersects(areaMenu.buttons[0].box))
+                    {
+                        Drone d = (Drone)selectedPhysEnt.entity;
+                        d.ActArea(areaMenu.area);
+                    }
+                    areaMenu.active = false;
+                    return;
+                }
+
+                areaMenu.active = false;
+                
 
                 if (r.Intersects(radial.drawBox))
                 {
@@ -1132,8 +1149,8 @@ namespace CrossPlatformDesktopProject
 
         public void DrawRegular()
         {
-            spriteBatch.DrawString(font, "Theta: " + dV1.ToString(), new Vector2(200, 100), Color.Black);
-            spriteBatch.DrawString(font, dV2.ToString(), new Vector2(200, 120), Color.Black);
+            spriteBatch.DrawString(font, "AMenuActive: " + areaMenu.active.ToString(), new Vector2(200, 100), Color.Black);
+            spriteBatch.DrawString(font, "Holding: " + mTracker.currentlyDown.ToString(), new Vector2(200, 120), Color.Black);
             spriteBatch.DrawString(font, dV3.ToString(), new Vector2(200, 140), Color.Black);
             spriteBatch.DrawString(font, dV4.ToString(), new Vector2(200, 160), Color.Black);
             spriteBatch.Draw(textureBall,
@@ -1226,8 +1243,22 @@ namespace CrossPlatformDesktopProject
             int h = (int)Math.Abs(mTracker.downPoint.Y - mTracker.upPoint.Y);
             Rectangle r = new Rectangle(xval, yval, w, h);
             areaMenu.Activate(r);
+            if(selectedPhysEnt.entity.type == "miningDrone")
+            {
+                areaMenu.buttons[0].textureEnabled = _globals.textures[4, 2];
+                //areaMenu.buttons[0].textureDisabled
+            }
+            else if(selectedPhysEnt.entity.type == "harvestDrone")
+            {
+                areaMenu.buttons[0].textureEnabled = _globals.textures[4, 3];
+            }
+            else
+            {
+                areaMenu.buttons[0].textureEnabled = _globals.textures[4, 7];
+            }
 
             spriteBatch.Draw(areaMenu.texture, areaMenu.area, Color.White);
+            spriteBatch.Draw(areaMenu.buttons[0].textureEnabled, areaMenu.buttons[0].box, Color.White);
         }
 
         public void DrawHoldAreaSelect()

@@ -179,12 +179,16 @@ namespace CrossPlatformDesktopProject
         public SelectedAreaMenu()
         {
             texture = _globals.textures[6, 2];
+            buttons.Add(new SelectedAreaButton());
         }
 
         public void Activate(Rectangle r)
         {
             area = r;
             active = true;
+
+            Rectangle buttonBox = new Rectangle(r.X + r.Width / 2 - 10, r.Y + r.Height - 20, 20, 20);
+            buttons[0].box = buttonBox;
         }
 
         public void Deactivate()
@@ -210,5 +214,6 @@ namespace CrossPlatformDesktopProject
             textureEnabled = tex;
             textureDisabled = texD;
         }
+        public SelectedAreaButton() { }
     }
 }
